@@ -1,0 +1,95 @@
+<!-- Webview print plugin: -->
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" 
+        xmlns:android="http://schemas.android.com/apk/res/android" 
+        id="co.ablabs.cordova.plugin.escpos" 
+        version="0.0.1-dev">
+    <name>Cordova EscPos</name>
+    <description>Cordova plugin to interact with Epson thermal receipt printers using Esc/Pos</description>
+    <author>AB Labs, Inc.</author>
+    <license>MIT</license>
+    <keywords>escpos,epson,receipt printer,thermal printer</keywords>
+    
+    <js-module src="www/EscPos.js" name="EscPos">
+        <clobbers target="EscPos" />
+    </js-module>
+    
+    <platform name="android">
+        
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="EscPos" >
+                <param name="android-package" value="co.ablabs.cordova.plugin.escpos.EscPos"/>
+            </feature>
+        </config-file>
+        
+        <config-file target="AndroidManifest.xml" parent="/manifest/application/activity[@android:name='MainActivity']/intent-filter">
+
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+
+        </config-file>
+        
+        <config-file target="AndroidManifest.xml" parent="/manifest/application/activity[@android:name='MainActivity']">
+            <meta-data android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" 
+                       android:resource="@xml/device_filter" />
+        </config-file>
+        
+        <source-file src="src/android/EscPos.java" target-dir="src/co/ablabs/cordova/plugin/escpos" />
+        
+        <source-file src="src/android/libs/device_filter.xml" target-dir="res/xml" /> 
+        
+        <source-file src="src/android/libs/ePOS-Print.jar" target-dir="libs" framework="true" />
+        <source-file src="src/android/libs/libeposprint.so" target-dir="libs/armeabi" />
+
+        <source-file src="src/android/libs/ePOS-Print.jar" target-dir="lib" framework="true" />
+        <source-file src="src/android/libs/libeposprint.so" target-dir="lib/armeabi-v7a" />
+        <source-file src="src/android/libs/libeposprint.so" target-dir="lib/arm" />
+
+    </platform>
+</plugin>
+
+
+<!-- Crosswalk Print Plugin: -->
+
+<!-- <?xml version="1.0" encoding="UTF-8" ?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" 
+        xmlns:android="http://schemas.android.com/apk/res/android" 
+        id="co.ablabs.cordova.plugin.escpos" 
+        version="0.0.1-dev">
+    <name>Cordova EscPos</name>
+    <description>Cordova plugin to interact with Epson thermal receipt printers using Esc/Pos</description>
+    <author>AB Labs, Inc.</author>
+    <license>MIT</license>
+    <keywords>escpos,epson,receipt printer,thermal printer</keywords>
+    
+    <js-module src="www/EscPos.js" name="EscPos">
+        <clobbers target="EscPos" />
+    </js-module>
+    
+    <platform name="android">
+        
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="EscPos" >
+                <param name="android-package" value="co.ablabs.cordova.plugin.escpos.EscPos"/>
+            </feature>
+        </config-file>
+        
+        <config-file target="AndroidManifest.xml" parent="/manifest/application/activity[@android:name='MainActivity']/intent-filter">
+
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+
+        </config-file>
+        
+        <config-file target="AndroidManifest.xml" parent="/manifest/application/activity[@android:name='MainActivity']">
+            <meta-data android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" 
+                       android:resource="@xml/device_filter" />
+        </config-file>
+        
+        <source-file src="src/android/EscPos.java" target-dir="src/co/ablabs/cordova/plugin/escpos" />
+        
+        <source-file src="src/android/libs/device_filter.xml" target-dir="res/xml" /> 
+        
+        <source-file src="src/android/libs/ePOS-Print.jar" target-dir="libs" framework="true" />
+        <source-file src="src/android/libs/libeposprint.so" target-dir="libs/armeabi-v7a" />
+    </platform>
+</plugin> -->

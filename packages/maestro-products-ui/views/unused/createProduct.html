@@ -1,0 +1,49 @@
+<template name="CreateProduct">
+	<div id="addNewProductModal" class="modal modal-fixed-footer">
+        <div class="modal-content">
+            <h4>Add New Product</h4>
+            <table id="addProductForm">
+                <tbody>
+                    <tr>
+                        <td>
+                        <form id="addNewProductForm" name="add-new-product" class="col s12">
+                            <div class="row">
+                                <div class="col s6">
+                                    <label for="name">New Product Name</label>
+                                    <input id="name" type="text" class="validate">
+                                </div>
+                                <div id="categoryRow" class="row">
+                                    <div class="input-field col s6">
+                                        <select id="productType" class="categoryAddSelect">
+                                            <option value="" disabled selected>Choose a category</option>
+                                            {{#each categories}}
+                                                <option value="{{this.name}}">{{this.name}}</option>
+                                            {{/each}}
+                                        </select>
+                                        <label>Optional</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <p>Pricing:</p>
+                            </div>
+                            <div class="row">
+                                {{#each preferredSizes}}
+                                    <div class="col s2 m2 center-align">
+                                        <input type="number" min="0.01" step="0.01" id="{{this.code}}_label_createProduct" class="product-size" data-size-code="{{this.code}}"/>
+                                        <label for="{{this.code}}_label_createProduct">{{this.label}}</label>
+                                    </div>
+                                {{/each}}
+                            </div>
+                        </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="modal-footer">
+            <a id="save-Product" class="modal-action modal-close waves-effect waves-green btn-flat">Add Product</a>
+        </div>
+    </div>
+    {{initCategorySelect}}
+</template>

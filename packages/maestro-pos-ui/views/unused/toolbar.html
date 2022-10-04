@@ -1,0 +1,22 @@
+<template name="OrdersToolbar">
+    <div class="row">
+        <nav class="col s12">
+            <div class="nav-wrapper">
+                <form class="toolbar row">
+                    <div class="input-field col s4">
+                        <input id="search" type="search" required>
+                        <label for="search"><i class="material-icons">search</i></label>
+                    </div>
+                    <div class="input-field col s4">
+                        <select id="selected-location">
+                            <option value="">Select location</option>
+                            {{#each locations }}
+                                <option value="{{this._id}}">{{this.name}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                </form>
+            </div>
+        </nav>
+    </div>
+</template>

@@ -1,0 +1,234 @@
+<template name="EnterHours">
+	{{#if isEmployeeUnlocked}}
+		{{#with getSelectedEmployee}}
+			<div class="row"></div>
+			<div class="row hide-on-small-only">
+				<div class="col l1 hide-on-med-and-down">&nbsp;</div>
+				<div class="col s12 m12 l10">
+					<h5 class="row center-align teal-text">{{name}}<span class="secondary-content"><a class="clearEmployee btn-floating btn waves-effect waves-dark white"><i class="material-icons grey-text">clear</i></a></span></h5>
+					<div class="row">
+						<div class="col s12">
+							<h5 class="row valign-wrapper">
+								<div class="col s6 valign">Time Sheet:</div>
+								<div class="col s6 valign right-align">
+									{{#if isAlreadyCheckedInToday}}
+										{{#if isAlreadyCheckedOutToday}}
+											<i class="green-text"><i class="material-icons green-text">done</i> Entries are in for today.</i>
+										{{else}}
+											{{getTodayDate}}: <a class="waves-effect waves-light btn blue checkInOut">Check-Out</a>
+										{{/if}}
+									{{else}}
+										{{getTodayDate}}: <a class="waves-effect waves-light btn teal checkInOut">Check-In</a>
+									{{/if}}
+								</div>
+							</h5>
+							<div class="row">
+								<a class="periodDown waves-effect waves-dark"><i class="material-icons grey-text medium">keyboard_arrow_up</i></a> Pay Period Start Date: {{getThisPeriodStart}} 
+								<ul class="collection card">
+									<li class="collection-item row">
+										<div class="col s5">&nbsp;</div>
+										<div class="col s2 center-align">In</div>
+										<div class="col s2 center-align">Out</div>
+										<div class="col s2 center-align">Hours</div>
+										<div class="col s1 center-align">&nbsp;</div>
+									</li>
+									{{#each getPeriodDates}}
+										{{#if isExistingEntry clockIn clockOut}}
+											<li class="collection-item row valign-wrapper">
+												<div class="col s4">{{getFormattedDate date}}</div>
+												<div class="col s2 center-align valign">{{getFormattedTime clockIn}}</div>
+												<div class="col s2 center-align valign">{{getFormattedTime clockOut}}</div>
+												<div class="col s2 center-align valign">{{hours}}</div>
+												<div class="col s1 center-align valign">
+													<a class="editEntry btn-flat btn-small waves-effect waves-dark"><i class="material-icons grey-text">edit</i></a>
+												</div>
+												<div class="col s1 center-align valign">
+													<a class="deleteEntry btn-flat btn-small waves-effect waves-dark"><i class="material-icons grey-text">clear</i></a>
+												</div>
+											</li>
+										{{else}}
+											<li class="collection-item row valign-wrapper">
+												<div class="col s5"><a class="addNewEntry btn-flat btn-small waves-effect waves-dark"><i class="material-icons grey-text">add</i></a> {{getFormattedDate date}}</div>
+												<div class="col s2 center-align valign">&nbsp;</div>
+												<div class="col s2 center-align valign">&nbsp;</div>
+												<div class="col s2 center-align valign">&nbsp;</div>
+												<div class="col s1 center-align valign">&nbsp;</div>
+											</li>
+										{{/if}}
+									{{/each}}
+								</ul>
+								<a class="periodUp waves-effect waves-dark"><i class="material-icons grey-text medium">keyboard_arrow_down</i></a> Pay Period End Date: {{getThisPeriodEnd}}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row hide-on-med-and-up">
+				<div class="col s12">
+					<h5 class="row center-align teal-text">{{name}}<span class="secondary-content"><i class="clearEmployee material-icons grey-text">clear</i></span></h5>
+					<div class="row">
+						<div class="col s12">
+							<h5 class="row valign-wrapper">
+								<div class="col s12 valign">Time Sheet:</div>
+							</h5>
+							<h6 class="row valign-wrapper">
+								<div class="col s12 valign center-align">
+									{{#if isAlreadyCheckedInToday}}
+										{{#if isAlreadyCheckedOutToday}}
+											<i class="green-text"><i class="material-icons green-text">done</i> Entries are in for today.</i>
+										{{else}}
+											{{getTodayDate}}: Check-Out <i class="material-icons red-text waves-effect waves-light checkInOut">arrow_back</i>
+										{{/if}}
+									{{else}}
+										{{getTodayDate}}: Check-In <i class="material-icons green-text waves-effect waves-light checkInOut">arrow_forward</i>
+									{{/if}}
+								</div>
+							</h6>
+							<div class="row">
+								<i class="periodDown waves-effect waves-dark material-icons grey-text">keyboard_arrow_up</i> Pay Period Start Date: {{getThisPeriodStart}} 
+								<ul class="collection card">
+<!-- 									<li class="collection-item row">
+										<div class="col s5">&nbsp;</div>
+										<div class="col s2 center-align">In</div>
+										<div class="col s2 center-align">Out</div>
+										<div class="col s2 center-align">Hours</div>
+										<div class="col s1 center-align">&nbsp;</div>
+									</li> -->
+									{{#each getPeriodDates}}
+										{{#if isExistingEntry clockIn clockOut}}
+											<li class="collection-item">
+												<div class="row"><b>{{getFormattedDate date}}<span class="secondary-content"><i class="editEntry waves-effect waves-dark material-icons grey-text">edit</i>&nbsp;&nbsp;<i class="deleteEntry waves-effect waves-dark material-icons grey-text">clear</i></span></b></div>
+												<div class="row valign"><i class="material-icons green-text">arrow_forward</i> {{getFormattedTime clockIn}}</div>
+												<div class="row valign"><i class="material-icons red-text">arrow_back</i> {{getFormattedTime clockOut}}</div>
+												<div class="row right-align valign"> Hours: {{hours}}</div>
+<!-- 												<div class="row center-align valign">
+													<a class="editEntry btn-flat btn-small waves-effect waves-dark"><i class="material-icons grey-text">edit</i></a>
+												</div> -->
+											</li>
+										{{else}}
+											<li class="collection-item row valign-wrapper">
+												<div class="row"><i class="addNewEntry waves-effect waves-dark material-icons grey-text">add</i> {{getFormattedDate date}}</div>
+												<!-- <div class="col s2 center-align valign">&nbsp;</div>
+												<div class="col s2 center-align valign">&nbsp;</div>
+												<div class="col s2 center-align valign">&nbsp;</div>
+												<div class="col s1 center-align valign">&nbsp;</div> -->
+											</li>
+										{{/if}}
+									{{/each}}
+								</ul>
+								<i class="periodUp waves-effect waves-dark material-icons grey-text">keyboard_arrow_down</i> Pay Period End Date: {{getThisPeriodEnd}}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div id="checkInOut" class="modal">
+			    <div class="modal-content center-align hide-on-small-only">
+			    	{{#if isAlreadyCheckedInToday}}
+						<h5>Check-Out Time:</h5>
+			    	{{else}}
+			     		<h5>Check-In Time:</h5>
+			     	{{/if}}
+			     	<div class="row center-align">
+			     		<h4>
+			     			<a class="waves-effect waves-light btn-floating btn-large btn-flat white incrementTimeDown"><i class="material-icons grey-text">keyboard_arrow_left</i></a>
+			     			{{getTimeNow}}
+			     			<a class="waves-effect waves-light btn-floating btn-large btn-flat white incrementTimeUp"><i class="material-icons grey-text">keyboard_arrow_right</i></a>
+			     		</h4>
+			     	</div>
+			     	<a class="waves-effect waves-light btn-floating btn-large modal-action modal-close {{#if isAlreadyCheckedInToday}}confirmCheckOut blue{{else}}confirmCheckIn teal{{/if}}"><i class="material-icons">done</i></a>
+			    </div>
+			    <div class="modal-content center-align hide-on-med-and-up">
+			    	{{#if isAlreadyCheckedInToday}}
+						<b>Check-Out Time:</b>
+			    	{{else}}
+			     		<b>Check-In Time:</b>
+			     	{{/if}}
+			     	<div class="row center-align">
+			     		<h5>
+			     			<i class="incrementTimeDown material-icons grey-text waves-effect waves-light">keyboard_arrow_left</i>
+			     			{{getTimeNow}}
+			     			<i class="incrementTimeUp material-icons grey-text waves-effect waves-light">keyboard_arrow_right</i>
+			     		</h5>
+			     	</div>
+			     	<a class="waves-effect waves-light btn-floating btn-large modal-action modal-close {{#if isAlreadyCheckedInToday}}confirmCheckOut blue{{else}}confirmCheckIn teal{{/if}}"><i class="material-icons">done</i></a>
+			    </div>
+			</div>
+
+			<div id="editEntryModal" class="modal">
+			    <div class="modal-content center-align">
+			    	{{#with getSelectedEntry}}
+						<h4>{{getFormattedDate date}}: {{hours}} hrs</h4>
+						<div class="row valign-wrapper hide-on-med-and-down">
+							<div class="col s6 valign">
+						     	<div class="row center-align">
+						     		<h5>Check-In Time:</h5>
+						     		<h5>
+						     			<a class="editEntryIncrementDownCheckIn waves-effect waves-light btn-floating btn-large btn-flat white"><i class="material-icons grey-text">keyboard_arrow_left</i></a>
+						     			{{getFormattedTime clockIn}}
+						     			<a class="editEntryIncrementUpCheckIn waves-effect waves-light btn-floating btn-large btn-flat white"><i class="material-icons grey-text">keyboard_arrow_right</i></a>
+						     		</h5>
+						     	</div>
+						    </div>
+						    <div class="col s6 valign">
+						     	<div class="row center-align">
+						     		<h5>Check-Out Time:</h5>
+						     		<h5>
+						     			<a class="editEntryIncrementDownCheckOut waves-effect waves-light btn-floating btn-large btn-flat white"><i class="material-icons grey-text">keyboard_arrow_left</i></a>
+						     			{{getFormattedTime clockOut}}
+						     			<a class="editEntryIncrementUpCheckOut waves-effect waves-light btn-floating btn-large btn-flat white"><i class="material-icons grey-text">keyboard_arrow_right</i></a>
+						     		</h5>
+						     	</div>
+						    </div>
+						</div>
+						<div class="hide-on-large-only">
+					     	<div class="row center-align">
+					     		<b>Check-In Time:</b>
+					     		<h5>
+					     			<i class="editEntryIncrementDownCheckIn waves-effect waves-light material-icons grey-text">keyboard_arrow_left</i>
+					     			{{getFormattedTime clockIn}}
+					     			<i class="editEntryIncrementUpCheckIn waves-effect waves-light material-icons grey-text">keyboard_arrow_right</i>
+					     		</h5>
+					     	</div>
+
+					     	<div class="row center-align">
+					     		<b>Check-Out Time:</b>
+					     		<h5>
+					     			<i class="editEntryIncrementDownCheckOut waves-effect waves-light material-icons grey-text">keyboard_arrow_left</i>
+					     			{{getFormattedTime clockOut}}
+					     			<i class="editEntryIncrementUpCheckOut waves-effect waves-light material-icons grey-text">keyboard_arrow_right</i>
+					     		</h5>
+					     	</div>
+						</div>
+				     	<a class="confirmEntryEdit waves-effect waves-light btn-floating btn-large modal-action modal-close"><i class="material-icons">done</i></a>
+			    	{{/with}}
+			    </div>
+			</div>
+		{{/with}}
+	{{else}}
+		<h5 class="row center-align">Timesheet Log In</h5>
+		<div class="row"></div>
+		<div class="row">
+			<div class="col m1 l3 hide-on-small-only">&nbsp;</div>
+			<div class="col s12 m10 l6 fixedHeightContainer">
+				<ul class="collection">
+					<li class="collection-item row valign-wrapper">
+						<div class="col s3 valign"><i class="material-icons large grey-text hide-on-small-only">lock_outline</i><i class="material-icons medium grey-text hide-on-med-and-up">lock_outline</i></div>
+						<div class="col s7 input-field valign">
+					        <label for="employeePin">Pin</label>
+					        <input id="employeePin" type="password" class="validate">
+					    </div>
+					    <div class="col s2 valign"><a class="verifyPin btn-floating btn-medium waves-effect waves-light"><i class="material-icons medium white-text">arrow_forward</i></a></div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	{{/if}}
+
+<!-- 	<div class="row"><div class="col s12 right-align">
+		<a class="waves-effect waves-light btn-flat">Cancel</a>
+		<a class="waves-effect waves-light btn">Update Settings</a>
+	</div></div> -->
+</template>

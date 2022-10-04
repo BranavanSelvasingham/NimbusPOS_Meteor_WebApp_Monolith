@@ -1,0 +1,457 @@
+<template name="OrderHistory">
+
+<!--     <div class="row saveVerticalSpace valign-wrapper">
+        <div class="saveVerticalSpace col s4 right-align">
+            <h4>Orders History</h4>
+        </div>
+        <div class="saveVerticalSpace col s4 input-field ">
+            <input id="order_number" type="number" class="validate orderNumberSearch" placeholder="Search Order Number">
+        </div>
+        <div class="saveVerticalSpace col s4 right-align valign">
+            <a class="btn-flat teal white-text waves-effect waves-light" href="/orders">New Order <i class="material-icons small right">add</i></a>
+        </div>
+    </div> -->
+
+    <div class="row saveVerticalSpace valign-wrapper">
+        <h4 class="col s12 saveVerticalSpace center-align">
+            Order History<!--  <a class="btn-flat teal white-text" href="/orders">New Order <i class="material-icons small right">add</i></a> -->
+        </h4>
+    </div>
+
+    <div class="row saveVerticalSpace customersSearchBar">
+        <div class="col s12 saveVerticalSpace">
+            <div class="{{#unless isOrderSearchTypeSelected 'Order'}}orderSearchField selectCustomerSearchField{{else}}selectedCustomerSearchField{{/unless}}" data-field="Order">{{#unless isOrderSearchTypeSelected 'Order'}}Order #{{else}}<input id="order-number-search" type="number" placeholder="Search Order #" style="font-size: 1.4rem;">{{/unless}}</div>
+            <div class="{{#unless isOrderSearchTypeSelected 'Daily'}}orderSearchField selectCustomerSearchField{{else}}selectedCustomerSearchField{{/unless}}" data-field="Daily">{{#unless isOrderSearchTypeSelected 'Daily'}}Daily #{{else}}<input id="daily-number-search" type="number" placeholder="Search Daily #" style="font-size: 1.4rem;">{{/unless}}</div>
+            <div class="{{#unless isOrderSearchTypeSelected 'Customer'}}orderSearchField selectCustomerSearchField{{else}}selectedCustomerSearchField{{/unless}}" data-field="Customer">{{#unless isOrderSearchTypeSelected 'Customer'}}Customer{{else}}<input id="customer-name-search" type="text" placeholder="Search Customer Name" style="font-size: 1.4rem;">{{/unless}}</div>
+            <a class="orderSearchField teal white-text right" href="/orders">New Order +</a>
+        </div>
+    </div>
+
+    <ul class="collection">
+        <li class="collection-item listViewContainer row saveVerticalSpace">
+            <div class="col s7 orderHistoryColHeights listViewContainer itemsListStyle">
+                <ul class="collection listViewContainer">
+                    {{#each searchCustomerNameResults}}
+                        <li class="collection-item row searchThisCustomer valign-wrapper">
+                            <i class="material-icons small left">person_outline</i><b>{{name}}</b>
+                        </li>
+                    {{/each}}
+
+                    {{#with searchCustomerNameResults}}
+                        <div class="divider"></div>
+                        <div class="divider"></div>
+                        <div class="divider"></div>
+                    {{/with}}
+
+                    {{#each orderHistory}}
+                        <li class="collection-item row selectHistoricalOrder valign-wrapper saveHorizontalSpace" data-orderid="{{_id}}" style="{{isOrderSelected _id}}">
+                            <div class="col {{#if orderWaiting}}s6{{else}}s8{{/if}} truncate valign saveHorizontalSpace">    
+                                {{#if noStatus}}
+                                    <i class="material-icons left green-text">done</i>
+                                {{/if}}
+                                {{#if orderComplete}}
+                                    <i class="material-icons left green-text">done</i>
+                                {{/if}}
+                                {{#if orderCancelled}}
+                                    <i class="material-icons left grey-text">delete</i>
+                                {{/if}}
+                                {{#if orderHold}}
+                                    <i class="material-icons left teal-text">pause</i>
+                                {{/if}}
+                                {{#if orderWaiting}}
+                                    <i class="material-icons left teal-text">radio_button_unchecked</i>
+                                {{/if}}
+
+                                {{#if orderSplitOut}}
+                                    <i class="material-icons left teal-text">call_split</i>
+                                {{/if}}
+
+                                {{#with orderInformation}}
+                                    <i class="material-icons left teal-text">{{getOrderTypeIcon orderType}}</i>
+                                {{/with}}
+                                <b>{{uniqueOrderNumber}}</b>
+                                &nbsp;&nbsp;
+                                <b><i>{{formatOrderNumber dailyOrderNumber}}</i></b> | {{formatOrderDate createdAt}}
+                                &nbsp;&nbsp;
+                                {{currency subtotals.total}}
+                                &nbsp;&nbsp;
+                                {{getCustomerName customerId}}
+                            </div>
+                            {{#if orderWaiting}}    
+                                <div class="col s2 valign truncate saveHorizontalSpace">
+                                    <i class="material-icons tiny">timelapse</i>{{getTimeElapsed createdAt}}
+                                </div>
+                            {{/if}}
+                            <div class="col s1 truncate valign saveHorizontalSpace">
+                                {{#if isDineInType orderInformation.orderType}}<i class="material-icons tiny">group_work</i><b>{{getTableLabel tableId}}</b>{{/if}}
+                            </div>
+                            <div class="col s3 truncate valign saveHorizontalSpace">
+                                {{#with getWaiterName waiterId}}
+                                    <a class="secondary-content"><i class="material-icons tiny">person</i>{{this.name}}</a>
+                                {{/with}}
+                            </div>
+                        </li>
+                    {{/each}}
+                    <li class="collection-item row center-align">
+                        <i class="material-icons medium grey-text displayNextOrderSet">keyboard_arrow_down</i>
+                    </li>
+                </ul>
+            </div>
+            <div class="col s5 orderHistoryColHeights">
+                {{#with getSelectedTableOrder}}
+                    {{#if orderSplitOut}}
+                        <h5 class="row blue-text">Order Split Out To:</h5>
+                        <div class="row">
+                            <div class="col s12">
+                                {{#each splitOrders}}
+                                    {{#with getSpecificOrder this}}
+                                        <div class="row selectHistoricalOrder" data-orderid="{{_id}}" style="{{isOrderSelected _id}}">
+                                            <div class="col s1 valign">
+                                                {{#if noStatus}}
+                                                    <i class="material-icons left green-text">done</i>
+                                                {{/if}}
+                                                {{#if orderComplete}}
+                                                    <i class="material-icons left green-text">done</i>
+                                                {{/if}}
+                                                {{#if orderCancelled}}
+                                                    <i class="material-icons left grey-text">delete</i>
+                                                {{/if}}
+                                                {{#if orderHold}}
+                                                    <i class="material-icons left teal-text">pause</i>
+                                                {{/if}}
+                                                {{#if orderWaiting}}
+                                                    <i class="material-icons left teal-text">radio_button_unchecked</i>
+                                                {{/if}}
+
+                                                {{#if orderSplitOut}}
+                                                    <i class="material-icons left teal-text">call_split</i>
+                                                {{/if}}
+                                            </div>
+                                            <div class="col {{#if orderWaiting}}s5{{else}}s8{{/if}} truncate valign">
+                                                <b>{{uniqueOrderNumber}}</b>
+                                                &nbsp;&nbsp;
+                                                <b><i>{{formatOrderNumber dailyOrderNumber}}</i></b> | {{formatOrderDate createdAt}}
+                                                &nbsp;&nbsp;
+                                                {{currency subtotals.total}}
+                                                &nbsp;&nbsp;
+                                                {{getCustomerName customerId}}
+                                            </div>
+                                            {{#if orderWaiting}}    
+                                                <div class="col s3 valign truncate">
+                                                    <i class="material-icons left">timelapse</i>{{getTimeElapsed createdAt}}
+                                                </div>
+                                            {{/if}}
+                                            <div class="col s3 truncate valign">
+                                                {{#with getWaiterName waiterId}}
+                                                    <a class="secondary-content"><i class="material-icons left">person</i>{{this.name}}</a>
+                                                {{/with}}
+                                            </div>
+                                        </div>
+                                        <p class="divider"></p>
+                                    {{/with}}
+                                {{/each}}
+                            </div>
+                        </div>
+                    {{else}}
+                        <div class="row">
+                            <a id="sendToKitchen" class="btn btn-medium waves-effect waves-light"><i class="material-icons left">{{#if itemsWaiting}}send{{else}}done{{/if}}</i>Kitchen</a>
+                            &nbsp;&nbsp;
+                            {{#unless orderComplete}}
+                                <a id="editThisOrder" class="{{#if orderNotEditable}}disabled{{/if}} btn btn-medium waves-effect waves-light" href="/orders/edit/{{this._id}}/false"><i class="material-icons left">edit</i>Edit</a>
+                            {{/unless}}
+                            <!-- <a id="printReceipt" class="btn-floating btn-medium waves-effect waves-light"><i class="material-icons">print</i></a> -->
+                            
+                            <!-- {{#with customerId}}
+                                <a id="emailReceipt" class="btn-floating btn-medium waves-effect waves-light"><i class="material-icons">email</i></a>
+                            {{/with}} -->
+
+                            <span class="secondary-content">
+                                {{#if orderComplete}}
+                                    <a id="printReceipt" class="btn-floating btn-medium waves-effect waves-light"><i class="material-icons">print</i></a>
+                                    {{#with customerId}}<a id="emailReceipt" class="btn-floating btn-medium waves-effect waves-light"><i class="material-icons">email</i></a>{{/with}}
+                                {{/if}}
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                {{#if orderCancelled}}{{else}}<a data-orderid="{{_id}}" class="cancelOrder btn-floating btn-medium waves-effect waves-light red lighten-2"><i class="material-icons">delete</i>></a>{{/if}} 
+                            </span>
+                        </div>
+                        <div class="row center-align">
+                            {{#if orderComplete}}
+                                <h3 class="teal-text">Completed</h3>
+                            {{else}}
+                                {{#if orderCancelled}}
+                                    <h3 class="red-text">Cancelled</h3>
+                                {{else}}
+                                    <a id="checkoutThisOrder" class="{{#if orderNotEditable}}disabled{{/if}} btn btn-medium light-blue waves-effect waves-light" href="/orders/edit/{{this._id}}/true" style="width: 100%;"><i class="material-icons left">done</i>Checkout</a>
+                                {{/if}}
+                            {{/if}}
+                        </div>
+
+                        {{#with orderInformation}}
+                            <h5>{{#with getOrderType orderType}}{{this}}{{/with}}<a class="secondary-content">{{#if isDineInType orderType}}<i class="material-icons left">group_work</i><b>{{getTableLabel ../tableId}}</b>{{/if}}</a></h5>
+                            <h6>{{#with orderName}}Name: {{this}}{{/with}}</h6>
+                            <h6>{{#with orderPhone}}Phone: {{this}}{{/with}}</h6>
+                            <h6>{{#with unitNumber}}Unit #{{this}}{{/with}}{{#with buzzerNumber}}(buzzer #: {{this}}), {{/with}}
+                            {{#with streetNumber}}#{{this}}{{/with}}{{#with street}} {{this}}{{/with}}
+                            {{#with city}}{{this}}{{/with}}{{#with postalCode}}, {{this}}{{/with}}</h6>
+                            <h6>{{#with instructions}}<b>Note: {{this}}</b>{{/with}}</h6>
+                        {{/with}}
+
+                        {{#if orderCancelled}}
+                            <ul class="collection">
+                            {{#with getCancelledInfo}}
+                                {{#if amountIsNotZero payBack.amount}}
+                                    <li class="collection-item">
+                                        <h6>Pay back amount of <a class="teal-text">{{currency payBack.amount}}</a> by <a class="teal-text">{{payBack.method}}</a></h6>
+                                    </li>
+                                {{/if}}
+                                {{#each giftCards}}
+                                    {{#if amountIsNotZero redeemedAmount}}
+                                        {{#if isAmountCredited redeemedAmount}}
+                                            <li class="collection-item">
+                                                <h6>Credited back <a class="teal-text">{{currency redeemedAmount}}</a> into <a class="teal-text">"{{getProgramName programId}}"</a>  </h6>
+                                            </li>
+                                        {{else}}
+                                            <li class="collection-item">
+                                                <h6>Took back purchase of <a class="teal-text">"{{getProgramName programId}}"</a> by <a class="teal-text">{{currency redeemedAmount}}</a></h6>
+                                            </li>
+                                        {{/if}}
+                                    {{/if}}
+                                {{/each}}
+                                {{#each quantityCards}}
+                                    {{#if amountIsNotZero redeemedQuantity}}
+                                        {{#if isAmountCredited redeemedQuantity}}
+                                            <li class="collection-item">
+                                                <h6>Credited back <a class="teal-text">{{redeemedQuantity}}</a> units into <a class="teal-text">"{{getProgramName programId}}"</a> </h6>
+                                            </li>
+                                        {{else}}
+                                            <li class="collection-item">
+                                                <h6>Took back purchase of <a class="teal-text">"{{getProgramName programId}}"</a> by <a class="teal-text">{{redeemedQuantity}}</a> units</h6>
+                                            </li>
+                                        {{/if}}
+                                    {{/if}}
+                                {{/each}}
+                            {{/with}}
+                            </ul>
+                        {{/if}}
+                        <!-- <div class="row">
+
+                        </div> -->
+
+                        <div id="receipt" class="receiptPrint card col s12">
+                            {{#if orderCancelled}}<h5 class="row"><span class="secondary-content"><a class="red-text">CANCELLED</a></span></h5>{{/if}}
+                            <h5>{{#with getCustomerName customerId}}{{this}}{{else}}Order Summary{{/with}}<span class="secondary-content">{{formatOrderNumber dailyOrderNumber}}</span></h5>
+                            <p>Order#: {{uniqueOrderNumber}}<span class="secondary-content">{{formatOrderDateAndTime createdAt}}</span></p>
+                            <ul class="collection">
+                                {{#each getGroupedItems items}}
+                                    <b>Seat Number {{seatNum}}:</b>
+                                    <div class="divider"></div>
+                                    {{#each seatItems}}
+                                        {{#if this.isRedeemItem}}                                            
+                                            <li class="collection-item row">
+                                                <p class="col s2">
+                                                    &nbsp;
+                                                </p>
+                                                <p class="col s10">
+                                                    <b>x{{quantity}}</b> {{product.name}} <i class="teal-text small-text">({{sizeName size.code}})</i><span class="secondary-content">{{ currency total }}</span>
+                                                    <!-- <div class="col s12">
+                                                        <i class="teal-text small-text">{{sizeName size.code}}</i><i class="teal-text secondary-content">{{currency size.price}} ea.</i>
+                                                    </div> -->
+                                                </p>    
+                                            </li>
+                                        {{else}}
+                                            {{#if itemIsLoyaltyProgram product._id}}
+                                                <li class="collection-item row valign-wrapper">
+                                                    <p class="col s2 valign">
+                                                        <i class="material-icons right">card_giftcard</i>
+                                                    </p>
+                                                    <p class="col s10">
+                                                        <b>x{{quantity}}</b> {{product.name}}<span class="secondary-content">{{ currency total }}</span>
+                                                        <div class="col s12">
+                                                            <i class="teal-text small-text">{{sizeName size.code}}</i><i class="teal-text secondary-content">{{currency size.price}} ea.</i>
+                                                        </div>
+                                                    </p>
+                                                </li>
+                                            {{else}}
+                                                <li class="collection-item saveHorizontalSpace">
+                                                    <div class="row valign-wrapper saveHorizontalSpace">
+                                                        <div class="col s2 valign center-align saveHorizontalSpace">
+                                                            {{#if sentToKitchen}}
+                                                                <i class="material-icons small">content_paste</i>
+                                                            {{else}}
+                                                                <a class="btn-floating btn-medium waves-effect waves-light sendItemToKitchen"><i class="material-icons">send</i></a>
+                                                            {{/if}}
+                                                        </div>
+                                                        <div class="col s10 saveVerticalSpace">
+                                                            <div class="row saveVerticalSpace">
+                                                                <b>x{{quantity}}</b> {{product.name}} <i class="teal-text small-text">({{sizeName size.code}} {{#if this.variablePrice}}, Variable Price{{/if}} {{#if this.unitBasedPrice}}, {{unitBasedPriceQuantity}}{{unitLabel}} x {{currency unitPrice}}/{{unitLabel}}{{/if}})</i><span class="secondary-content">{{ currency total }}</span>
+                                                                <!-- <div class="col s12">
+                                                                    <i class="teal-text small-text">{{sizeName size.code}}</i><i class="teal-text secondary-content">{{currency size.price}} ea.</i>
+                                                                </div> -->
+                                                                <!-- <p>Seat Number: <b>{{seatNumber}}</b></p> -->
+                                                            </div>
+
+                                                            {{#each addOns}}
+                                                                <p class="row">
+                                                                    <i class="teal-text small-text">+ {{name}}</i><i class="teal-text secondary-content">{{currency price}} ea.</i>
+                                                                </p>
+                                                            {{/each}}
+                                                            {{#each notes}}
+                                                                <p class="row">
+                                                                    <i class="teal-text small-text">* {{this}}</i>
+                                                                </p>
+                                                            {{/each}}
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            {{/if}}
+                                        {{/if}}
+                                    {{/each}}
+                                {{/each}}
+                            </ul>
+                            <div class="divider"></div>
+
+                            {{#with subtotals}}
+                                <div>Subtotal<span class="secondary-content">{{currency subtotal}}</span></div>
+                                {{#if amountIsNotZero discount}}<div>Discounts<span class="secondary-content">- {{currency discount}}</span></div>{{/if}}
+                                {{#if amountIsNotZero adjustments}}<div>Adjustments<span class="secondary-content">- {{currency adjustments}}</span></div>{{/if}}
+                                <div>Taxes<span class="secondary-content">{{currency tax}}</span></div>
+                                <div class="divider"></div>
+                                <div>Total <span class="secondary-content">{{currency total}}</span></div>
+                                <div class="divider"></div>
+                            {{/with}}
+                            {{#if orderComplete}}
+                                {{#with getGiftCardTotal}}<div>Gift Card<span class="secondary-content">-{{currency giftCard}}</span></div>{{/with}}
+                                <!-- {{#with getPaymentReceived}}
+                                    {{#if amountIsNotZero amount}}
+                                        <div>{{getPaymentMethod method}}<span class="secondary-content">-{{currency amount}}</span></div>
+                                    {{/if}}
+                                {{/with}} -->
+                                {{#with payment}}
+                                    {{#if amountIsNotZero cashGiven}}
+                                        <div class="divider"></div>
+                                        <div>Cash Given<span class="secondary-content">-{{currency cashGiven}}</span></div>
+                                        <div>Change Due<span class="secondary-content">{{currency change}}</span></div>
+                                    {{else}}
+                                        <div>{{getPaymentMethod method}}<span class="secondary-content">-{{currency received}}</span></div>
+                                    {{/if}}
+                                {{/with}}
+                            {{/if}}
+                            {{#if payment.tips}}
+                                <div class="divider">&nbsp;</div>&nbsp;
+                                <div class="divider">&nbsp;</div>
+                                <div>Tips <span class="secondary-content">{{currency payment.tips}}</span></div>
+                                <div class="divider"></div>
+                            {{/if}}
+                        </div>
+                    {{/if}}
+                {{/with}}
+
+                {{#with getSelectedDirectOrder}}
+                    <div class="row">
+                        <a id="printReceipt" class="btn-floating btn-large waves-effect waves-light"><i class="material-icons">print</i></a>
+                        {{#with customerId}}<a id="emailReceipt" class="btn-floating btn-large waves-effect waves-light"><i class="material-icons">email</i></a>{{/with}}
+                        <span class="secondary-content">
+                            {{#if orderCancelled}}{{else}}<a data-orderid="{{_id}}" class="cancelOrder btn-floating btn-large waves-effect waves-light red lighten-2"><i class="material-icons">delete</i>></a>{{/if}} 
+                        </span>
+                    </div>
+                    {{#if orderCancelled}}
+                        <ul class="collection">
+                        {{#with getCancelledInfo}}
+                            {{#if amountIsNotZero payBack.amount}}
+                                <li class="collection-item">
+                                    <h6>Pay back amount of <a class="teal-text">{{currency payBack.amount}}</a> by <a class="teal-text">{{payBack.method}}</a></h6>
+                                </li>
+                            {{/if}}
+                            {{#each giftCards}}
+                                {{#if amountIsNotZero redeemedAmount}}
+                                    {{#if isAmountCredited redeemedAmount}}
+                                        <li class="collection-item">
+                                            <h6>Credited back <a class="teal-text">{{currency redeemedAmount}}</a> into <a class="teal-text">"{{getProgramName programId}}"</a>  </h6>
+                                        </li>
+                                    {{else}}
+                                        <li class="collection-item">
+                                            <h6>Took back purchase of <a class="teal-text">"{{getProgramName programId}}"</a> by <a class="teal-text">{{currency redeemedAmount}}</a></h6>
+                                        </li>
+                                    {{/if}}
+                                {{/if}}
+                            {{/each}}
+                            {{#each quantityCards}}
+                                {{#if amountIsNotZero redeemedQuantity}}
+                                    {{#if isAmountCredited redeemedQuantity}}
+                                        <li class="collection-item">
+                                            <h6>Credited back <a class="teal-text">{{redeemedQuantity}}</a> units into <a class="teal-text">"{{getProgramName programId}}"</a> </h6>
+                                        </li>
+                                    {{else}}
+                                        <li class="collection-item">
+                                            <h6>Took back purchase of <a class="teal-text">"{{getProgramName programId}}"</a> by <a class="teal-text">{{redeemedQuantity}}</a> units</h6>
+                                        </li>
+                                    {{/if}}
+                                {{/if}}
+                            {{/each}}
+                        {{/with}}
+                        </ul>
+                    {{/if}}
+                    <div class="row">
+
+                    </div>
+
+                    <div id="receipt" class="receiptPrint card col s12">
+                        {{#if orderCancelled}}<h5 class="row"><span class="secondary-content"><a class="red-text">CANCELLED</a></span></h5>{{/if}}
+                        <h5>{{#with getCustomerName customerId}}{{this}}{{else}}Order Summary{{/with}}<span class="secondary-content">{{formatOrderNumber dailyOrderNumber}}</span></h5>
+                        <p>Order#: {{uniqueOrderNumber}}<span class="secondary-content">{{formatOrderDateAndTime createdAt}}</span></p>
+                        {{#each items}}
+                            <div class="row">
+                                <b>x{{quantity}}</b> {{product.name}}<span class="secondary-content">{{ currency total }}</span>
+                                <div class="col s12">
+                                    <i class="teal-text small-text">{{sizeName size.code}} {{#if this.variablePrice}}(Variable Price){{/if}} {{#if this.unitBasedPrice}}({{unitBasedPriceQuantity}}{{unitLabel}} x {{currency unitPrice}}/{{unitLabel}}){{/if}}</i><i class="teal-text secondary-content">{{currency size.price}} ea.</i>
+                                </div>
+                                {{#each addOns}}
+                                    <div class="col s12">
+                                        <i class="teal-text small-text">+ {{name}}</i><i class="teal-text secondary-content">{{currency price}} ea.</i>
+                                    </div>
+                                {{/each}}
+                            </div>
+                        {{/each}}
+
+                        <div class="divider"></div>
+
+                        {{#with subtotals}}
+                            <div>Subtotal<span class="secondary-content">{{currency subtotal}}</span></div>
+                            {{#if amountIsNotZero discount}}<div>Discounts<span class="secondary-content">- {{currency discount}}</span></div>{{/if}}
+                            {{#if amountIsNotZero adjustments}}<div>Adjustments<span class="secondary-content">- {{currency adjustments}}</span></div>{{/if}}
+                            <div>Taxes<span class="secondary-content">{{currency tax}}</span></div>
+                            <div class="divider"></div>
+                            <div>Total <span class="secondary-content">{{currency total}}</span></div>
+                            <div class="divider"></div>
+                            
+                            {{#with getGiftCardTotal}}<div>Gift Card<span class="secondary-content">-{{currency giftCard}}</span></div>{{/with}}
+                            <!-- {{#with getPaymentReceived}}
+                                {{#if amountIsNotZero amount}}
+                                    <div>{{getPaymentMethod method}}<span class="secondary-content">-{{currency amount}}</span></div>
+                                {{/if}}
+                            {{/with}} -->
+                            
+                            {{#if ../payment.tips}}
+                                <div class="divider">&nbsp;</div>&nbsp;
+                                <div class="divider">&nbsp;</div>
+                                <div>Tips <span class="secondary-content">{{currency ../payment.tips}}</span></div>
+                                <div class="divider"></div>
+                            {{/if}}
+                        {{/with}}
+
+                        {{#with payment}}
+                            {{#if amountIsNotZero cashGiven}}
+                                <div class="divider"></div>
+                                <div>Cash Given<span class="secondary-content">-{{currency cashGiven}}</span></div>
+                                <div>Change Due<span class="secondary-content">{{currency change}}</span></div>
+                            {{else}}
+                                <div>{{getPaymentMethod method}}<span class="secondary-content">-{{currency received}}</span></div>
+                            {{/if}}
+                        {{/with}}
+                    </div>
+                {{/with}}
+            </div>
+        </li>
+    </ul>
+
+</template>

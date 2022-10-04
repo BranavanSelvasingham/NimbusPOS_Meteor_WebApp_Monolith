@@ -1,0 +1,61 @@
+<template name="ManageSize">
+    <div id="manageSizesModal" class="modal modal-fixed-footer">
+        <div class="modal-content">
+            <h4>Manage Sizes</h4>
+            <form>
+                <table class="striped centered responsive-table">
+                    <thead>
+                        <tr>
+                            <th data-field="key">Code</th>
+                            <th data-field="label">Label</th>
+                            <th data-field="preferred">Preferred</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {{#each productSizes}}
+                            <tr>
+                                <td>
+                                    <div class="switch">
+                                        <label>
+                                            <input id="size-available-{{this.code}}"
+                                                   name="size-available-{{this.code}}"
+                                                   type="checkbox" class="size-available"
+                                                   checked="{{isSizeAvailable this.code}}"
+                                                   data-size-code="{{this.code}}"/>
+                                            <span class="lever"></span>
+                                            {{this.code}}
+                                        </label>
+                                    </div>
+                                </td>
+                                <td><input name="size-label-{{this.code}}"
+                                           value="{{this.label}}"
+                                           class="size-label"
+                                           type="text"
+                                           disabled="{{negate (isSizeAvailable this.code)}}"
+                                           data-size-code="{{this.code}}">
+                                </td>
+                                <td>
+                                    <input id="size-preferred-{{this.code}}"
+                                           name="size-preferred-{{this.code}}"
+                                           type="checkbox"
+                                           class="size-preferred"
+                                           checked="{{isSizePreferred this.code}}"
+                                           disabled="{{negate (isSizeAvailable this.code)}}"
+                                           data-size-code="{{this.code}}">
+                                    <label for="size-preferred-{{this.code}}"></label>
+                                </td>
+                            </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button id="complete-size-update" class="modal-action modal-close waves-effect waves-green orange darken-1 btn">Update</button>
+            <button id="cancel-size-update" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</button>
+        </div>
+    </div>
+
+</template>
+

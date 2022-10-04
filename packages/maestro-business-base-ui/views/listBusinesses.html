@@ -1,0 +1,43 @@
+<template name="ListBusinesses">
+	<h4 class="row grey-text center-align">Select Business</h4>
+    <div class="row">
+        <div class="col l6 offset-l3 m8 offset-m2 s12">
+            <ul class="collection">
+            	{{#with getBusinessUser}}
+	                {{#each businessesList}}
+	                    <li class="collection-item row valign-wrapper selectBusiness">
+	                    	<h5 class="col s3 valign center-align">
+	                    		<i class="material-icons">business</i>
+	                    	</h5>
+	                    	<h5 class="col s6 valign">
+	                    		{{this.businessName}}
+	                    	</h5>
+	                    	<h5 class="col s3 valign right-align">
+	                    		<i class="material-icons">arrow_forward</i>
+	                    	</h5>
+	                   	</li>
+	                {{/each}}
+	            {{/with}}
+                <li class="collection-item row center-align createNewBusiness"><h6 class="teal-text">Create New</h6></li>
+            </ul>
+        </div>
+    </div>
+    {{#if inCreateBusinessMode}}
+	    <div class="row">
+	   		<form id="create-business" name="add-business" class="col l6 offset-l3 m8 offset-m2 s12">
+		        <div class="row">
+		            <div class="input-field">
+		                <input id="business-name" type="text" class="validate">
+		                <label for="business-name" data-error="Business with this name already exists. Trying to sign in?">Business Name</label>
+		            </div>
+		        </div>
+		        <div class="row">
+		            <div class="col s12 right-align">
+		                <a id="cancel-create-business" class="waves-effect waves-teal btn-flat" type="reset" form="create-business">Cancel</a>
+		                <button id="submit-create-business" class="waves-effect waves-light btn orange darken-1" type="submit" form="create-business">Create</button>
+		            </div>
+		        </div>
+		    </form>
+		</div>
+    {{/if}}
+</template>

@@ -1,0 +1,1 @@
+Maestro.Templates.LoadingSpinner = "LoadingSpinner";

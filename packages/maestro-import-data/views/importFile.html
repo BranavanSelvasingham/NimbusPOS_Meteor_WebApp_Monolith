@@ -1,0 +1,41 @@
+<template name="ImportFile">
+	<div class="row valign-wrapper">
+		<div class="col s2 valign">
+			Get Templates:
+		</div>
+		<div class="col s3 valign">
+			<a href="/packages/maestro-import-data/downloads/products.csv" download>Products Template</a>
+		</div>
+	</div>
+
+	<form action="#">
+		<div class="file-field input-field">
+			<div class="btn">
+				<span>File</span>
+				<input id='selectFile' type="file" accept=".csv">
+			</div>
+			<div class="file-path-wrapper">
+				<input class="file-path validate" type="text">
+			</div>
+		</div>
+		<a id='readFile' class="waves-effect waves-light btn">Read</a>
+	</form>
+	<div class="card">
+		<table id='showFileData'>
+			<thead>
+				<th>Product</th>
+				<th>Price</th>
+				<th>Size</th>
+			</thead>
+			<tbody>
+				{{#each getDataFromFile}}
+					<tr>
+						<td>{{this.Product}}</td>
+						<td>{{this.Price}}</td> 
+						<td>{{this.Size}}</td>
+					</tr>
+				{{/each}}
+			</tbody>
+		</table>
+	</div>	
+</template>

@@ -1,0 +1,239 @@
+<head>
+    <title>My Nimbus</title>
+    <meta name="description" content="Manage and track your Nimbus POS loyalty cards.">
+    <link rel="icon" href="nimbus_logo_blue.png">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+</head>
+
+<template name="Layout">
+    <main>
+        {{> AppHeader}}
+        <body>
+            <div class="contentBody">
+                {{>Template.dynamic template=content}}
+            </div>
+        </body>
+        {{> AppFooter}}
+    </main>
+</template>
+
+<template name="Home">
+    {{checkIfUserLoggedIn}}
+    <div id="landingScreen">
+        <div id="Login_Tile" class="condensedTile" data-activates="Login">
+            Login
+            <div id="Login" class="explorationDetails hide">
+                <form class="row centerText">
+                    <input id="userEmail" type="email" placeholder="Email">
+                    <input id="userPassword" type="password" placeholder="Password">
+                </form>
+                <div class="row centerText">
+                    <button id="loginUser" class="landingScreenButtons">Go</button>
+                    <div id="loginLoading" class="loader-mini hide"></div>
+                </div>
+                <div class="row centerText">
+                    <button id="forgotPassword">Email Password Reset</button>
+                    <div id="forgotPasswordLoading" class="loader-mini hide"></div>
+                </div>
+                <div class="row centerText">
+                    <button class="closeTile">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="Signup_Tile" class="condensedTile" data-activates="Signup">
+            Sign-up
+            <div id="Signup" class="explorationDetails hide">
+                <form id="createUserForm" class="row centerText">
+                    <input id="newUserEmail" type="email" placeholder="Email">
+                    <i>Please use the same email address that you gave while purchasing your loyalty cards. We will send a verification email before we activate your account.</i><br>
+                    <input id="newPassword" type="password" placeholder="Password">
+                    <input id="confirmUserPassword" type="password" placeholder="Confirm Password">
+                </form>
+                <div class="row centerText">
+                    <button id="createUser" class="landingScreenButtons">Create Account</button>
+                    <div id="createUserLoading" class="loader-mini hide"></div>
+                </div>
+                <div class="row centerText">
+                    <button class="closeTile">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <p class="row centerText">OR</p>
+
+        <div id="EmailReport_Tile" class="condensedTile" data-activates="EmailReport">
+            Email Card Balances
+            <div id="EmailReport" class="explorationDetails hide">
+                <form class="row centerText">
+                    <input id="emailBalancesInput" type="email" placeholder="Email">
+                </form>
+                <div class="row centerText">
+                    <button id="emailBalances" class="landingScreenButtons">Email Me</button>
+                    <div id="emailBalancesLoading" class="loader-mini hide"></div>
+                </div>
+                <div class="row centerText">
+                    <button class="closeTile">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="CardBalances">
+    <!-- <div class="row centerText">
+        <i class="material-icons fontSize_5 greyText">home</i>
+    </div> -->
+    {{#if emailUnverified}}
+        <div class="row centerText titleText">
+            Please verify your email: {{#with getUserProfile}}{{this.emails.[0].address}}{{/with}}
+        </div>
+        <div class="row centerText">
+            It may take a few minutes to receive the email. Please check your spam folder just in case.<br>
+            <button class="verifyEmail">Re-send Verification Email</button>
+        </div>
+    {{else}}
+        {{#with getBalances}}
+            {{#each this.balances}}
+                <div class="accordionListItem">
+                    {{#with companyInfo}}
+                        <button class="accordion">{{name}}</button>
+                    {{/with}}
+                    <div class="panel">
+                        {{#each cards}}
+                            <div class="loyaltyCard {{#if expired}}loyaltyCard-expired{{/if}}">
+                                <div class="loyaltyCard-content">
+                                    <h4><b>{{name}}</b>{{#if expired}}<i> (Expired)</i>{{/if}}</h4>
+                                    <p>{{getLoyaltyBalance this.remainingQuantity this.remainingAmount}}</p>
+                                    <p>{{getLoyaltyExpiration this}}</p>
+                                    <p>{{getTallyCount this.tally}}</p>
+                                </div>
+                            </div>
+                        {{/each}}
+                    </div>
+                </div>
+            {{else}}
+                <div class="row centerText titleText">
+                    Seems like you don't have any Loyalty Cards registered with this email address. <br>Please register your email with your existing account at the store. <br>Or, if you don't have any Loyalty Cards yet, you can purchase a new one at the store and provide this email at checkout.
+                </div>
+            {{/each}}
+        {{/with}}
+    {{/if}}
+    <div class="row centerText">
+        <button class="refreshBalances"><i class="material-icons fontSize_3">refresh</i></button>
+        <div id="refreshBalancesLoading" class="loader-mini hide"></div>
+    </div>
+</template>
+
+<template name="AppHeader">
+    <div class="topNameBar">
+        <div class="headerText goHome"><img class="nimbusLogo" src="nimbus_logo_only.png">my nimbus<sup>(Beta)</sup></div>
+    </div>
+    <div id="snackbar">Some text some message..</div>
+</template>
+
+<template name="AppFooter">
+    <div class="bottomOptionsBar">
+        {{#if userLoggedIn}}
+            <a href="/home"><i class="material-icons footerButton">home</i></a>
+            <a href="/account"><i class="material-icons footerButton">account_circle</i></a>
+        {{/if}}
+        <a href="/info"><i class="material-icons footerButton">info_outline</i></a>
+    </div>
+</template>
+
+<template name="InfoPage">
+    <div class="textPadding">
+        <div class="row centerText">
+            <i class="material-icons fontSize_5 greyText">info_outline</i>
+        </div>
+        <div class="row centerText fontSize_2">
+            My Nimbus <sup>(Beta)</sup>
+        </div>
+        <div class="row centerText">
+            by Nimbus POS Inc.
+        </div>
+        <br>
+        <div class="row centerText">
+            <p>
+                My Nimbus <sup>(Beta)</sup> is a way for Customers of Businesses that run on the Nimbus POS platform to track their loyalty card balances.
+            </p>
+            <p>
+                This is a Beta release of this tool and is currently undergoing testing and feedback gathering. We would love to hear your feedback:<br>
+                <a href="mailto:info@nimbuspos.com">info@nimbuspos.com</a>
+            </p>
+            <p>
+                As we stabilize this tool and roll-out future updates, you will be able to do more than just track your card balances. Please stay tuned.
+            </p>
+        </div>
+        <br><br>
+        <div class="row centerText">
+            <b>About Nimbus POS Inc.</b>
+        </div>
+        <div class="row centerText">
+            <p>
+                A small start-up, based in the GTA, that wants to make intuitive and customizable POS Software and Systems for independently owned coffee shops and restaurants. 
+            </p>
+            <p>
+                Check us out: <a href="www.nimbuspos.com">www.nimbuspos.com</a>
+            </p>
+            <p>
+                Help us grow :)
+            <br>
+                If you know of any local coffee stores or restaurants that we should work with, please let us know!
+            </p>
+            <p>
+                <a href="mailto:info@nimbuspos.com">info@nimbuspos.com</a>
+            </p>
+        </div>
+    </div>
+</template>
+
+<template name="AccountPage">
+    <div class="row centerText">
+        <i class="material-icons fontSize_5 greyText">account_circle</i>
+    </div>
+    {{#with getUserProfile}}
+        {{#each emails}}
+            <div id="Emails_Tile" class="accountEmails">
+                {{address}}
+                {{#if verified}}
+                    <!-- <i class="material-icons">verified_user</i> -->
+                {{else}}
+                    <br><button class="verifyEmail">Re-send Verification Email</button>
+                {{/if}}
+            </div>
+        {{/each}}
+
+        {{#if isAccountCustomerOnly}}
+            <div id="ChangePassword_Tile" class="condensedTile" data-activates="ChangePassword">
+                Change Password
+                <div id="ChangePassword" class="explorationDetails hide">
+                    <form id="createUserForm" class="row centerText">
+                        <input id="oldPassword" type="password" placeholder="Current Password">
+                        <br>
+                        <input id="newPassword" type="password" placeholder="New Password">
+                        <input id="confirmUserPassword" type="password" placeholder="Confirm Password">
+                    </form>
+                    <div class="row centerText">
+                        <button id="changePassword" class="landingScreenButtons">Change Password</button>
+                    </div>
+                    <div class="row centerText">
+                        <button class="closeTile">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        {{else}}
+            <div class="row centerText">
+                Since this is a business user account, you will not be able to change any account information here. <br>Please go to www.nimbuspos.com to access your account settings.
+            </div>
+        {{/if}}        
+
+        <div id="Logout_Tile" class="condensedTile">
+            Logout
+        </div>
+    {{/with}}
+</template>

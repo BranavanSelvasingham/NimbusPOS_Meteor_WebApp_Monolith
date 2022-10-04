@@ -1,0 +1,165 @@
+<template name="ListLocations">
+    <div class="row">
+        <div class="col s12">
+            <ul class="collection with-header">
+                <li class="collection-header">
+                    <div class="row valign-wrapper">
+                        <div class="col s6 left-align valign">
+                            <h3>Locations</h3>
+                        </div>
+                        <div class="col s6 right-align valign">
+                            <a id="add-location" href="{{pathFor 'AddLocation'}}" class="waves-effect waves-light btn-floating btn-large"><i class="material-icons large">add</i></a>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="collection-item listViewContainer">
+                    <div class="row listViewContainer">
+                        <div class="col s4 fixedHeightContainer listViewContainer itemsListStyle">
+                            <ul class="collection listViewContainer">
+                                {{#each locations}}
+                                    <li class="collection-item avatar locationSelected" style="{{isSelectedLocation _id}}">
+                                        <div class="row">
+                                            <i class="material-icons circle green">location_on</i>
+                                            <span class="title">{{ this.name }}</span>
+                                            <p>{{ this.address.street }}</p>
+                                        </div>
+                                    </li>
+                                {{/each}}
+                            </ul>
+                        </div>
+                        <div class="col s8 fixedHeightContainer">
+                            {{#with getSelectedLocation}}
+                                {{#if staticLocationMode}}
+                                    <div class="row valign-wrapper">
+                                        <div class="col s10 valign">
+                                            <p><h5>{{this.name}}</h5></p>
+                                            <p><h6>{{this.address.street}}</h6></p>
+                                            <p><h6>{{this.address.city}}, {{this.address.state}}</h6></p>
+                                            <p><h6>{{this.address.pin}}, {{this.address.country}}</h6></p>
+                                        </div>
+                                        <div class="col s2 valign center-align"><i class="material-icons small grey-text editLocationDetails">edit</i></div>
+                                    </div>
+                                    <div class="divider"></div>
+                                {{/if}}
+                                {{#if editLocationMode}}
+                                    <form id="edit-location" name="edit-location" class="col s12">
+                                        <div class="row">
+                                            <div class="col s12">
+                                                <label for="location-name">Name</label>
+                                                <input id="location-name" type="text" class="validate" value="{{this.name}}">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col s12">
+                                                <label for="address-street">Street</label>
+                                                <input id="address-street" type="text" class="validate" value="{{this.address.street}}">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col s6">
+                                                <label for="address-city">City</label>
+                                                <input id="address-city" type="text" class="validate" value="{{this.address.city}}">
+                                            </div>
+                                            <div class="col s3">
+                                                <label for="address-pin">Pin/Zip</label>
+                                                <input id="address-pin" type="text" class="validate" value="{{this.address.pin}}">
+                                            </div>
+                                            <div class="col s3">
+                                                <label for="address-state">State/Province</label>
+                                                <input disabled id="address-state" type="text" class="validate" value="{{this.address.state}}">
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="row">
+                                            <div class="col s12">
+                                                <label>Country: {{this.address.country}}</label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+    <!--                                         <div class="col s6 left-align">
+                                                <button id="close-down-location" class="waves-effect waves-light btn red lighten-1 left-align">Close Down Location</button>
+                                            </div> -->
+                                            <div class="col s12 right-align">
+                                                <a class="cancelEditMode btn-flat waves-light">Cancel</a>
+                                                <a id="save-edit-location" class="waves-effect waves-light btn green lighten-1 right-align" form="edit-location">Save Changes</a>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <div class="divider"></div>
+                                {{/if}}
+                                <h5 class="row center-align">Custom Receipt Note: (Optional & Location Specific)</h5>
+                                <h6 class="row center-align">"{{receiptMessage}}&nbsp;"</h6>
+
+                                <div class="row valign-wrapper">
+                                    <div class="col s10 valign">
+                                        <label for="newReceiptMessage">Edit Receipt Messge</label>
+                                        <input id="newReceiptMessage" type="text" class="validate" value="{{receiptMessage}}">
+                                    </div>
+                                    <div class="row s2 valign">
+                                        <i class="material-icons small grey-text saveReceiptNote">save</i>
+                                    </div>
+                                </div>
+                                <div class="row">&nbsp;</div>
+                                <h5 class="row center-align">Printers:</h5>
+                                <div class="row">
+                                    <div class="col s12">
+                                        <div class="divider"></div>
+                                        {{#each this.printers}}
+                                            <div class="section">
+                                                <div class="row valign-wrapper">
+                                                    {{#if disabled}}
+                                                        <div class="col s2 valign center-align enablePrinter printerSettingButton-disabled">
+                                                            <i class="material-icons grey-text medium">print</i><br><h5 class="grey-text">Disabled</h5>
+                                                        </div>
+                                                    {{else}}
+                                                        <div class="col s2 valign center-align disablePrinter printerSettingButton-enabled">
+                                                            <i class="material-icons green-text medium">print</i><br><h5 class="green-text">Enabled</h5>
+                                                        </div>
+                                                    {{/if}}
+                                                    <div class="col s6 valign">
+                                                        <p>Printer Model Name: <b>{{this.name}}</b></p>
+                                                        <p>Use: <b>{{this.use}}</b></p>
+                                                        <p>Connection: <b>{{this.connection}}</b></p>
+                                                        <p>Address: <b>{{this.address}}</b></p>
+                                                    </div>
+                                                    <div class="col s2 valign"><i class="material-icons grey-text small deletePrinter">delete</i></div>
+
+                                                </div>
+                                            </div>
+                                            <div class="divider"></div>
+                                        {{/each}}
+                                    </div>
+                                </div>
+                                <h5 class="row center-align">Add Printer</h5>
+                                <div class="row">
+                                    <form class="col s10 offset-s1" id="add-printer">
+                                        <p>
+                                            <label for="printer-name">Printer Model Name:</label>
+                                            <input id="printer-name" type="text" class="validate">
+                                        </p>
+                                        <p>
+                                            <label for="printer-use">Printer Use (MAIN / KITCHEN / ETC.):</label>
+                                            <input id="printer-use" type="text" class="validate">
+                                        </p>
+                                        <p>
+                                            <label for="connection-type">Connection Type (USB / WIRELESS):</label>
+                                            <input id="connection-type" type="text" class="validate">
+                                        </p>
+                                        <p>
+                                            <label for="printer-address">Printer Address:</label>
+                                            <input id="printer-address" type="text" class="validate">
+                                        </p>
+                                    </form>
+                                </div>
+                                <p class="row center-align">
+                                    <a class="addPrinter"><i class="material-icons grey-text small">print</i><i class="material-icons grey-text small">add</i></a>
+                                </p>
+                            {{/with}}
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</template>

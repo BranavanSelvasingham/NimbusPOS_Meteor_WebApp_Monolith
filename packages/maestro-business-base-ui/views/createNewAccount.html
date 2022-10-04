@@ -1,0 +1,357 @@
+<template name="CreateNewAccount">
+    <ul class="tabs hide">
+        <li class="tab"><a class="active" href="#userInfo">User</a></li>
+        <li class="tab"><a href="#businessInfo">Business</a></li>
+        <li class="tab"><a href="#firstLocationInfo">Location</a></li>
+        <li class="tab"><a href="#summaryOfInfo">Summary</a></li>
+        <li class="tab"><a href="#progressTab">Progress</a></li>
+        <li class="tab"><a href="#firstTabPostCreation">All Set</a></li>
+    </ul>
+
+    <div class="row">
+        <div class="col l8 offset-l2 m12">
+            <div id="userInfo" class="row">
+                <p class="center-align"><i class="material-icons grey-text medium">account_circle</i></p>
+                <h3 class="row center-align grey-text">Create Your User Account</h3>
+                <p class="row center-align grey-text">We are super excited you've chosen to join!</p>
+                <form id="create-owner" name="add-owner" class="col s12">
+                    <div class="row">
+                        <div class="input-field col s6">
+                            <input id="first-name" type="text" class="validate">
+                            <label for="first-name">First Name</label>
+                        </div>
+                        <div class="input-field col s6">
+                            <input id="last-name" type="text" class="validate">
+                            <label for="last-name">Last Name</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="email" type="email" class="validate">
+                            <label for="email">Email</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="user-name" type="text" class="validate">
+                            <label for="user-name">Username</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s6">
+                            <input id="password" type="password" class="validate">
+                            <label for="password">Password</label>
+                        </div>
+                        <div class="input-field col s6">
+                            <input id="confirm-password" type="password" class="validate">
+                            <label for="confirm-password">Confirm Password</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12 right-align">
+                            <a class="waves-effect waves-teal btn-flat goBackToPrevious">Cancel</a>
+                            <a id="save-owner-info" class="waves-effect waves-light btn orange darken-1">Next</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div id="businessInfo" class="row">
+                <p class="center-align"><i class="material-icons grey-text medium">domain</i></p>
+                <h3 class="row center-align grey-text">Create Your Business</h3>
+                <p class="row center-align grey-text">If you manage multiple businesses, you can create additional businesses under the same account so that you can manage them all with the same login. We can show you how to do that later.</p>
+                <form id="create-business" name="add-business" class="s12">
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <!-- <i class="material-icons prefix">domain</i> -->
+                            <input id="business-name" type="text" class="validate">
+                            <label for="business-name">Business Name</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <!-- <i class="material-icons prefix">email</i> -->
+                            <input id="business-email" type="email" class="validate">
+                            <label for="business-email">Primary Business Email</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <!-- <i class="material-icons prefix">phone</i> -->
+                            <input id="business-phone" type="tel" class="validate">
+                            <label for="business-phone">Primary Business Phone</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12 right-align">
+                            <a class="waves-effect waves-teal btn-flat goToUserInfo">Back</a>
+                            <a id="save-business-info" class="waves-effect waves-light btn orange darken-1">Next</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div id="firstLocationInfo" class="row">
+                <p class="center-align"><i class="material-icons grey-text medium">location_on</i></p>
+                <h3 class="row center-align grey-text">Create Your First Location</h3>
+                <p class="row center-align grey-text">If your business has multiple locations, you can create the additional locations later by going to the Locations Manager. We can show you how to set it up if you need help.</p>
+                <form id="add-location" name="add-location" class="col s12">
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="location-name" type="text" class="validate">
+                            <label for="location-name">Location Name</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="address-street" type="text" class="validate">
+                            <label for="address-street">Street Address</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s6">
+                            <input id="address-city" type="text" class="validate">
+                            <label for="address-city">City</label>
+                        </div>
+                        <div class="input-field col s3">
+                            <input id="address-pin" type="text" class="validate">
+                            <label for="address-pin">Postal Code</label>
+                        </div>
+                        <div class="input-field col s3">
+                            <select id="address-state" class="browser-default">
+                                <option value="" selected disabled class="grey-text">Choose Province</option>
+                                {{#each provinces}}
+                                    <option value="{{this.code}}">{{this.name}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <select id="address-country" class="browser-default">
+                                <option value="CA" selected>Canada</option>
+                                <option value="" disabled>(At the moment, we only support locations in Canada.)</option>
+                                <!-- {{#each countries }}
+                                    <option value="{{this.code}}">{{this.name}}</option>
+                                {{/each}} -->
+                            </select>
+                            <!-- <label for="address-country">Country</label> -->
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12 right-align">
+                            <a class="waves-effect waves-light btn-flat goToBusinessInfo">Back</a>
+                            <a id="save-location-info" class="waves-effect waves-light btn orange darken-1">Next</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div id="summaryOfInfo" class="row">
+                <h3 class="row center-align grey-text">Looks Good?</h3>
+                <div class="row valign-wrapper">
+                    <div class="col s2 valign center-align">
+                        <i class="material-icons medium grey-text">account_circle</i>
+                    </div>
+                    <div class="col s9 valign card">
+                        {{#with getUserInfo}}
+                            <h6>{{firstName}} {{lastName}}</h6>
+                            <h6>Email: {{email}}</h6>
+                            <h5>Username: {{username}}</h5>
+                        {{/with}}
+                    </div>
+                    <div class="col s1 valign">
+                        <i class="material-icons small teal-text goToUserInfo">edit</i>
+                    </div>
+                </div>
+                <div class="row valign-wrapper">
+                    <div class="col s2 valign center-align">
+                        <i class="material-icons medium grey-text">domain</i>
+                    </div>
+                    <div class="col s9 valign card">
+                        {{#with getBusinessInfo}}
+                            <h5>{{name}}</h5>
+                            <p>Email: {{email}}</p>
+                            <p>Phone: {{phone}}</p>
+                        {{/with}}
+                    </div>
+                    <div class="col s1 valign">
+                        <i class="material-icons small teal-text goToBusinessInfo">edit</i>
+                    </div>
+                </div>
+                <div class="row valign-wrapper">
+                    <div class="col s2 valign center-align">
+                        <i class="material-icons medium grey-text">location_on</i>
+                    </div>
+                    <div class="col s9 valign card">
+                        {{#with getLocationInfo}}
+                            <p><h5>{{name}}</h5></p>
+                            <p><h6>{{address.street}}</h6></p>
+                            <p><h6>{{address.city}}, {{address.state}}</h6></p>
+                            <p><h6>{{address.pin}}, {{address.country}}</h6></p>
+                        {{/with}}
+                    </div>
+                    <div class="col s1 valign">
+                        <i class="material-icons small teal-text goToLocationInfo">edit</i>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s12 right-align">
+                        <a id="startup-account" class="waves-effect waves-light btn orange darken-1">Lets Get Started</a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="progressTab" class="row">
+                <h3 class="row center-align grey-text">Getting Things Setup...</h3>
+                {{#if isUserCreated}}
+                    <div class="row valign-wrapper">
+                        <div class="col s2 valign center-align">
+                            <i class="material-icons medium green-text">account_circle</i>
+                        </div>
+                        <h4 class="col s9 valign center-align green-text">
+                            Account Created!
+                        </h4>
+                        <div class="col s1 valign">
+                            <i class="material-icons small green-text goToUserInfo">done</i>
+                        </div>
+                    </div>
+                {{/if}}
+                {{#if isBusinessCreated}}
+                    <div class="row valign-wrapper">
+                        <div class="col s2 valign center-align">
+                            <i class="material-icons medium green-text">domain</i>
+                        </div>
+                        <h4 class="col s9 valign center-align green-text">
+                            Business added to your account!
+                        </h4>
+                        <div class="col s1 valign">
+                            <i class="material-icons small green-text goToUserInfo">done</i>
+                        </div>
+                    </div>
+                {{/if}}
+                {{#if isLocationCreated}}
+                    <div class="row valign-wrapper">
+                        <div class="col s2 valign center-align">
+                            <i class="material-icons medium green-text">location_on</i>
+                        </div>
+                        <h4 class="col s9 valign center-align green-text">
+                            Location added to your business!
+                        </h4>
+                        <div class="col s1 valign">
+                            <i class="material-icons small green-text goToUserInfo">done</i>
+                        </div>
+                    </div>
+                {{/if}}
+                {{#unless isAllCreated}}
+                    <div class="row center-align">
+                        <div class="preloader-wrapper big active">
+                            <div class="spinner-layer spinner-blue-only">
+                                <div class="circle-clipper left">
+                                    <div class="circle"></div>
+                                </div>
+                                <div class="gap-patch">
+                                    <div class="circle"></div>
+                                </div>
+                                <div class="circle-clipper right">
+                                    <div class="circle"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {{/unless}}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col l10 offset-l1 m12">
+            <div id="firstTabPostCreation" class="row">
+                <h3 class="row center-align grey-text">All Set!</h3>
+                {{#if isPos}}
+                    <h6 class="row center-align grey-text"><b><i>Please keep in mind:</i></b> The layout and features in tablet mode have been tailored to an in-store, customer-facing, multiple-employee environment. Though this is optimal for day to day operations, you may find that setting up your business for the first time might be faster by logging in to your account at www.nimbuspos.com and using a mouse and keyboard.</h6>
+
+                    <div class="divider"></div>
+                    <div class="row valign-wrapper">
+                        <h6 class="col s12 valign center-align grey-text">
+                            In tablet mode, when accessing the main Menu <i class="material-icons small">menu</i>, the 'Admin' menu items are locked to esnure better control and security for the business owner in the case of multiple employees. <b>The default passcode is 'abcd1234'.</b> You can change this to your own passcode in 'Settings' <i class="material-icons small">settings</i>.
+                        </h6>
+                    </div>
+                    <div class="divider"></div>
+                    <h5 class="row center-align grey-text">We recommend starting with the following:</h5>
+                {{/if}}
+
+                {{#if isDesktop}}
+                    <h5 class="row center-align grey-text">You're ready to explore and get things set up yourself but<br>we recommend starting with the following:</h5>
+                {{/if}}
+                <div class="divider"></div>
+                <div class="row valign-wrapper">
+                    <h4 class="col s1 valign center-align grey-text">
+                        1.
+                    </h4>
+                    <h6 class="col s9 valign center-align grey-text">
+                        <p>Head over to the Product Menu Builder and create your products.</p><br><a class="green white-text pos-button" href="/products">Start Here</a>
+                    </h6>
+                    <div class="col s2 valign center-align">
+                        <i class="material-icons medium grey-text">view_module</i>
+                    </div>
+                </div>
+                <div class="divider"></div>
+                <div class="row valign-wrapper">
+                    <h4 class="col s1 valign center-align grey-text">
+                        2.
+                    </h4>
+                    <h6 class="col s9 valign center-align grey-text">
+                        If it applies to your business, you can create and define and manage your own loyalty programs.
+                    </h6>
+                    <div class="col s2 valign center-align">
+                        <i class="material-icons medium grey-text">card_giftcard</i>
+                    </div>
+                </div>
+                <div class="divider"></div>
+                <div class="row valign-wrapper">
+                    <h4 class="col s1 valign center-align grey-text">
+                        3.
+                    </h4>
+                    <h6 class="col s9 valign center-align grey-text">
+                        Try out your first order!
+                    </h6>
+                    <div class="col s2 valign center-align">
+                        <i class="material-icons medium grey-text">attach_money</i>
+                    </div>
+                </div>
+                <div class="divider"></div>
+                <div class="row valign-wrapper">
+                    <h4 class="col s1 valign center-align grey-text">
+                        4.
+                    </h4>
+                    <h6 class="col s9 valign center-align grey-text">
+                        Check out your dashboard after trying out a few orders.
+                    </h6>
+                    <div class="col s2 valign center-align">
+                        <i class="material-icons medium grey-text">trending_up</i>
+                    </div>
+                </div>
+                <div class="divider"></div>
+                <div class="row valign-wrapper">
+                    <h4 class="col s1 valign center-align grey-text">
+                        5.
+                    </h4>
+                    <div class="col s9 valign center-align grey-text">
+                        <div class="row center-align grey-text">
+                            We're here to help you with every step of the way. Reach us any way you like.
+                        </div>
+                        <div class="row center-align">
+                            <a style="color: #40c4ff;" href="mailto:info@nimbuspos.com">info@nimbuspos.com</a>
+                        </div>
+                        <div class="row center-align">
+                            <img src="contact_info.png" alt="contact info" height="100">
+                        </div>
+                    </div>
+                    <div class="col s2 valign center-align">
+                        <i class="material-icons small grey-text">call</i><br><i class="material-icons small grey-text">videocam</i><br><i class="material-icons small grey-text">mail_outline</i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

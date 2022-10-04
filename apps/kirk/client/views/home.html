@@ -1,0 +1,53 @@
+<template name="Home">
+    {{#if isUserLoggedIn}}
+        {{#if isDesktop }}
+            <div class="row center-align valign-wrapper">
+                <div class="col s12 valign fit-vertical-view">
+                    {{> LoadingSpinner }}
+                </div>
+            </div>
+            {{waitForSessionStart}}
+        {{/if}}
+
+        {{#if isPos}}
+            <div class="row center-align">
+                <h5><i class="material-icons medium">lock_outline</i></h5>
+            </div>
+            <div class="row center-align">
+                <h5>Waiting for Device Approval</h5>
+            </div>
+            {{waitForDeviceApproval}}
+        {{/if}}
+    {{else}}
+        <ul id="homeTop" class="fit-vertical-view">
+            <li class="row center-align">
+                <img class="hide-on-small-only" src="nimbus_logo_name_blue_slogan.png" alt="nimbus logo" style="width:60%; height:auto; max-height:80%;">
+
+                <img class="hide-on-med-and-up" src="nimbus_logo_name_blue_slogan.png" alt="nimbus logo" style="width:60%; height:auto; max-height:80%;">
+
+                <p class="row">
+                    {{#if isDesktop}}
+                        <a class="waves-effect waves-light btn-flat yellow darken-4 white-text" href="/signup">Sign-Up</a>
+                    {{/if}}
+                    <a class="waves-effect waves-light btn-flat light-blue accent-2 white-text" href="/login">Login</a>
+                </p>
+            </li>
+        </ul>
+    {{/if}}
+
+    {{#if isPos}}
+        <div class="divider"></div>
+        
+        <div class="row center-align">
+            <div class="col s10 push-s1">
+                <h6 class="center-align grey-text">If you require assistance or have any questions, please contact us:<br><br><a style="color: #40c4ff;" href="mailto:info@nimbuspos.com">info@nimbuspos.com</a></h6>
+                {{#if isUserLoggedIn}}
+                    <img src="contact_info.png" alt="contact info" height="100">
+                {{/if}}
+            </div>
+        </div>
+    {{/if}}
+
+    <a class="bottomHomeBar nimbus-bgcolor white-text center-align" style="font-size: 0.8rem;">Nimbus POS Inc., Toronto, ON.</a>
+
+</template>

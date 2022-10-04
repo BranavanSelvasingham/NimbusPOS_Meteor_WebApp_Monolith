@@ -1,0 +1,364 @@
+<template name="ListLoyaltyPrograms">
+    <div class="row valign-wrapper saveVerticalSpace saveHorizontalSpace border-bottom">
+        <div class="col s4 center-align valign">
+            <h4>&nbsp;&nbsp;&nbsp;&nbsp;Loyalty Programs</h4>
+        </div>
+        <div class="col s8 right-align valign">
+        	<a class="filterProgramType {{#if isProgramTypeFilterSelected 'All'}}activeHeaderButton{{else}}headerButtons{{/if}}" data-programtype="All">All</a>
+        	<a class="filterProgramType {{#if isProgramTypeFilterSelected 'Quantity'}}activeHeaderButton{{else}}headerButtons{{/if}}" data-programtype="Quantity">Quantity</a>
+        	<a class="filterProgramType {{#if isProgramTypeFilterSelected 'Amount'}}activeHeaderButton{{else}}headerButtons{{/if}}" data-programtype="Amount">Amount</a>
+        	<a class="filterProgramType {{#if isProgramTypeFilterSelected 'Percentage'}}activeHeaderButton{{else}}headerButtons{{/if}}" data-programtype="Percentage">Percentage</a>
+        	<a class="filterProgramType {{#if isProgramTypeFilterSelected 'Tally'}}activeHeaderButton{{else}}headerButtons{{/if}}" data-programtype="Tally">Tally</a>
+		    <a class="waves-effect waves-light btn-floating btn-large" href="/loyaltyPrograms/create"><i class="material-icons left">add</i></a>
+        </div>
+    </div>
+
+	 <div class="row listViewContainer border-bottom saveVerticalSpace saveHorizontalSpace">
+        <div class="col s4 loyaltyProgramsContainer border-right saveVerticalSpace saveHorizontalSpace">
+            <ul class="collection saveVerticalSpace saveHorizontalSpace">
+            	{{#each getQuantityPrograms}}
+            		<li class="collection-item avatar programSelected" style='{{isSelectedProgram _id}}'>
+                        <div class="row">               
+                            <i class="material-icons circle small left">card_giftcard</i>
+                            <span class="title"><b>{{this.name}}</b></span>
+                            {{#with programType}}
+                            	<p>{{this.type}}</p>
+                            {{/with}}
+                        </div>
+                    </li>
+            	{{/each}}
+            	{{#with getAmountPrograms}}<div class="divider black"></div>{{/with}}
+            	{{#each getAmountPrograms}}
+            		<li class="collection-item avatar programSelected" style='{{isSelectedProgram _id}}'>
+                        <div class="row">               
+                            <i class="material-icons circle small left">card_giftcard</i>
+                            <span class="title"><b>{{this.name}}</b></span>
+                            {{#with programType}}
+                            	<p>{{this.type}}</p>
+                            {{/with}}
+                        </div>
+                    </li>
+            	{{/each}}
+            	{{#with getPercentagePrograms}}<div class="divider black"></div>{{/with}}
+            	{{#each getPercentagePrograms}}
+            		<li class="collection-item avatar programSelected" style='{{isSelectedProgram _id}}'>
+                        <div class="row">               
+                            <i class="material-icons circle small left">card_giftcard</i>
+                            <span class="title"><b>{{this.name}}</b></span>
+                            {{#with programType}}
+                            	<p>{{this.type}}</p>
+                            {{/with}}
+                        </div>
+                    </li>
+            	{{/each}}
+            	{{#with getTallyPrograms}}<div class="divider black"></div>{{/with}}
+            	{{#each getTallyPrograms}}
+            		<li class="collection-item avatar programSelected" style='{{isSelectedProgram _id}}'>
+                        <div class="row">               
+                            <i class="material-icons circle small left">card_giftcard</i>
+                            <span class="title"><b>{{this.name}}</b></span>
+                            {{#with programType}}
+                            	<p>{{this.type}}</p>
+                            {{/with}}
+                        </div>
+                    </li>
+            	{{/each}}
+            </ul>
+        </div>
+        <div class="col s8 loyaltyProgramsContainer">
+            {{#with getSelectedProgram}}
+        		<div class="row saveVerticalSpace valign-wrapper">
+					<div class="col s8 valign saveHorizontalSpace ">
+						<h5>{{this.name}}</h5>
+					</div>
+					<div class="col s4 valign right-align saveHorizontalSpace">
+						<h6 class=""><b>{{getPriceInfo price}}</b></h6>
+					</div>
+				</div>
+				<div class="divider"></div>
+            	<div class="staticCard {{#if inEditMode}}hide{{/if}}">
+					<div class="row saveVerticalSpace valign-wrapper">
+						<div class="col s10 saveHorizontalSpace">
+							<div class="row saveVerticalSpace">
+								<div class="col s12 saveHorizontalSpace">
+									<b>Program Type: </b><a class="cyan-text">{{programType.type}} Based</a>
+								</div>
+							</div>
+							<div class="row saveVerticalSpace valign-wrapper ">
+								<div class="col s6 saveHorizontalSpace">
+									<a class="cyan-text">{{getExpiryDays expiryDays}}</a>
+								</div>
+								<div class="col s6 saveHorizontalSpace">
+									<a class="cyan-text">{{getExpiryDate expiryDate}}</a>
+								</div>
+							</div>
+							<div class="row saveVerticalSpace">
+								<div class="col s12 saveHorizontalSpace">
+									<b>Program Details: </b><a class="cyan-text">{{getProgramTypeInfo programType appliesTo}}</a>
+								</div>
+							</div>
+							<div class="row saveVerticalSpace ">
+								<div class="col s6 saveHorizontalSpace">
+			    					<b>Tax on Program Price: </b><a class="cyan-text">{{getProgramTaxRule taxRule}}</a>
+			    				</div>
+			    			</div>
+						</div>
+						<div class="col s2 saveHorizontalSpace right-align">
+							<a class="editThisCard btn-floating waves-effect waves-light btn-small teal">
+								<i class="valign material-icons">edit</i>
+							</a>
+						</div>
+					</div>
+				</div>
+
+				<div class="editCard {{#if inEditMode}}{{else}}hide{{/if}}">
+					<div class="row saveVerticalSpace valign-wrapper">
+						<div class="col s10 saveHorizontalSpace">
+							<div class="row saveVerticalSpace valign-wrapper">
+								<div class="col s8 valign ">
+									<label for="editProgramNameField">Loyalty Program Name</label>
+									<input value="{{this.name}}" id="editProgramNameField" type="text">
+								</div>
+								<div class="col s4 valign">
+									<label for="editProgramPriceField">Price</label>
+			            			<input id="editProgramPriceField" class='pricingCells' type="number" min="0" step="1" value="{{editPrice price}}" placeholder="Free coupon/reward"/>
+								</div>
+							</div>
+							
+							<div class="row saveVerticalSpace valign-wrapper">
+								<div class="col s6 valign">
+									<label for="editProgramExpiryDays">Days to Expiry After Purchase</label>
+			            			<input id="editProgramExpiryDays" class='pricingCells' type="number" min="0" step="1" value="{{editExpiryDays expiryDays}}" placeholder="Does not expire"/>
+								</div>
+								<div class="col s6 valign">
+									<label for="editProgramExpiryDate">Expires on Date {{editExpiryDate expiryDate}}</label>
+			            			<input id="editProgramExpiryDate" class='datepicker' type="date" value="{{editExpiryDate expiryDate}}" placeholder="Does not expire"/>  
+								</div>
+							</div>
+							
+							<div class="row saveVerticalSpace valign-wrapper ">
+								<div class="col s12 valign left-align ">
+			    					<b>Retail Tax on Program Price:</b>
+			    					<input name="applyTax" type="radio" id="yesTax" class="chooseProgramTax" />
+				      				<label for="yesTax">Yes</label>
+				      				&nbsp;&nbsp;&nbsp;&nbsp;
+				      				<input name="applyTax" type="radio" id="noTax" class="chooseProgramTax"/>
+				      				<label for="noTax">No</label>
+			    				</div>
+							</div>
+						</div>
+						<div class="col s2 saveHorizontalSpace right-align">
+							<a class="saveThisCard btn-floating waves-effect waves-light btn-small teal" data-programid="{{this._id}}">
+								<i class="material-icons">save</i>
+							</a>
+							<a class="clearChangesOnCard btn-floating waves-effect waves-light btn-small teal" data-programid="{{this._id}}">
+								<i class="material-icons">clear</i>
+							</a>
+						</div>
+					</div>
+					<div class="divider"></div>
+					<div class="row saveVerticalSpace">
+						<div class="col s12 ">
+							<b>Program Type: </b><a class="cyan-text">{{programType.type}} Based</a>
+						</div>
+					</div>
+					<div class="row saveVerticalSpace valign-wrapper">
+						<div class="col s12 ">
+							<b>Program Details: </b><a class="cyan-text">{{getProgramTypeInfo programType appliesTo}}</a>
+						</div>
+					</div>
+				</div>
+
+				<div class="divider"></div>
+				<div class="row saveVerticalSpace valign-wrapper">
+					{{#if isProgramActive status}}
+						<div class="col s6 saveHorizontalSpace valign">
+							<b>Program Status: </b><a class="green-text">Currently Available For Sale</a>
+						</div>
+						<div class="col s6 saveHorizontalSpace valign">
+							<a class="btn-flat red-text right deactivateProgram">Deactivate Program</a>
+						</div>
+					{{else}}
+						<div class="col s6 saveHorizontalSpace valign">
+							<b>Program Status: </b><a class="red-text">Currently Not Available For Sale</a>
+						</div>
+						<div class="col s6 saveHorizontalSpace valign">
+							<a class="btn-flat green-text right activateProgram">Activate Program</a>
+						</div>
+					{{/if}}
+				</div>
+				<div class="divider"></div>
+				<div class="row">
+					<div class="col s12 saveHorizontalSpace">
+						<h6 class="grey-text center-align expandProgramItems">Program Items: <b>(x{{getProgramItemsCount this.products this.categories}})</b><i id="expandProgramItems" class="material-icons right small grey-text">expand_more</i></h6>
+					</div>
+				</div>
+				<div id="programItems" class="row" style="display: none;">
+					<ul class="col s10 push-s1 collection">
+						{{#each this.products}}
+							<li class="collection-item row saveVerticalSpace valign-wrapper">
+								<div class="col s8 valign">
+									<p class="cyan-text">{{getProductName productId}}</p>
+									<p>Size(s): {{getSizeLabels sizeCodes}}</p>
+								</div>
+								<div class="col s4 valign right-align">
+									<i class="material-icons grey-text removeThisProduct">clear</i>
+								</div>
+							</li>
+						{{/each}}
+						{{#each this.categories}}
+							<li class="collection-item row saveVerticalSpace valign-wrapper">
+								<div class="col s8 valign">
+									<p class="blue-text">{{this.name}}</p>
+								</div>
+								<div class="col s4 valign right-align">
+									<i class="material-icons grey-text removeThisCategory">clear</i>
+								</div>
+							</li>
+						{{/each}}
+						{{#if isProductsCategoriesEditable programType appliesTo}}
+							<li class="collection-item center-align" style="">
+								<a class="btn-flat addNewItem"><i class="material-icons left">add</i>Add Item</a>
+							</li>
+						{{/if}}
+						<div id="chooseProductsCard row" style="{{isAddNewProductsMode}}">
+							<div class="row right-align">
+								<i class="material-icons grey-text small exitAddNewItemMode">clear</i>
+							</div>
+			    			<ul class="collection with-header col s8 offset-s2">
+						    	<li class="collection-header black-text"><h6>Add Product(s):</h6></li>
+			        			{{#each getSortedFilteredProductsAndGroups}}
+		                            {{#if isThisAGroupItem thisIsGroup}}
+		                                <li class="collection-item row selectGroup" data-groupname="{{name}}">
+		                                    <a style="{{getProductBackgroundColor this}}">&nbsp;&nbsp;</a>{{name}}
+		                                    <a class="secondary-content">
+		                                    	<i class="material-icons small" style="{{getProductTextColor this}}">view_module</i>
+		                                    </a>
+		                                </li>
+		                                {{#if isThisSelectedGroup name}}
+		                                    <li class="collection-item">
+		                                        {{#each getProductsInGroup name}}  
+		                                            <li class="collection-item row {{#unless thisProductAlreadyAdded _id}}selectProduct{{/unless}}" data-productid="{{_id}}">
+		                                                <a style="{{getProductBackgroundColor this}}">&nbsp;&nbsp;</a>{{name}}
+		                                                <a class="secondary-content">{{#if thisProductAlreadyAdded _id}}<i class="material-icons grey-text">done</i>{{/if}}</a>
+		                                                {{#if isThisSelectedProduct _id}}
+												            {{#each getSizes _id}}
+													            <li class="collection-item">
+									            					<input value="{{this.code}}" checked type="checkbox" id="{{this.code}}"/>
+									      							<label for="{{this.code}}">{{this.label}}</label>
+										      					</li>
+								            				{{/each}}
+								            				<li class="collection-item center-align row">
+								            					<a class="btn-flat white grey-text addSelectedProduct">ADD</a>
+								            				</li>	
+					                                	{{/if}}
+		                                            </li>
+		                                        {{/each}}
+		                                    </li>
+		                                {{/if}}
+		                            {{else}}
+		                                <li class="collection-item row {{#unless thisProductAlreadyAdded _id}}selectProduct deselectGroup{{/unless}}" data-productid="{{_id}}">
+		                                    <a style="{{getProductBackgroundColor this}}">&nbsp;&nbsp;</a>{{name}}
+		                                    <a class="secondary-content">{{#if thisProductAlreadyAdded _id}}<i class="material-icons grey-text">done</i>{{/if}}</a>
+		                                	{{#if isThisSelectedProduct _id}}
+									            {{#each getSizes _id}}
+										            <li class="collection-item">
+						            					<input value="{{this.code}}" checked type="checkbox" id="{{this.code}}"/>
+						      							<label for="{{this.code}}">{{this.label}}</label>
+							      					</li>
+					            				{{/each}}
+					            				<li class="collection-item center-align row">
+					            					<a class="btn-flat white grey-text addSelectedProduct">ADD</a>
+					            				</li>	
+		                                	{{/if}}
+		                                </li>
+		                            {{/if}}
+		                        {{/each}}
+					        </ul>
+				        </div>
+						<div id="chooseCategoriesCard row" style="{{isAddNewCategoriesMode}}">
+							<div class="row right-align">
+								<i class="material-icons grey-text exitAddNewItemMode">clear</i>
+							</div>
+					    	<ul class="collection with-header col s8 offset-s2">
+						    	<li class="collection-header black-text"><h6>Add Category:</h6></li>
+					        	{{#each category}}
+					        		<li class="collection-item {{#unless thisCategoryAlreadyAdded name}}selectCategory{{/unless}}" style="{{getCategoryColor name}}">
+					        			<a class="white-text">{{this.name}}</a>
+					        			<a class="secondary-content">{{#if thisCategoryAlreadyAdded name}}<i class="material-icons white-text">done</i>{{/if}}</a>
+					        		</li>
+					        	{{/each}}
+					        </ul>
+				        </div>
+					</ul>
+				</div>
+				<div class="divider"></div>
+				<div class="row">
+					<div class="col s12 saveHorizontalSpace">
+						<h6 class="grey-text row center-align expandProgramActiveCards">Active Program Cards: <b>(x{{getArrayCount (getProgramActiveCards _id)}})</b><i id="expandProgramActiveCards" class="material-icons right small grey-text">expand_more</i></h6>
+						<div id="programActiveCards" class="border-full" style="display: none; max-height: 70vh; overflow-y:auto;">
+							{{#each getProgramActiveCards _id}}
+                                <div class="row valign-wrapper">
+                                    <div class="card col s10 offset-s1 valign">
+                                        <div class="card-content row valign-wrapper">
+                                            <div class="col s8 valign">
+                                                <h6><b>{{getCustomerName this.customerId}}</b></h6>
+                                                <p>{{getLoyaltyBalance this.remainingQuantity this.remainingAmount}} <!-- {{#if isProgramNonPercent this.programId}}<i class="material-icons tiny grey-text editThisBalance">edit</i>{{/if}} --></p>
+                                                <p>{{getLoyaltyExpiration this.programId this.boughtOn}}</p>
+                                            </div>
+                                            {{#if isProgramNonPercent this.programId}}
+                                                <div class="col s2 valign">
+                                                    <input id="updateBalancefor-{{this._id}}" type="number" min="0" value="{{getLoyaltyBalanceAmount this.remainingQuantity this.remainingAmount this.tally}}">
+                                                </div>
+                                                <div class="col s1 valign">
+                                                    <i class="small updateBalanceForProgram material-icons grey-text">save</i>
+                                                </div>
+                                            {{else}}
+                                                <div class="col s3">&nbsp;</div>
+                                            {{/if}}
+                                            <div class="col s1 valign right-align">
+                                                {{#unless isTallyProgramType programType}}<i class="small deactivateProgramCard material-icons red-text">archive</i>{{/unless}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+                <div class="divider"></div>
+                <div class="row">  
+                	<div class="col s12 saveHorizontalSpace">                                      
+                        <h6 class="grey-text row center-align expandProgramExpiredCards">Expired/Depleted Loyalty Program Cards: <b>(x{{getArrayCount (getProgramExpiredCards _id)}})</b><i id="expandProgramExpiredCards" class="material-icons right small grey-text">expand_more</i></h6>
+                        <div id="programExpiredCards" class="border-full" style="display: none; max-height: 70vh; overflow-y:auto;">
+                            {{#each getProgramExpiredCards _id}}
+                                <div class="row">
+                                    <div class="card col s10 push-s1">
+                                        <div class="card-content row valign-wrapper saveVerticalSpace">
+                                            <div class="col s9 valign">
+                                                <h6><b>{{getCustomerName this.customerId}}</b></h6>
+                                                <p>{{getLoyaltyBalance this.remainingQuantity this.remainingAmount}}</p>
+                                                <p>{{getLoyaltyExpiration this.programId this.boughtOn}}</p>
+                                            </div>
+                                            {{#if isProgramNonPercent this.programId}}
+                                                <div class="col s3 valign">
+                                                    <input id="reactivate-{{this._id}}" type="number" min="0" value="{{getLoyaltyBalanceAmount this.remainingQuantity this.remainingAmount this.tally}}">
+                                                    <a class="btn-flat green-text reactivateProgramCard">Reactivate</a>
+                                                </div>
+                                            {{else}}
+                                                <div class="col s3"><a class="btn-flat green-text reactivateProgram">Reactivate</a></div>
+                                            {{/if}}
+                                        </div>
+                                    </div>
+                                </div>
+                            {{/each}}
+                        </div>
+                    </div>
+				</div>
+            {{/with}}
+        </div>
+    </div>
+</template>
+
+
+

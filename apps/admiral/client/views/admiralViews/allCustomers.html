@@ -1,0 +1,82 @@
+<template name="AllCustomers">
+	<div class="row">
+		<div class="col s8 offset-s2">
+			<ul class="collection">
+				{{#with getSelectedBusiness}}
+					<li class="collection-item row blue white-text">
+						{{name}}
+						<a class="secondary-content"><a class="deselectBusiness"><i class="material-icons white-text">clear</i></a></a>
+					</li>
+					<li class="collection-item row">
+						<a class="btn startBusinessMigration">Migrate Customers</a>
+					</li>
+					<h5 class="grey-text center-align">All Customers ({{getTotalNumberOfCustomers}})</h5>
+					<ul class="collection" style="max-height: 300px; overflow-y: auto;">
+						{{#each getAllCustomers}}
+							<li class="collection-item row">
+								<div class="col s6">
+									{{name}}
+								</div>
+								<div class="col s2 left-align">
+									Loyalty: {{getTotalNumberofLoyaltyPrograms loyaltyPrograms}}
+								</div>
+								<div class="col s2 center-align">
+									Tally: {{getTotalNumberofTallyPrograms tallyPrograms}}
+								</div>
+								<div class="col s2 right-align">
+									
+								</div>
+							</li>
+						{{/each}}
+					</ul>
+
+					<h5 class="grey-text center-align">All Loyalty Cards ({{getTotalNumberOfCards}})</h5>
+					<ul class="collection" style="max-height: 300px; overflow-y: auto;">
+						{{#each getAllLoyaltyCards}}
+							<li class="collection-item row">
+								<div class="col s5">
+									{{getCustomerName customerId}}
+								</div>
+								<div class="col s5 left-align">
+									{{getProgramName programId}}
+								</div>
+								<div class="col s1 center-align">
+
+								</div>
+								<div class="col s1 right-align">
+									
+								</div>
+							</li>
+						{{/each}}
+					</ul>
+
+					<h5 class="grey-text center-align">All Tally Cards ({{getTotalNumberOfTallyCards}})</h5>
+					<ul class="collection" style="max-height: 300px; overflow-y: auto;">
+						{{#each getAllTallyCards}}
+							<li class="collection-item row">
+								<div class="col s5">
+									{{getCustomerName customerId}}
+								</div>
+								<div class="col s5 left-align">
+									{{getProgramName programId}}
+								</div>
+								<div class="col s1 center-align">
+									{{tally}}
+								</div>
+								<div class="col s1 right-align">
+									
+								</div>
+							</li>
+						{{/each}}
+					</ul>
+				{{else}}
+					{{#each getAllBusinesses}}
+						<li class="collection-item row selectBusiness">
+							{{name}}
+						</li>
+					{{/each}}
+				{{/with}}
+			</ul>
+		</div>
+	</div>
+</template>

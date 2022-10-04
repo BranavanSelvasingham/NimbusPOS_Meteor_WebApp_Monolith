@@ -1,0 +1,167 @@
+<template name="DailyView">
+	<!-- <div class="row"></div> -->
+	<div class="row valign-wrapper">
+<!-- 		<div class="col s4 left-align valign">
+			<a id="previousDay" class="waves-effect waves-light btn btn-small"><i class="material-icons left">arrow_backward</i>Previous</a>
+		</div> -->
+		<div class="col s2 m4 right-align valign">
+			<a id="previousDay" class="waves-effect waves-light"><i class="material-icons teal-text medium">keyboard_arrow_left</i></a>
+		</div>
+		<h5 class="col s8 m4 center-align valign">
+	    	{{getSelectedDailyDate}}&nbsp;&nbsp;<i class="material-icons small grey-text forceRefreshDaily">refresh</i>
+	    </h5>
+	    <div class="col s2 m4 left-align valign">
+	    	<a id="nextDay" class="waves-effect waves-light"><i class="material-icons teal-text medium">keyboard_arrow_right</i></a>
+	    </div>
+	</div>
+<!-- 		<div class="col s4 right-align valign">
+			<a id="nextDay" class="waves-effect waves-light btn btn-small"><i class="material-icons right">arrow_forward</i>Next</a>
+		</div> -->
+	{{#if isSubscriptionReady}}
+		<div class="row hide-on-large-only">
+			<div class="tally col s12 m6 card">
+				<div class="row center-align">
+					<h2>${{getDailySalesTally}}</h2>
+				</div>
+				<div class="row center-align">
+					Net Sales
+				</div>
+				{{#if isTaxComponentsZero}}
+					<div class="row center-align">
+						<h4>${{getDailyTaxesTotal}}</h4>
+					</div>
+					<div class="row center-align">
+						Taxes
+					</div>
+				{{else}}
+					<div class="row">
+						<div class="col s6">
+							<div class="row center-align">
+								<h4>${{getDailyGSTTaxes}}</h4>
+							</div>
+							<div class="row center-align">
+								GST
+							</div>
+						</div>
+						<div class="col s6">
+							<div class="row center-align">
+								<h4>${{getDailyHSTTaxes}}</h4>
+							</div>
+							<div class="row center-align">
+								HST
+							</div>
+						</div>
+					</div>
+				{{/if}}
+			</div>			
+			<div class="tally col s12 m6 card">
+				<div class="row center-align">
+					<h2>x{{getDailyOrdersTally}}</h2>
+				</div>
+				<div class="row center-align">
+					Orders
+				</div>
+			</div>
+		</div>
+
+		<div class="row valign-wrapper">
+			<div class="tally col l3 card hide-on-med-and-down valign">
+				<div class="row center-align">
+					<h2>${{getDailySalesTally}}</h2>
+				</div>
+				<div class="row center-align">
+					Net Sales
+				</div>
+				{{#if isTaxComponentsZero}}
+					<div class="row center-align">
+						<h4>${{getDailyTaxesTotal}}</h4>
+					</div>
+					<div class="row center-align">
+						Taxes
+					</div>
+				{{else}}
+					<div class="row">
+						<div class="col s6">
+							<div class="row center-align">
+								<h4>${{getDailyGSTTaxes}}</h4>
+							</div>
+							<div class="row center-align">
+								GST
+							</div>
+						</div>
+						<div class="col s6">
+							<div class="row center-align">
+								<h4>${{getDailyHSTTaxes}}</h4>
+							</div>
+							<div class="row center-align">
+								HST
+							</div>
+						</div>
+					</div>
+				{{/if}}
+			</div>			
+			<div class="col m12 l6 hide-on-small-only">
+				<div id="dailyBarChart"></div>{{refreshDailyGraph}}
+			</div>			
+			<div class="tally col l3 card hide-on-med-and-down valign">
+				<div class="row center-align">
+					<h2>x{{getDailyOrdersTally}}</h2>
+				</div>
+				<div class="row center-align">
+					Orders
+				</div>
+			</div>
+		</div>
+		<div class="divider"></div>
+		<div class="row valign-wrapper">
+			<div class="col s12 valign center-align">
+				<div class="horizontalCategoryTallyDiv">
+					<div class="horizontalCategoryTallyContainer">
+						<div class="horizontalCategoryTallyContent">
+							{{#each getDailyCategoryTable}}
+								<div class="fixedTallyCard chip" style="{{getCategoryColor categoryName}}">
+									<div class="row center-align white-text">
+										<h6>{{categoryName}}</h6>
+									</div>
+									<div class="row center-align white-text">
+										<h4>{{currency categoryTotal}}</h4>
+									</div>
+								</div>
+							{{/each}}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="divider"></div>
+		<div class="row">
+			<div class="col s12 m10 push-m1 card">
+				<table class="bordered highlight">
+					<thead>
+						<tr>
+						    <th data-field="id">Product</th>
+						    <th data-field="name" class="center-align">Total Qty</th>
+						    <th data-field="price" class="center-align">Total Sales</th>
+						</tr>
+					</thead>
+					<tbody>
+						{{#each getDailyProductsTable}}
+							<tr>
+							    <td>{{this.product}}</td>
+							    <td class="center-align">{{formatQuantity productQuantity}}</td>
+							    <td class="center-align">{{formatCurrency productTotal}}</td>
+					        </tr>
+				        {{/each}}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	{{else}}
+		<div class="row center-align">
+			<p>The report is being generated, this may take up to a minute.</p>
+			<div class="progress">
+				<div class="indeterminate"></div>
+			</div>
+		</div>
+	{{/if}}
+</template>

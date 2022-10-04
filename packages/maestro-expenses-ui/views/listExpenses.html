@@ -1,0 +1,100 @@
+<template name="ListExpenses">
+	<div class="row">		
+		<div class="col s12">
+			<div class="row valign-wrapper">
+				<div class="col s1">&nbsp;</div>
+				<div class="col s10">
+					<div class="row valign-wrapper">
+						<p class="col s3 right-align"><a class="previousMonth"><i class="material-icons grey-text small">keyboard_arrow_left</i></a></p>
+						<p class="col s6 center-align"><h5 class="grey-text">Expenses for {{displayMonth}}</h5></p>
+						<p class="col s3 left-align"><a class="nextMonth"><i class="material-icons grey-text small">keyboard_arrow_right</i></a></p>					
+					</div>
+				</div>
+				<div class="col s1 valign"><a id='addNewExpense' class="waves-effect waves-light btn-floating btn-large" href="/business/expenses/create"><i class="material-icons left">add</i></a></div>
+			</div>
+
+			<ul class="tabs hide">
+				<li class="tab col s6"><a href="#summaryView"></a></li>
+        		<li class="tab col s6"><a href="#listView"></a></li>
+			</ul>
+
+			<div class="row center-align">
+				<a class="waves-effect waves-light btn-large btn-flat white {{#if isSummaryView}}light-blue-text{{else}}grey-text{{/if}} setSummaryView">Summary</a>
+				<a class="waves-effect waves-light btn-large btn-flat white {{#if isListView}}light-blue-text{{else}}grey-text{{/if}} setListView">List</a>
+			</div>
+
+			<div id="summaryView">
+				<h5 class="grey-text center-align">Summary by Category</h5>
+				<div class="row">
+					<div class="col s10 offset-s1">
+						<ul class="collapsible" data-collapsible="accordion">
+							{{#each getExpenseSummary}}
+								<li>
+									<div class="collapsible-header">{{getCategoryLabel category}}<a class="secondary-content"><b>{{getPercentageOfNetSales total}}</b><a class="grey-text"> of Net Sales (all locations)</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>{{currency total}}</b></a></div>
+									<div class="collapsible-body">
+										<table class="centered highlight small-text">
+											<thead>
+												<tr>
+													<th width="20%">Date</th>
+													<th width="30%">Vendor</th>
+													<th width="35%">Details</th>
+													<th width="15%">Total (incl taxes)</th>
+												</tr>
+											</thead>
+											<tbody>
+												{{#each listExpensesByCategory category}}
+													<tr class="expenseItem">
+														<td>{{formatDate expenseDate}}</td>
+														<td>{{this.vendor}}</td>
+														<td>{{this.details}}</td>
+														<td><i class="material-icons tiny">{{getPaymentMethodIcon paymentMethod}}</i>{{currency amount}}</td>
+													</tr>
+												{{/each}}
+											</tbody>
+										</table>
+									</div>
+								</li>
+							{{/each}}
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div id="listView">
+				<ul class="collection">
+					<li class="collection-item fixedHeightContainer listViewContainer">
+						<table id="expensesTable" class="centered highlight small-text">
+							<thead>
+								<tr>
+									<th width="10%">Date</th>
+									<th width="22%">Vendor</th>
+									<th width="20%">Category</th>
+									<th width="23%">Details</th>
+									<!-- <th width="5%">Taxable?</th> -->
+									<th width="10%">Taxes Paid</th>
+									<th width="10%">Total (incl taxes)</th>
+									<th width="3%"></th>
+								</tr>
+							</thead>
+							<tbody>
+								{{#each listExpenses}}
+									<tr id="{{this._id}}" class="expenseItem">
+										<td>{{formatDate expenseDate}}</td>
+										<td>{{this.vendor}}</td>
+										<td>{{getCategoryLabel this.category}}</td>
+										<td>{{this.details}}</td>
+										<!-- <td><i class="material-icons">{{isTaxableFormat taxable}}</i></td> -->
+										<td>{{formatTax tax}}</td>
+										<td><i class="material-icons tiny">{{getPaymentMethodIcon paymentMethod}}</i>{{currency amount}}</td>
+										<td><i data-id="{{this._id}}" class="removeThisExpense material-icons tiny grey-text">clear</i></td>
+									</tr>
+								{{/each}}
+							</tbody>
+						</table>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+</template>

@@ -1,0 +1,55 @@
+<head>
+    <title>Nimbus POS Inc.</title>
+    <meta charset="utf-8">
+    <meta name="description" content="An intuitive and custom POS for specialty cafes and restaurants.">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="nimbus">
+    <meta name='apple-touch-fullscreen' content='yes'>
+    <meta name="application-name" content="nimbus"/>
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <meta name="theme-color" content="#ffffff">
+    <meta name="msapplication-navbutton-color" content="#ffffff">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#ffffff">
+    <!--<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">-->
+    <meta name="msapplication-TileColor" content="#ffffff"/>
+
+    <link rel="shortcut icon" sizes="196x196" href="nimbus_logo_blue.png">
+    <link rel="shortcut icon" sizes="128x128" href="nimbus_logo_blue.png">
+    <link rel="icon" sizes="128x128" href="nimbus_logo_blue.png">
+    <link rel="apple-touch-icon" sizes="128x128" href="nimbus_logo_blue.png">
+    <link rel="apple-touch-icon-precomposed" sizes="128x128" href="nimbus_logo_blue.png">
+    <link rel="apple-touch-startup-image" href="nimbus_logo_blue.png">
+
+    <link rel="manifest" href="/manifest.json">
+
+    <meta name="google-site-verification" content="aeYFLLJOEbdFfPKQfTPwzvN6ssD4OusMK9BeV8j601s" />
+
+</head>
+
+<template name="Layout">
+
+<!--     <header>
+        {{> AppHeader }}
+    </header>
+ -->
+    <main>
+<!--         <div class="layout-container">
+            <div class="row section">
+                <div class="col s12"> -->
+                    {{> Template.dynamic template=content }}
+<!--                 </div>
+            </div>
+        </div> -->
+    </main>
+
+<!--     <footer class="hide-on-med-and-down">
+        {{> AppFooter }}
+    </footer> -->
+
+</template>

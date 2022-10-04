@@ -1,0 +1,1336 @@
+<template name="ProductsMenuView">
+	<div class="row saveHorizontalSpace saveVerticalSpace">
+		<div id="order-products" class="col s8 saveHorizontalSpace saveVerticalSpace border-bottom {{#if inReorganizeMode}}{{else}}product-edit-details-style{{/if}}">
+			<h5 class="row center-align">Product Menu Builder</h5>
+            <div id="filterSection" class="saveVerticalSpace">
+                <div class="row valign-wrapper">
+                    <div class="col s12 valign">
+                        <h6>Sort by:</h6>
+                        <div class="chip selectSort" data-sort="name" style="{{isSortSelected 'name'}}">Name</div>
+                        <div class="chip selectSort" data-sort="categories" style="{{isSortSelected 'categories'}}">Primary Category Name</div>
+                    </div>
+                </div>
+                <div class="row valign-wrapper">
+                    <div class="col s12 valign">
+                        <h6>Product Status:</h6>
+                        <div class="chip selectStatus" data-status="active" style="{{isStatusSelected 'active'}}">Active</div>
+                        <div class="chip selectStatus" data-status="out-of-season" style="{{isStatusSelected 'out-of-season'}}">Out of Season</div>
+                        <div class="chip selectStatus" data-status="archived" style="{{isStatusSelected 'archived'}}">Archived</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row valign-wrapper showHideFiltersRow saveVerticalSpace">
+                <div class="col s12 valign right-align">
+                	<a class="waves-effect waves-light right-align grey-text openClumpByCategoriesModal {{#if inReorganizeMode}}{{else}}hide{{/if}}"><b>Clump Categories Together</b></a>&nbsp;&nbsp;&nbsp;
+                	<a class="waves-effect waves-light right-align toggleReorganizeMode {{#if inReorganizeMode}}btn-flat green white-text{{else}}grey-text{{/if}}">{{#if inReorganizeMode}}Done{{else}}<b>Organize Tiles</b>{{/if}}</a>&nbsp;&nbsp;&nbsp;
+		    		<a class="{{#if inReorganizeMode}}hide{{/if}} waves-effect waves-light right-align manage-Categories grey-text"><b>Manage Categories</b></a>&nbsp;&nbsp;&nbsp;
+		        	<a class="{{#if inReorganizeMode}}hide{{/if}} waves-effect waves-light right-align manage-Addons grey-text"><b>Manage Add-Ons</b></a>&nbsp;&nbsp;&nbsp;
+		            <a class="{{#if inReorganizeMode}}hide{{/if}} waves-effect waves-light right-align manage-Sizes grey-text"><b>Manage Sizes</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a id="showFiltersButton" class="{{#if inReorganizeMode}}hide{{/if}} waves-effect waves-light right-align grey-text"><i class="material-icons right">keyboard_arrow_down</i>Show Filter Options</a>
+                    <a id="hideFiltersButton" class="{{#if inReorganizeMode}}hide{{/if}} waves-effect waves-light right-align grey-text"><i class="material-icons right">keyboard_arrow_up</i>Hide Filter Options</a>
+                </div>
+            </div>
+            <div class="divider"></div>
+
+            <div class="{{#if inReorganizeMode}}hide{{/if}}">
+
+		        <div class="menu-builder-slide border-bottom">
+                    <div class="row saveVerticalSpace">
+                        <div class="col s12 saveVerticalSpace">
+                            <div class="{{#unless isCategorySelected 'All'}}selectCategory posCategoryTile{{else}}posCategoryTileSelected{{/unless}} white-text" data-category="All" style="{{getCategoryTileColor 'All' ''}}">All</div>
+                            {{#each getAllCategories}}
+                                <div class="{{#unless isCategorySelected name}}selectCategory posCategoryTile{{else}}posCategoryTileSelected{{/unless}} white-text" data-category="{{name}}" style="{{getCategoryTileColor name color}}">
+                                    {{name}}
+                                </div>
+                            {{/each}}
+                            <a class="waves-effect waves-light right-align manage-Categories grey-text posCategoryTile"><b>+New Category</b></a>
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div id="order-products-list" class="grid-fluid">
+                        {{#each getSortedFilteredProductsAndGroups}}
+                            {{#if isThisAGroupItem thisIsGroup}}
+                                {{#if isThisSelectedGroup name}}
+                                    <div class="card-panel white-text grid-fluid-item-large" style="{{getTileBackgroundColor this}}" data-productid="{{_id}}">
+                                        <div class="row">
+                                            <h5 class="deselect-group-item">{{name}}<a class="secondary-content"><i class="material-icons white-text small">remove_circle_outline</i></a></h5>
+                                        </div>
+                                        <div class="row" style="background-color: white;">
+                                            <div class="grid-fluid">
+                                                {{#each getProductsInGroupWithFilters name}}
+                                                    {{#if isThisProductExpanded this}}
+                                                        <div class="card-panel white-text sub-grid-fluid-item-large" style="{{getTileBackgroundColor this}}" data-productid="{{_id}}">
+                                                            <div class="row">
+                                                                <h5 class="product-collapse">{{name}}<a class="secondary-content"><i class="material-icons white-text small">remove_circle_outline</i></a></h5>
+                                                            </div>
+                                                            <div class="row" style="background-color: white;">
+                                                                <div class="grid-fluid">
+                                                                    {{#each sizes}}
+                                                                        <div class="product-size-select card-panel waves-effect waves-light white-text grid-fluid-item grid-fluid-item-small z-depth-0" style="{{getSizeTileBackgroundColor ../_id}}">
+                                                                            <span>{{sizeName (code)}}<br>{{currency (price)}}</span>
+                                                                        </div>
+                                                                    {{/each}}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    {{else}}
+                                                        <div class="card-panel waves-effect waves-light white-text product-item-select grid-fluid-item" style="{{getTileBackgroundColor this}}" data-productid="{{_id}}">{{name}}</div>
+                                                    {{/if}}
+                                                {{/each}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {{else}}
+                                    <div class="card-panel waves-effect waves-light white-text group-item-select product-collapse grid-fluid-item" style="{{getTileBackgroundColor this}}" data-productid="{{_id}}">{{name}}<a class="secondary-content"><i class="material-icons white-text small">view_module</i></a></div>
+                                {{/if}}
+                            {{else}}
+                                {{#if isThisProductExpanded this}}
+                                    <div class="card-panel white-text grid-fluid-item-large" style="{{getTileBackgroundColor this}}" data-productid="{{_id}}">
+                                        <div class="row">
+                                            <h5 class="product-collapse">{{name}}<a class="secondary-content"><i class="material-icons white-text small">remove_circle_outline</i></a></h5>
+                                        </div>
+                                        <div class="row" style="background-color: white;">
+                                            <div class="grid-fluid">
+                                                {{#each sizes}}
+                                                    <div class="card-panel waves-effect waves-light white-text grid-fluid-item grid-fluid-item-small z-depth-0" style="{{getSizeTileBackgroundColor ../_id}}">
+                                                        <span>{{sizeName (code)}}<br>{{currency (price)}}</span>
+                                                    </div>
+                                                {{/each}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {{else}}
+                                    <div class="card-panel waves-effect waves-light white-text product-item-select deselect-group-item grid-fluid-item" style="{{getTileBackgroundColor this}}" data-productid="{{_id}}">{{name}}</div>
+                                {{/if}}
+                            {{/if}}                                            
+                        {{else}}
+                        	{{#if noProductsExist}}<div class="card-panel waves-effect waves-light white-text startNewProductForm grid-fluid-item" style="{{getTileBackgroundColor this}}" data-productid="{{_id}}">Create Your First Product</div>{{/if}}
+                        {{/each}}
+                    </div>
+		        </div>
+		    </div>
+
+		    <div class="{{#if inReorganizeMode}}{{else}}hide{{/if}}">
+		        <!-- Category filters -->
+		        <div class="row">
+		            <div class="col s12">
+	                    <ul id="sortableCategories">
+	                        {{#each getArrayOfMovableCategories}}
+	                            <li href="" class="posCategoryTileMove movableTile" data-category="{{name}}" style="{{getCategoryColorAndCheckSelected name color}}">
+	                                {{name}}
+	                            </li>
+	                        {{/each}}
+	                    </ul>
+		            </div>
+		        </div>
+		        <ul id="sortableProducts" class="grid-fluid border-bottom">
+		        	{{#each getArrayOfMovableTiles}}
+						{{#if isThisAGroupItem thisIsGroup}}
+	                        {{#if isThisSelectedGroup name}}
+	                            <li id="{{_id}}" class="card-panel white-text grid-fluid-item-large doNotMoveGroup" style="{{getTileBackgroundColor this}}" data-productid="{{_id}}">
+	                                <div class="row">
+	                                    <h5 class="deselect-group-item">{{name}}<a class="secondary-content"><i class="material-icons white-text small">remove_circle_outline</i></a></h5>
+	                                </div>
+	                                <div class="row" style="background-color: white;">
+	                                    <ul id="sortableSubProducts" class="grid-fluid">
+	                                        {{#each getArrayOfGroupedTiles name}}
+	                                        	<li id="{{_id}}" class="card-panel white-text grid-fluid-item-sortable movableTile" style="{{getTileBackgroundColor this}}" data-productid="{{_id}}">
+	                                        		{{name}}
+	                                        		{{#if nonActiveProduct status}}<br><i><b>({{status}})</b></i>{{/if}}
+	                                        	</li>
+	                                        {{/each}}
+	                                    </ul>
+	                                </div>
+	                            </li>
+	                        {{else}}
+	                            <li id="{{_id}}" class="card-panel white-text grid-fluid-item-sortable group-item-select openGroupItemSort movableTile" style="{{getTileBackgroundColor this}}" data-productid="{{_id}}">
+	                            	{{name}}<a class="secondary-content"><i class="material-icons white-text small">view_module</i></a>
+	                            </li>
+	                        {{/if}}
+	                    {{else}}
+	                        <li id="{{_id}}" class="card-panel white-text grid-fluid-item-sortable movableTile" style="{{getTileBackgroundColor this}}" data-productid="{{_id}}">
+	                        	{{name}}
+	                        	{{#if nonActiveProduct status}}<br><i><b>({{status}})</b></i>{{/if}}
+	                        </li>
+	                    {{/if}}     
+  					{{/each}}
+				</ul>
+		    </div>
+	    </div>
+
+		<div class="col s4 saveHorizontalSpace saveVerticalSpace border-left border-bottom product-edit-details-style {{#if inReorganizeMode}}hide{{/if}}">
+			{{#if nothingSelected}}
+				<div class="row menu-builder-slide valign-wrapper">
+					<div class="col s12 valign center-align">
+						<div class="startNewProductForm row valign-wrapper card-panel sub-grid-fluid-item-large waves-effect waves-light" style="{{getTileBackgroundColor 'All'}}">
+							<div class="col s1 valign">&nbsp;</div> 
+							<div class="col s10 valign white-text">
+								<b>Create New Product</b>
+							</div>
+							<div class="col s1 valign"><i class="material-icons white-text">stop</i></div>
+						</div>
+						<div class="row">&nbsp;</div>
+						<div class="startNewGroupForm row valign-wrapper card-panel sub-grid-fluid-item-large waves-effect waves-light" style="{{getTileBackgroundColor 'All'}}">
+							<div class="col s1 valign">&nbsp;</div> 
+							<b class="col s10 valign white-text">
+								Create New Group of Products
+							</b>
+							<div class="col s1 valign"><i class="material-icons white-text">view_module</i></div>
+						</div>
+					</div>
+				</div>
+			{{/if}}
+
+			{{#if getNewProductForm}}
+				<form id="addNewProductForm" name="add-new-product" class="col s12">
+                    <div class="row valign-wrapper">
+                        <div class="col s12 valign">
+                            New Product Name:
+                            <input id="newProductName" type="text" class="validate">
+                        </div>
+                    </div>
+
+                    {{#each savedCategories}}
+	                    <div class="row valign-wrapper">
+			        		<!-- <div class="col s10 offset-s1 productsPageComponent waves-effect waves-light white-text openNewProductCategoryModal center-align" data-productid="{{../_id}}" data-category="{{this}}" style="{{getCategoryColor this}}">
+			        			{{this}}
+			        		</div> -->
+                            <div class="col s12">
+                                <div class="posCategoryTile white-text openNewProductCategoryModal" data-category="{{this}}" style="{{getCategoryColor this}}">
+                                    {{this}}
+                                </div>
+                                <i class="material-icons medium grey-text closeNewProductCategoryChip" data-category="{{this}}">clear</i>
+                            </div>
+			        		<!-- <div class="col s1">
+			        			<i class="material-icons right closeNewProductCategoryChip" data-category="{{this}}">clear</i>
+			        		</div> -->
+			        	</div>
+			        {{else}}
+			        	<div class="row valign-wrapper productsPageComponent" style="{{getCategoryColor 'All'}}">
+			        		<a class="waves-effect waves-light white-text openNewProductCategoryModal col s12 center-align">Select Category</a>
+			        	</div>
+			        {{/each}}
+
+                    <div class='row newProductPrice productsPageComponent'>
+                        <table class="bordered centered table-editable">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    {{#each preferredSizes}}
+                                        <th align="left">{{this.label}}</th>
+                                    {{/each}}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                    {{#each preferredSizes}}
+                                        <td>
+                                            <input style="text-align: center;" id="newProductSize_{{this.code}}" type="number" min="0.01" step="0.01" value="{{this.price}}"/>
+                                        </td>
+                                    {{/each}}
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                    <div class="row valign-wrapper productsPageComponent">
+                    	<div class="col s12">
+                    		<div class="row valign-wrapper">
+		                        <div class="col s6 valign">
+		                            <h6>Variable Price:</h6>
+		                        </div>
+		                        <div class="col s6 valign">
+		                            <div class="switch">
+		                                <label>
+		                                    No
+		                                    <input id="variablePriceSetting_newProduct" type="checkbox">
+		                                    <span class="lever"></span>
+		                                    Yes
+		                                </label>
+		                            </div>
+		                        </div>
+		                    </div>
+	                        <i>*If yes, the prices entered above for each size will be interpreted as average prices and can be modified at checkout.</i>
+	                    </div>
+                    </div>
+
+	                <div class="row valign-wrapper productsPageComponent">
+			        	<div class="col s12">
+				            <h6 class="row">Unit Based Price: (e.g $/lb)</h6>
+				            <div class="row valign-wrapper">
+				            	<div class="col s6 valign">
+					                <div class="switch">
+					                    <label>
+					                        No
+					                        <input id="unitBasedPriceSetting_newProduct" type="checkbox">
+					                        <span class="lever"></span>
+					                        Yes
+					                    </label>
+					                </div>
+					            </div>
+					            <div class="col s5 valign">
+					                <input id="unitLabel_newProduct" type="text" placeholder="Unit Label (eg. 'lb')">
+					            </div>
+					            <div class="col s1 valign"><i id="saveUnitLabel" class="material-icons small grey-text">save</i></div>
+					        </div>
+					        <i>*If yes, the prices entered above for each size will be interpreted as rates.</i>
+			            </div>
+			        </div>                    
+
+                    <div class="row valign-wrapper openNewProductTaxModal productsPageComponent">
+		        		<a class="waves-effect waves-light col s12 center-align teal-text ">Tax Rule: {{getTaxRuleLabel savedTaxRule}}</a>
+		        	</div>
+
+		        	<div class="row valign-wrapper productsPageComponent">
+		        		<div class="col s12">
+			        		{{#if showAddonsOptions}}
+			        			<div class="row">
+			        				<div class="waves-effect waves-light col s12 center-align teal-text hideAddonsOptions">Add-Ons:<a class="secondary-content"><i class="material-icons">keyboard_arrow_up</i></a></div>
+			        			</div>
+			        			<div class="divider"></div>
+			        			{{#each getProductAttachedPureAddOns savedAddOns}}
+			        				<div class="row valign-wrapper">
+						        		<div class="valign col s2"><i class="material-icons">star</i></div>
+						        		<div class="valign col s8 white-text productsPageComponent" style="{{getTileBackgroundColor 'All'}}">{{name}}<a class="secondary-content">{{currency (price)}}</a></div>
+						        		<div class="valign col s2 closeNewProductAddOnChip"><i class="material-icons">clear</i></div>
+						        	</div>
+						        {{else}}
+						        	<i>*You have not pinned any Add-Ons to this product yet. Any Add-Ons pinned to this product will show at the top of the list of Add-Ons options on the POS.</i>
+			        			{{/each}}
+			        			<div class="divider"></div>
+			        			{{#each getPureAddOns (allOtherAddons savedAddOns)}}
+			        				<div class="row valign-wrapper attachNewProductAddon">
+						        		<div class="valign col s2"><i class="material-icons">add</i></div>
+						        		<div class="valign col s8 white-text productsPageComponent" style="{{getTileBackgroundColor 'All'}}">{{name}}<a class="secondary-content">{{currency (price)}}</a></div>
+						        		<div class="valign col s2">&nbsp;</div>
+						        	</div>
+			        			{{/each}}
+			        			<div class="divider"></div>
+			        			<h6 class="row">Create New Add-On:</h6>
+			        			<form id="manageAddonForm" class="row valign-wrapper">					                
+				                    <div class="input-field col s8 valign">
+				                        <input id="inputAddonName" type="text" class="validate" placeholder="New Add-On Name">
+				                    </div>
+				                    <div class="input-field col s valign">
+				                    	<input id="addonPrice" type="number" min="0.01" step="0.01" placeholder="$0.00" />
+				                    </div>
+				                    <div class="col s1 valign">
+				                    	<a class="create-Addon btn-floating btn waves-effect waves-light teal">
+				        				<i id="AddNewAddon" class="material-icons">add</i></a>
+				                    </div>
+					            </form>
+			        		{{else}}
+			        			<div class="waves-effect waves-light col s12 center-align teal-text showAddonsOptions">Add-Ons:<a class="secondary-content"><i class="material-icons">keyboard_arrow_down</i></a></div>
+			        		{{/if}}
+			        	</div>
+		        	</div>
+
+		        	<div class="row valign-wrapper productsPageComponent">
+		        		<div class="col s12">
+			        		{{#if showSubstituteOptions}}
+			        			<div class="row">
+			        				<div class="waves-effect waves-light col s12 center-align teal-text hideSubstituteOptions">Substitutions:<a class="secondary-content"><i class="material-icons">keyboard_arrow_up</i></a></div>
+			        			</div>
+			        			<div class="divider"></div>
+			        			{{#each getProductAttachedSubstituteAddOns savedAddOns}}
+			        				<div class="row valign-wrapper">
+						        		<div class="valign col s2"><i class="material-icons">star</i></div>
+						        		<div class="valign col s8 white-text productsPageComponent" style="{{getTileBackgroundColor 'All'}}">{{name}}<a class="secondary-content">{{currency (price)}}</a></div>
+						        		<div class="valign col s2 closeNewProductAddOnChip"><i class="material-icons">clear</i></div>
+						        	</div>
+						        {{else}}
+						        	<i>*You have not pinned any Substitutions to this product yet. Any Substitutions pinned to this product will show at the top of the list of Substitutions options on the POS.</i>
+			        			{{/each}}
+			        			<div class="divider"></div>
+			        			{{#each getSubstituteAddOns (allOtherAddons savedAddOns)}}
+			        				<div class="row valign-wrapper attachNewProductAddon">
+						        		<div class="valign col s2"><i class="material-icons">add</i></div>
+						        		<div class="valign col s8 white-text productsPageComponent" style="{{getTileBackgroundColor 'All'}}">{{name}}<a class="secondary-content">{{currency (price)}}</a></div>
+						        		<div class="valign col s2">&nbsp;</div>
+						        	</div>
+			        			{{/each}}
+			        			<div class="divider"></div>
+			        			<h6 class="row">Create New Substitution:</h6>
+			        			<form id="manageSubstitutionForm">
+			        				<div class="row valign-wrapper">
+			        					<div class="col s6"><input id="new-substitute-label-NO" placeholder="NO:" type="text" class="validate"></div>
+			                        	<div class="col s6"><input id="new-substitute-label-ADD" placeholder="ADD:" type="text" class="validate"></div>
+			                        </div>
+			                        <div class="row valign-wrapper">
+			                        	<div class="col s4 offset-s6 valign"><input id="new-substitute-price" placeholder="$0.00" type="number" min="0.01" step="0.01" class="validate"></div>
+
+			                        	<div class="col s2 center-align valign">
+				                            <a class="create-Substitution btn-floating btn waves-effect waves-light teal">
+					        				<i id="AddNewSubstitution" class="material-icons">add</i></a>
+				                        </div>
+				                    </div>
+					            </form>
+			        		{{else}}
+			        			<div class="waves-effect waves-light col s12 center-align teal-text showSubstituteOptions">Substitutions:<a class="secondary-content"><i class="material-icons">keyboard_arrow_down</i></a></div>
+			        		{{/if}}
+			        	</div>
+		        	</div>
+
+                    <div id="newProductTaxModal" class="modal">
+                        <div class="modal-content">
+                            {{#each getTaxKeys}}
+                                <div class="row valign-wrapper">
+                                    <div class="col s4">
+                                        <div class="addNewProductTaxRule card-panel light-blue lighten-1 white-text modal-action modal-close" data-taxkey="{{this}}">
+                                            <span data-taxkey="{{this}}">{{getTaxLabel this}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col s8 valign">
+                                        <p>{{getTaxDescription this}}</p>
+                                    </div>
+                                </div>
+                            {{/each}}
+                        </div>
+                    </div>
+                </form>
+
+                <div class="row"></div>
+                <div class="row" align="center">
+                    <div class="col s12">                                        
+                        <a class="waves-effect waves-light btn cancelNewProduct grey">Cancel</a>
+                        <a class="waves-effect waves-light btn createNewProduct">Create Product</a>
+                    </div>
+                </div>
+
+                <div class="row" align="center">
+                    <input type="checkbox" id="rememberSelections" checked="checked"/>
+                    <label for="rememberSelections">Remember Selections</label>        
+                </div>
+			{{/if}}
+
+			{{#if getNewGroupForm}}
+				<form id="addNewProductForm" name="add-new-product" class="col s12">
+                    <div class="row valign-wrapper">
+                        <div class="col s12 valign">
+                            New Group Name:
+                            <input id="newProductName" type="text" class="validate">
+                        </div>                        
+                    </div>
+
+                    {{#each savedCategories}}
+			        	<div class="row valign-wrapper">
+			        		<!-- <div class="col s10 offset-s1 productsPageComponent waves-effect waves-light white-text openNewProductCategoryModal center-align" data-productid="{{../_id}}" data-category="{{this}}" style="{{getCategoryColor this}}">
+			        			{{this}}
+			        		</div> -->
+                            <div class="col s12">
+                                <div class="posCategoryTile white-text openNewProductCategoryModal" data-category="{{this}}" style="{{getCategoryColor this}}">
+                                    {{this}}
+                                </div>
+                                <i class="material-icons grey-text medium closeNewProductCategoryChip" data-category="{{this}}">clear</i>
+                            </div>
+			        		<!-- <div class="col s1">
+			        			<i class="material-icons right closeNewProductCategoryChip" data-category="{{this}}">clear</i>
+			        		</div> -->
+			        	</div>
+			        {{else}}
+			        	<div class="row valign-wrapper productsPageComponent" style="{{getCategoryColor 'All'}}">
+			        		<a class="waves-effect waves-light white-text openNewProductCategoryModal col s12 center-align">Select Category</a>
+			        	</div>
+			        {{/each}}
+
+					<div class='row newProductPrice productsPageComponent'>
+	                    <div class="right-align">
+	                        <input type="checkbox" id="samePriceAllVariants" />
+	                        <label for="samePriceAllVariants">Same pricing for new variants</label>
+	                    </div>
+
+                        {{#each getProductsToVariantSet}}
+                        	<div class="row productsPageComponent">
+	                        	<h6><i class="material-icons left">arrow_forward</i><b>{{name}}</b></h6>
+		                        <table class="bordered centered table-editable">
+		                            <thead>
+		                                <tr>
+		                                    {{#each preferredSizes}}
+		                                        <th align="left">{{this.label}}</th>
+		                                    {{/each}}
+		                                </tr>
+		                            </thead>
+		                            <tbody>
+			                            <tr class="light-blue lighten-5">
+			                                {{#each getNewProductSizes this.sizes}}
+			                                    <td class="center-align">
+			                                        {{#if ifNonZeroSizes this.price}}{{currency this.price}}{{/if}}
+			                                    </td>
+			                                {{/each}}
+			                            </tr>
+			                        </tbody>
+	                        	</table>
+	                        </div>
+                        {{/each}}
+
+                        {{#each newGroupProducts}}
+                        	<div class="row productsPageComponent">
+	                        	<h6><b>{{name}}</b></h6>
+		                        <table class="bordered centered table-editable">
+		                            <thead>
+		                                <tr>
+		                                    <!-- <th>Product Name</th> -->
+		                                    {{#each preferredSizes}}
+		                                        <th align="left">{{this.label}}</th>
+		                                    {{/each}}
+		                                </tr>
+		                            </thead>
+		                            <tbody>
+			                            <tr class="grey lighten-5">
+			                               <!--  <td><h6><b>{{name}}</b></h6></td> -->
+			                                {{#each getNewProductSizes this.sizes}}
+			                                    <td class="center-align">
+			                                        {{#if ifNonZeroSizes this.price}}{{currency this.price}}{{/if}}
+			                                    </td>
+			                                {{/each}}
+			                            </tr>
+			                        </tbody>
+	                        	</table>
+	                        </div>
+                        {{else}}
+                        	<div class="row productsPageComponent">
+	                        	<h6><input id="firstVariantName" type="text" placeholder="New Product Name"/></h6>
+		                        <table class="bordered centered table-editable">
+		                            <thead>
+		                                <tr>
+		                                    {{#each preferredSizes}}
+		                                        <th align="left">{{this.label}}</th>
+		                                    {{/each}}
+		                                </tr>
+		                            </thead>
+		                            <tbody>
+			                            <tr>
+			                                {{#each preferredSizes}}
+			                                    <td>
+			                                        <input style="text-align: center;" id="newProductSize_{{this.code}}" type="number" min="0.01" step="0.01" value="{{this.price}}"/>
+			                                    </td>
+			                                {{/each}}
+			                            </tr>
+			                        </tbody>
+	                        	</table>
+	                        </div>
+                        {{/each}}
+
+                        {{#if isAddVariantMode}}
+                        	<div class="row productsPageComponent">
+	                        	<h6><input id="addVariantName" type="text" placeholder="New Product Name"/></h6>
+		                        <table class="bordered centered table-editable">
+		                            <thead>
+		                                <tr>
+		                                    {{#each preferredSizes}}
+		                                        <th align="left">{{this.label}}</th>
+		                                    {{/each}}
+		                                </tr>
+		                            </thead>
+		                            <tbody>
+			                            <tr id="addVariantForm">
+			                                {{#each preferredSizes}}
+			                                    <td>
+			                                        <input style="text-align: center;" class="addVariantSize" data-sizecode="{{this.code}}" id="addVariantSize_{{this.code}}" type="number" min="0.01" step="0.01"
+			                                        value="{{#if isSamePriceVariantMode}}{{getFirstVariantPrice code}}{{/if}}"/>
+			                                    </td>
+			                                {{/each}}
+			                            </tr>
+			                        </tbody>
+	                        	</table>
+	                        	<div class="row valign-wrapper">
+	                            	<a class="col s10 valign doneAddVariant productsPageComponent green-text">
+	                            		<i class="material-icons left">save</i>&nbsp;Save New Product To Group
+	                            	</a>
+	                            	<div class="col s2 valign center-align"><i class="material-icons red-text cancelAddVariant right">clear</i></div>
+	                            </div>
+	                        </div>
+                        {{else}}
+                            {{#if isFirstVariantAdded}}
+                            	<div class="row valign-wrapper">
+	                            	<a class="col s10 valign addVariant productsPageComponent green-text">
+	                            		<i class="material-icons left">add</i>&nbsp;Add Another New Product To Group
+	                            	</a>
+	                            	<div class="col s2 valign">&nbsp;</div>
+	                            </div>
+                                <!-- <div class="row left-align"><a class="btn-floating btn-small waves-effect waves-light teal addVariant"><i class="material-icons">add</i></a>&nbsp;Add New Variant</div> -->
+                            {{else}}
+                            	<div class="row valign-wrapper">
+	                            	<a class="col s10 valign addVariant productsPageComponent green-text">
+	                            		<i class="material-icons left ">save</i>&nbsp;Save New Product To Group
+	                            	</a>
+	                            	<div class="col s2 valign">&nbsp;</div>
+	                            </div>
+                            {{/if}}
+                            <div class="row valign-wrapper">
+                            	<a class="col s10 valign addExistingProductVariant productsPageComponent">
+                            		<i class="material-icons blue-text left">arrow_forward</i>&nbsp;Bring Existing Product Into Group
+                            	</a>
+                            	<div class="col s2 valign">&nbsp;</div>
+                            </div>
+                        {{/if}}
+                    </div>
+
+                    <div class="row valign-wrapper productsPageComponent">
+                    	<div class="col s12">
+		                    <div class="row valign-wrapper">    
+		                        <div class="col s6 valign">
+		                            <h6>Variable Price:</h6>
+		                        </div>
+		                        <div class="col s6 valign">
+		                            <div class="switch">
+		                                <label>
+		                                    No
+		                                    <input id="variablePriceSetting_newProduct" type="checkbox">
+		                                    <span class="lever"></span>
+		                                    Yes
+		                                </label>
+		                            </div>
+		                        </div>
+		                    </div>
+	                        <i>*If yes, the prices entered above for each size will be interpreted as average prices and can be modified at checkout.</i>
+	                    </div>
+                    </div>
+
+	                <div class="row valign-wrapper productsPageComponent">
+			        	<div class="col s12">
+				            <h6 class="row">Unit Based Price: (e.g $/lb)</h6>
+				            <div class="row valign-wrapper">
+				            	<div class="col s6 valign">
+					                <div class="switch">
+					                    <label>
+					                        No
+					                        <input id="unitBasedPriceSetting_newProduct" type="checkbox">
+					                        <span class="lever"></span>
+					                        Yes
+					                    </label>
+					                </div>
+					            </div>
+					            <div class="col s5 valign">
+					                <input id="unitLabel_newProduct" type="text" placeholder="Unit Label (eg. 'lb')">
+					            </div>
+					            <div class="col s1 valign"><i id="saveUnitLabel" class="material-icons small grey-text">save</i></div>
+					        </div>
+					        <i>*If yes, the prices entered above for each size will be interpreted as rates.</i>
+			            </div>
+			        </div>
+
+			        <div class="row valign-wrapper openNewProductTaxModal productsPageComponent">
+		        		<a class="waves-effect waves-light col s12 center-align teal-text ">Tax Rule: {{getTaxRuleLabel savedTaxRule}}</a>
+		        	</div>
+
+		        	<div class="row valign-wrapper productsPageComponent">
+		        		<div class="col s12">
+			        		{{#if showAddonsOptions}}
+			        			<div class="row">
+			        				<div class="waves-effect waves-light col s12 center-align teal-text hideAddonsOptions">Add-Ons:<a class="secondary-content"><i class="material-icons">keyboard_arrow_up</i></a></div>
+			        			</div>
+			        			<div class="divider"></div>
+			        			{{#each getProductAttachedPureAddOns savedAddOns}}
+			        				<div class="row valign-wrapper">
+						        		<div class="valign col s2"><i class="material-icons">star</i></div>
+						        		<div class="valign col s8 white-text productsPageComponent" style="{{getTileBackgroundColor 'All'}}">{{name}}<a class="secondary-content">{{currency (price)}}</a></div>
+						        		<div class="valign col s2 closeNewProductAddOnChip"><i class="material-icons">clear</i></div>
+						        	</div>
+						        {{else}}
+						        	<i>*You have not pinned any Add-Ons to this product yet. Any Add-Ons pinned to this product will show at the top of the list of Add-Ons options on the POS.</i>
+			        			{{/each}}
+			        			<div class="divider"></div>
+			        			{{#each getPureAddOns (allOtherAddons savedAddOns)}}
+			        				<div class="row valign-wrapper attachNewProductAddon">
+						        		<div class="valign col s2"><i class="material-icons">add</i></div>
+						        		<div class="valign col s8 white-text productsPageComponent" style="{{getTileBackgroundColor 'All'}}">{{name}}<a class="secondary-content">{{currency (price)}}</a></div>
+						        		<div class="valign col s2">&nbsp;</div>
+						        	</div>
+			        			{{/each}}
+			        			<div class="divider"></div>
+			        			<h6 class="row">Create New Add-On:</h6>
+			        			<form id="manageAddonForm" class="row valign-wrapper">					                
+				                    <div class="input-field col s8 valign">
+				                        <input id="inputAddonName" type="text" class="validate" placeholder="New Add-On Name">
+				                    </div>
+				                    <div class="input-field col s valign">
+				                    	<input id="addonPrice" type="number" min="0.01" step="0.01" placeholder="$0.00" />
+				                    </div>
+				                    <div class="col s1 valign">
+				                    	<a class="create-Addon btn-floating btn waves-effect waves-light teal">
+				        				<i id="AddNewAddon" class="material-icons">add</i></a>
+				                    </div>
+					            </form>
+			        		{{else}}
+			        			<div class="waves-effect waves-light col s12 center-align teal-text showAddonsOptions">Add-Ons:<a class="secondary-content"><i class="material-icons">keyboard_arrow_down</i></a></div>
+			        		{{/if}}
+			        	</div>
+		        	</div>
+
+		        	<div class="row valign-wrapper productsPageComponent">
+		        		<div class="col s12">
+			        		{{#if showSubstituteOptions}}
+			        			<div class="row">
+			        				<div class="waves-effect waves-light col s12 center-align teal-text hideSubstituteOptions">Substitutions:<a class="secondary-content"><i class="material-icons">keyboard_arrow_up</i></a></div>
+			        			</div>
+			        			<div class="divider"></div>
+			        			{{#each getProductAttachedSubstituteAddOns savedAddOns}}
+			        				<div class="row valign-wrapper">
+						        		<div class="valign col s2"><i class="material-icons">star</i></div>
+						        		<div class="valign col s8 white-text productsPageComponent" style="{{getTileBackgroundColor 'All'}}">{{name}}<a class="secondary-content">{{currency (price)}}</a></div>
+						        		<div class="valign col s2 closeNewProductAddOnChip"><i class="material-icons">clear</i></div>
+						        	</div>
+						        {{else}}
+						        	<i>*You have not pinned any Substitutions to this product yet. Any Substitutions pinned to this product will show at the top of the list of Substitutions options on the POS.</i>
+			        			{{/each}}
+			        			<div class="divider"></div>
+			        			{{#each getSubstituteAddOns (allOtherAddons savedAddOns)}}
+			        				<div class="row valign-wrapper attachNewProductAddon">
+						        		<div class="valign col s2"><i class="material-icons">add</i></div>
+						        		<div class="valign col s8 white-text productsPageComponent" style="{{getTileBackgroundColor 'All'}}">{{name}}<a class="secondary-content">{{currency (price)}}</a></div>
+						        		<div class="valign col s2">&nbsp;</div>
+						        	</div>
+			        			{{/each}}
+			        			<div class="divider"></div>
+			        			<h6 class="row">Create New Substitution:</h6>
+			        			<form id="manageSubstitutionForm">
+			        				<div class="row valign-wrapper">
+			        					<div class="col s6"><input id="new-substitute-label-NO" placeholder="NO:" type="text" class="validate"></div>
+			                        	<div class="col s6"><input id="new-substitute-label-ADD" placeholder="ADD:" type="text" class="validate"></div>
+			                        </div>
+			                        <div class="row valign-wrapper">
+			                        	<div class="col s4 offset-s6 valign"><input id="new-substitute-price" placeholder="$0.00" type="number" min="0.01" step="0.01" class="validate"></div>
+
+			                        	<div class="col s2 center-align valign">
+				                            <a class="create-Substitution btn-floating btn waves-effect waves-light teal">
+					        				<i id="AddNewSubstitution" class="material-icons">add</i></a>
+				                        </div>
+				                    </div>
+					            </form>
+			        		{{else}}
+			        			<div class="waves-effect waves-light col s12 center-align teal-text showSubstituteOptions">Substitutions:<a class="secondary-content"><i class="material-icons">keyboard_arrow_down</i></a></div>
+			        		{{/if}}
+			        	</div>
+		        	</div>
+
+                    <div id="newProductTaxModal" class="modal">
+                        <div class="modal-content">
+                            {{#each getTaxKeys}}
+                                <div class="row valign-wrapper">
+                                    <div class="col s4">
+                                        <div class="addNewProductTaxRule card-panel light-blue lighten-1 white-text modal-action modal-close" data-taxkey="{{this}}">
+                                            <span data-taxkey="{{this}}">{{getTaxLabel this}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col s8 valign">
+                                        <p>{{getTaxDescription this}}</p>
+                                    </div>
+                                </div>
+                            {{/each}}
+                        </div>
+                    </div>
+                </form>
+
+                <div class="row"></div>
+                <div class="row" align="center">
+                    <div class="col s12">                                        
+                        <a class="waves-effect waves-light btn cancelNewGroup grey">Cancel</a>
+                        <a class="waves-effect waves-light btn createNewGroup">Create Group<i class="material-icons right">view_module</i></a>
+                    </div>
+                </div>
+
+                <div class="row" align="center">
+                    <input type="checkbox" id="rememberSelections" checked="checked"/>
+                    <label for="rememberSelections">Remember Selections</label>        
+                </div>
+			{{/if}}
+
+		    {{#with getSelectedGroup}}
+		        <h5 class="row valign-wrapper">
+		            <div class="col s12 valign">
+		                {{#if editNameMode}}
+		                    <input id="editGroupName" type="text" value="{{name}}"><i class="material-icons small grey-text cancelEditName">clear</i>&nbsp;&nbsp;<i class="material-icons small grey-text saveNewGroupName">save</i>
+		                {{else}}
+		                    {{name}}&nbsp;&nbsp;<i class="material-icons small grey-text editThisName">edit</i>
+		                {{/if}}
+		            </div>
+		        </h5>
+
+		        {{#each this.categories}}
+		        	<div class="row valign-wrapper">
+		        		<!-- <div class="col s10 offset-s1 productsPageComponent waves-effect waves-light white-text openCategoryModal center-align" data-productid="{{../_id}}" data-category="{{this}}" style="{{getCategoryColor this}}">
+		        			{{this}}
+		        		</div> -->
+                        <div class="col s12">
+                            <div class="posCategoryTile white-text openCategoryModal" data-category="{{this}}" style="{{getCategoryColor this}}" data-productid="{{../_id}}">
+                                {{this}}
+                            </div>
+                            <i class="material-icons medium grey-text closeGroupCategoryChip" data-category="{{this}}">clear</i>
+                        </div>
+		        		<!-- <div class="col s1">
+		        			<i class="material-icons right closeGroupCategoryChip" data-category="{{this}}">clear</i>
+		        		</div> -->
+		        	</div>
+		        {{else}}
+		        	<div class="row valign-wrapper productsPageComponent" style="{{getCategoryColor 'All'}}">
+		        		<a class="waves-effect waves-light white-text openCategoryModal col s12 center-align">Select Category</a>
+		        	</div>
+		        {{/each}}
+
+				<div class="row valign-wrapper openTaxModal productsPageComponent">
+	        		<a class="waves-effect waves-light col s12 center-align teal-text ">Tax Rule: {{getTaxRuleLabel this.taxRule}}</a>
+	        	</div>
+
+	        	<div class="row valign-wrapper productsPageComponent">
+	        		<div class="col s12">
+		        		{{#if showAddonsOptions}}
+		        			<div class="row">
+		        				<div class="waves-effect waves-light col s12 center-align teal-text hideAddonsOptions">Add-Ons:<a class="secondary-content"><i class="material-icons">keyboard_arrow_up</i></a></div>
+		        			</div>
+		        			<div class="divider"></div>
+		        			{{#each getProductAttachedPureAddOns this.addOns}}
+		        				<div class="row valign-wrapper">
+					        		<div class="valign col s2"><i class="material-icons">star</i></div>
+					        		<div class="valign col s8 white-text productsPageComponent" style="{{getTileBackgroundColor 'All'}}">{{name}}<a class="secondary-content">{{currency (price)}}</a></div>
+					        		<div class="valign col s2 closeGroupAddOnChip"><i class="material-icons">delete</i></div>
+					        	</div>
+					        {{else}}
+					        	<i>*You have not pinned any Add-Ons to this product yet. Any Add-Ons pinned to this product will show at the top of the list of Add-Ons options on the POS.</i>
+		        			{{/each}}
+		        			<div class="divider"></div>
+		        			{{#each getPureAddOns (allOtherAddons this.addOns)}}
+		        				<div class="row valign-wrapper attachGroupSelectedAddon">
+					        		<div class="valign col s2"><i class="material-icons">add</i></div>
+					        		<div class="valign col s8 white-text productsPageComponent" style="{{getTileBackgroundColor 'All'}}">{{name}}<a class="secondary-content">{{currency (price)}}</a></div>
+					        		<div class="valign col s2">&nbsp;</div>
+					        	</div>
+		        			{{/each}}
+		        			<div class="divider"></div>
+		        			<h6 class="row">Create New Add-On:</h6>
+		        			<form id="manageAddonForm" class="row valign-wrapper">					                
+			                    <div class="input-field col s8 valign">
+			                        <input id="inputAddonName" type="text" class="validate" placeholder="New Add-On Name">
+			                    </div>
+			                    <div class="input-field col s valign">
+			                    	<input id="addonPrice" type="number" min="0.01" step="0.01" placeholder="$0.00" />
+			                    </div>
+			                    <div class="col s1 valign">
+			                    	<a class="create-Addon btn-floating btn waves-effect waves-light teal">
+			        				<i id="AddNewAddon" class="material-icons">add</i></a>
+			                    </div>
+				            </form>
+		        		{{else}}
+		        			<div class="waves-effect waves-light col s12 center-align teal-text showAddonsOptions">Add-Ons:<a class="secondary-content"><i class="material-icons">keyboard_arrow_down</i></a></div>
+		        		{{/if}}
+		        	</div>
+	        	</div>
+
+	        	<div class="row valign-wrapper productsPageComponent">
+	        		<div class="col s12">
+		        		{{#if showSubstituteOptions}}
+		        			<div class="row">
+		        				<div class="waves-effect waves-light col s12 center-align teal-text hideSubstituteOptions">Substitutions:<a class="secondary-content"><i class="material-icons">keyboard_arrow_up</i></a></div>
+		        			</div>
+		        			<div class="divider"></div>
+		        			{{#each getProductAttachedSubstituteAddOns this.addOns}}
+		        				<div class="row valign-wrapper">
+					        		<div class="valign col s2"><i class="material-icons">star</i></div>
+					        		<div class="valign col s8 white-text productsPageComponent" style="{{getTileBackgroundColor 'All'}}">{{name}}<a class="secondary-content">{{currency (price)}}</a></div>
+					        		<div class="valign col s2 closeGroupAddOnChip"><i class="material-icons">delete</i></div>
+					        	</div>
+					        {{else}}
+					        	<i>*You have not pinned any Substitutions to this product yet. Any Substitutions pinned to this product will show at the top of the list of Substitutions options on the POS.</i>
+		        			{{/each}}
+		        			<div class="divider"></div>
+		        			{{#each getSubstituteAddOns (allOtherAddons this.addOns)}}
+		        				<div class="row valign-wrapper attachGroupSelectedAddon">
+					        		<div class="valign col s2"><i class="material-icons">add</i></div>
+					        		<div class="valign col s8 white-text productsPageComponent" style="{{getTileBackgroundColor 'All'}}">{{name}}<a class="secondary-content">{{currency (price)}}</a></div>
+					        		<div class="valign col s2">&nbsp;</div>
+					        	</div>
+		        			{{/each}}
+		        			<div class="divider"></div>
+		        			<h6 class="row">Create New Substitution:</h6>
+		        			<form id="manageSubstitutionForm">
+		        				<div class="row valign-wrapper">
+		        					<div class="col s6"><input id="new-substitute-label-NO" placeholder="NO:" type="text" class="validate"></div>
+		                        	<div class="col s6"><input id="new-substitute-label-ADD" placeholder="ADD:" type="text" class="validate"></div>
+		                        </div>
+		                        <div class="row valign-wrapper">
+		                        	<div class="col s4 offset-s6 valign"><input id="new-substitute-price" placeholder="$0.00" type="number" min="0.01" step="0.01" class="validate"></div>
+
+		                        	<div class="col s2 center-align valign">
+			                            <a class="create-Substitution btn-floating btn waves-effect waves-light teal">
+				        				<i id="AddNewSubstitution" class="material-icons">add</i></a>
+			                        </div>
+			                    </div>
+				            </form>
+		        		{{else}}
+		        			<div class="waves-effect waves-light col s12 center-align teal-text showSubstituteOptions">Substitutions:<a class="secondary-content"><i class="material-icons">keyboard_arrow_down</i></a></div>
+		        		{{/if}}
+		        	</div>
+	        	</div>	
+		     
+		        <div class="divider"></div>
+	        	<h6 class="grey-text row"><b>Group Options:</b></h6>
+
+		        <div class="row valign-wrapper  convertGroupToProducts productsPageComponent">
+	        		<a class="waves-effect waves-light col s12 center-align teal-text">Break Group Into Single Products</a>
+	        	</div>
+
+		        {{#if isAddVariantMode}}
+        	        <div class="row productsPageComponent">
+                    	<h6><input id="addVariantName" type="text" placeholder="New Product Name"/></h6>
+                        <table class="bordered centered table-editable">
+                            <thead>
+                                <tr>
+                                    {{#each preferredSizes}}
+                                        <th align="left">{{this.label}}</th>
+                                    {{/each}}
+                                </tr>
+                            </thead>
+                            <tbody>
+	                            <tr id="addVariantForm">
+	                                {{#each preferredSizes}}
+	                                    <td>
+	                                        <input style="text-align: center;" class="addVariantSize" data-sizecode="{{this.code}}" id="addVariantSize_{{this.code}}" type="number" min="0.01" step="0.01"
+	                                        value="{{#if isSamePriceVariantMode}}{{getFirstVariantPrice code}}{{/if}}"/>
+	                                    </td>
+	                                {{/each}}
+	                            </tr>
+	                        </tbody>
+                    	</table>
+                    	<div class="row valign-wrapper">
+	                    	<a class="col s10 valign doneAddVariantToGroup productsPageComponent green-text">
+	                    		<i class="material-icons left">save</i>&nbsp;Save New Product To Group
+	                    	</a>
+	                    	<div class="col s2 valign center-align"><i class="material-icons red-text cancelAddVariant right">refresh</i></div>
+	                    </div>
+                    </div>
+		        {{else}}
+		        	<div class="row valign-wrapper addNewVariantToGroup productsPageComponent">
+		        		<a class="waves-effect waves-light col s12 center-align teal-text">Add New Product To Group</a>
+		        	</div>
+		        	<div class="row valign-wrapper addExistingProductVariant productsPageComponent">
+		        		<a class="waves-effect waves-light col s12 center-align teal-text">Bring Existing Single Product to Group</a>
+		        	</div>
+		        {{/if}}
+		    {{/with}}
+
+		    {{#with getSelectedProduct}}
+		    	<h5 class="row valign-wrapper">
+		            <div class="col s12 valign">
+		                {{#if editNameMode}}
+		                    <input id="editProductName" type="text" value="{{name}}"><i class="material-icons small grey-text cancelEditName">clear</i>&nbsp;&nbsp;<i class="material-icons small grey-text saveNewProductName">save</i>
+		                {{else}}
+		                    {{name}}&nbsp;&nbsp;<i class="material-icons small grey-text editThisName">edit</i>
+		                {{/if}}
+		            </div>
+		        </h5>
+
+		        {{#if productNotPartOfGroup group}}
+		        	{{#each this.categories}}
+			        	<div class="row valign-wrapper">
+			        		<!-- <div class="col s10 offset-s1 productsPageComponent waves-effect waves-light white-text openCategoryModal center-align" data-productid="{{../_id}}" data-category="{{this}}" style="{{getCategoryColor this}}">
+			        			{{this}}
+			        		</div> -->
+                            <div class="col s12">
+                                <div class="posCategoryTile white-text openCategoryModal" data-category="{{this}}" style="{{getCategoryColor this}}" data-productid="{{../_id}}">
+                                    {{this}}
+                                </div>
+                                <i class="material-icons grey-text medium closeCategoryChip" data-category="{{this}}">clear</i>
+                            </div>
+			        		<!-- <div class="col s1">
+			        			<i class="material-icons right closeCategoryChip" data-category="{{this}}">clear</i>
+			        		</div> -->
+			        	</div>
+			        {{else}}
+			        	<div class="row valign-wrapper productsPageComponent" style="{{getCategoryColor 'All'}}">
+			        		<a class="waves-effect waves-light white-text openCategoryModal col s12 center-align">Select Category</a>
+			        	</div>
+			        {{/each}}
+		        {{/if}}
+
+		        <div class="row productsPageComponent">
+			        {{#if priceUpdateModeEnabled }}
+			            <div class='priceUpdate'>
+			                <table class="striped centered table-editable">
+			                    <thead>
+			                        <tr>
+			                            {{#each getSizes _id}}
+			                                <th align="left">{{this.label}}</th>
+			                            {{/each}}
+			                        </tr>
+			                    </thead>
+			                    <tbody>
+			                        <tr>
+			                            {{#each getSizes _id}}
+			                                <td>
+			                                    <input id="{{../_id}}_{{this.code}}" class='pricingCells' type="number" min="0.01"
+			                                           step="0.01" value="{{this.price}}"/>
+			                                    <style> .pricingCells {
+			                                        text-align: center
+			                                    }</style>
+			                                </td>
+			                            {{/each}}
+			                        </tr>
+			                    </tbody>
+			                </table>
+			                <div class="row" align="center">
+			                    <a data-productid="{{_id}}"
+			                       class="waves-effect waves-light btn updateProductPricing">Update Pricing</a>
+			                </div>
+			            </div>
+			        {{else}}
+			            <div class='showPricing'>
+			                <table class="striped centered table-editable">
+			                    <thead>
+			                        <tr>
+			                            {{#each getSizes _id}}
+			                                <th align="left">{{this.label}}</th>
+			                            {{/each}}
+			                        </tr>
+			                    </thead>
+			                    <tbody>
+			                        <tr>
+			                            {{#each getSizes _id}}
+			                                <td class="center-align">
+			                                    {{#if ifNonZeroSizes this.price}}{{currency this.price}}{{/if}}
+			                                </td>
+			                            {{/each}}
+			                        </tr>
+			                    </tbody>
+			                </table>
+			                <div class="row" align="center">
+			                    <a data-productid="{{_id}}" class="waves-effect waves-light btn editProductPricing">Edit Pricing</a>
+			                </div>
+			            </div>
+			        {{/if}}
+		    	</div>
+
+		        <div class="row valign-wrapper productsPageComponent">
+		        	<div class="col s12">
+		        		<div class="row valign-wrapper">
+				            <div class="col s6 valign">
+				                <h6>Variable Price:</h6>
+				            </div>
+				            <div class="col s6 valign">
+				                <div class="switch">
+				                    <label>
+				                        No
+				                        <input id="variablePriceSetting" type="checkbox" checked="{{variablePrice}}">
+				                        <span class="lever"></span>
+				                        Yes
+				                    </label>
+				                </div>
+				            </div>
+				        </div>
+			            <i>*If yes, the prices entered above for each size will be interpreted as average prices and can be modified at checkout.</i>
+			        </div>
+		        </div>
+
+		        <div class="row valign-wrapper productsPageComponent">
+		        	<div class="col s12">
+			            <h6 class="row">Unit Based Price: (e.g $/lb)</h6>
+			            <div class="row valign-wrapper">
+			            	<div class="col s6 valign">
+				                <div class="switch">
+				                    <label>
+				                        No
+				                        <input id="unitBasedPriceSetting" type="checkbox" checked="{{unitBasedPrice}}">
+				                        <span class="lever"></span>
+				                        Yes
+				                    </label>
+				                </div>
+				            </div>
+				            <div class="col s5 valign">
+				                <input id="unitLabel" type="text" value="{{unitLabel}}" placeholder="Unit Label (eg. 'lb')">
+				            </div>
+				            <div class="col s1 valign"><i id="saveUnitLabel" class="material-icons small grey-text">save</i></div>
+				        </div>
+				        <i>*If yes, the prices entered above for each size will be interpreted as rates.</i>
+		            </div>
+		        </div>
+
+		        {{#if productNotPartOfGroup group}}
+			        <div class="row valign-wrapper openTaxModal productsPageComponent">
+		        		<a class="waves-effect waves-light col s12 center-align teal-text ">Tax Rule: {{getTaxRuleLabel this.taxRule}}</a>
+		        	</div>
+
+		        	<div class="row valign-wrapper productsPageComponent">
+		        		<div class="col s12">
+			        		{{#if showAddonsOptions}}
+			        			<div class="row">
+			        				<div class="waves-effect waves-light col s12 center-align teal-text hideAddonsOptions">Add-Ons:<a class="secondary-content"><i class="material-icons">keyboard_arrow_up</i></a></div>
+			        			</div>
+			        			<div class="divider"></div>
+			        			{{#each getProductAttachedPureAddOns this.addOns}}
+			        				<div class="row valign-wrapper">
+						        		<div class="valign col s2"><i class="material-icons">star</i></div>
+						        		<div class="valign col s8 white-text productsPageComponent" style="{{getTileBackgroundColor 'All'}}">{{name}}<a class="secondary-content">{{currency (price)}}</a></div>
+						        		<div class="valign col s2 closeAddOnChip"><i class="material-icons">clear</i></div>
+						        	</div>
+						        {{else}}
+						        	<i>*You have not pinned any Add-Ons to this product yet. Any Add-Ons pinned to this product will show at the top of the list of Add-Ons options on the POS.</i>
+			        			{{/each}}
+			        			<div class="divider"></div>
+			        			{{#each getPureAddOns (allOtherAddons this.addOns)}}
+			        				<div class="row valign-wrapper attachSelectedAddon">
+						        		<div class="valign col s2"><i class="material-icons">add</i></div>
+						        		<div class="valign col s8 white-text productsPageComponent" style="{{getTileBackgroundColor 'All'}}">{{name}}<a class="secondary-content">{{currency (price)}}</a></div>
+						        		<div class="valign col s2">&nbsp;</div>
+						        	</div>
+			        			{{/each}}
+			        			<div class="divider"></div>
+			        			<h6 class="row">Create New Add-On:</h6>
+			        			<form id="manageAddonForm" class="row valign-wrapper">					                
+				                    <div class="input-field col s8 valign">
+				                        <input id="inputAddonName" type="text" class="validate" placeholder="New Add-On Name">
+				                    </div>
+				                    <div class="input-field col s valign">
+				                    	<input id="addonPrice" type="number" min="0.01" step="0.01" placeholder="$0.00" />
+				                    </div>
+				                    <div class="col s1 valign">
+				                    	<a class="create-Addon btn-floating btn waves-effect waves-light teal">
+				        				<i id="AddNewAddon" class="material-icons">add</i></a>
+				                    </div>
+					            </form>
+			        		{{else}}
+			        			<div class="waves-effect waves-light col s12 center-align teal-text showAddonsOptions">Add-Ons:<a class="secondary-content"><i class="material-icons">keyboard_arrow_down</i></a></div>
+			        		{{/if}}
+			        	</div>
+		        	</div>
+
+		        	<div class="row valign-wrapper productsPageComponent">
+		        		<div class="col s12">
+			        		{{#if showSubstituteOptions}}
+			        			<div class="row">
+			        				<div class="waves-effect waves-light col s12 center-align teal-text hideSubstituteOptions">Substitutions:<a class="secondary-content"><i class="material-icons">keyboard_arrow_up</i></a></div>
+			        			</div>
+			        			<div class="divider"></div>
+			        			{{#each getProductAttachedSubstituteAddOns this.addOns}}
+			        				<div class="row valign-wrapper">
+						        		<div class="valign col s2"><i class="material-icons">star</i></div>
+						        		<div class="valign col s8 white-text productsPageComponent" style="{{getTileBackgroundColor 'All'}}">{{name}}<a class="secondary-content">{{currency (price)}}</a></div>
+						        		<div class="valign col s2 closeAddOnChip"><i class="material-icons">clear</i></div>
+						        	</div>
+						        {{else}}
+						        	<i>*You have not pinned any Substitutions to this product yet. Any Substitutions pinned to this product will show at the top of the list of Substitutions options on the POS.</i>
+			        			{{/each}}
+			        			<div class="divider"></div>
+			        			{{#each getSubstituteAddOns (allOtherAddons this.addOns)}}
+			        				<div class="row valign-wrapper attachSelectedAddon">
+						        		<div class="valign col s2"><i class="material-icons">add</i></div>
+						        		<div class="valign col s8 white-text productsPageComponent" style="{{getTileBackgroundColor 'All'}}">{{name}}<a class="secondary-content">{{currency (price)}}</a></div>
+						        		<div class="valign col s2">&nbsp;</div>
+						        	</div>
+			        			{{/each}}
+			        			<div class="divider"></div>
+			        			<h6 class="row">Create New Substitution:</h6>
+			        			<form id="manageSubstitutionForm">
+			        				<div class="row valign-wrapper">
+			        					<div class="col s6"><input id="new-substitute-label-NO" placeholder="NO:" type="text" class="validate"></div>
+			                        	<div class="col s6"><input id="new-substitute-label-ADD" placeholder="ADD:" type="text" class="validate"></div>
+			                        </div>
+			                        <div class="row valign-wrapper">
+			                        	<div class="col s4 offset-s6 valign"><input id="new-substitute-price" placeholder="$0.00" type="number" min="0.01" step="0.01" class="validate"></div>
+
+			                        	<div class="col s2 center-align valign">
+				                            <a class="create-Substitution btn-floating btn waves-effect waves-light teal">
+					        				<i id="AddNewSubstitution" class="material-icons">add</i></a>
+				                        </div>
+				                    </div>
+					            </form>
+			        		{{else}}
+			        			<div class="waves-effect waves-light col s12 center-align teal-text showSubstituteOptions">Substitutions:<a class="secondary-content"><i class="material-icons">keyboard_arrow_down</i></a></div>
+			        		{{/if}}
+			        	</div>
+		        	</div>
+		        {{/if}}
+
+		        <div class="divider"></div>
+				<h6 class="grey-text row"><b>Group Options:</b></h6>
+
+				{{#if isSelectedProductInGroup}}
+					<div class="row valign-wrapper unGroupProduct productsPageComponent">
+		        		<a class="waves-effect waves-light col s12 center-align teal-text ">Break Product Out Of Group</a>
+		        	</div>
+                {{else}}
+	                <div class="row valign-wrapper convertThisProductToGroup productsPageComponent">
+		        		<a class="waves-effect waves-light col s12 center-align teal-text ">Convert Product To Group</a>
+		        	</div>
+                {{/if}}
+
+		       	<div class="divider"></div>
+				<h6 class="grey-text row"><b>Archive Options:</b></h6>
+				{{#if archivedProduct _id}}
+					<div class="row valign-wrapper activateProduct green productsPageComponent">
+		        		<a class="waves-effect waves-light col s12 center-align white-text ">Activate</a>
+		        	</div>
+		        {{else}}
+		        	{{#if outOfSeasonProduct _id}}
+		        		<div class="row valign-wrapper activateProduct green productsPageComponent">
+			        		<a class="waves-effect waves-light col s12 center-align white-text ">Activate</a>
+			        	</div>
+		        	{{else}}
+			        	<div class="row valign-wrapper outOfSeason orange lighten-2 productsPageComponent">
+			        		<a class="waves-effect waves-light col s12 center-align white-text">Out of Season</a>
+			        	</div>
+			        {{/if}}
+		        	<div class="row valign-wrapper longTermArchive grey productsPageComponent">
+		        		<a class="waves-effect waves-light col s12 center-align white-text valign">Archive</a>
+		        	</div>
+		        {{/if}}
+
+		        <div class="row valign-wrapper chooseDeleteProduct red lighten-3 productsPageComponent">
+	        		<a class="waves-effect waves-light col s12 center-align white-text ">Delete Product</a>
+	        	</div>
+		    {{/with}}
+		</div>
+	</div>
+
+	<div id="newProductCategoryModal" class="modal modal-fixed-footer">
+        <div class="modal-content">
+            <div class="row saveVerticalSpace">
+                <div class="col s12 saveVerticalSpace">
+                    {{#each getAllCategories}}
+                        <div class="addNewProductCategory modal-action modal-close posCategoryTile white-text" data-category="{{name}}" style="{{getCategoryTileColor name color}}">
+                            {{name}}
+                        </div>
+                    {{/each}}
+                    <a class="waves-effect waves-light right-align manage-Categories modal-action modal-close grey-text posCategoryTile"><b>+New Category</b></a>
+                </div>
+            </div>
+            <!-- <div class="grid-fluid">
+                {{#each categories}}
+                    <div class="addNewProductCategory card-panel white-text grid-fluid-item modal-action modal-close" style="{{colorBackgroundClass color}}" data-category="{{name}}">
+                        <span>{{name}}<br><br><i class="white-text secondary-content">{{ifCategorySelectedGetImportanceInNew name}}</i></span>
+                    </div>
+                {{else}}
+	                <div class="manage-Categories card-panel teal lighten-1 white-text grid-fluid-item modal-action modal-close">
+	                    <span>Go To Manage Categories</span>
+	                </div>
+                {{/each}}
+            </div> -->
+        </div>
+    </div>
+
+	<div id="categoryModal" class="modal modal-fixed-footer">
+        <div class="modal-content">
+            <div class="row saveVerticalSpace">
+                <div class="col s12 saveVerticalSpace">
+                    {{#each getAllCategories}}
+                        <div class="{{#if getSelectedGroup}}addGroupCategory{{/if}} {{#if getSelectedProduct}}addProductCategory{{/if}} posCategoryTile white-text" data-category="{{name}}" style="{{getCategoryTileColor name color}}">
+                            <span>{{name}}<br><i class="white-text secondary-content">{{ifCategorySelectedGetImportance name}}</i></span>
+                        </div>
+                    {{/each}}
+                    <a class="waves-effect waves-light right-align manage-Categories modal-action modal-close grey-text posCategoryTile"><b>+New Category</b></a>
+                </div>
+            </div>
+<!--             <div class="grid-fluid">
+                {{#each categories}}
+                    <div class="{{#if getSelectedGroup}}addGroupCategory{{/if}} {{#if getSelectedProduct}}addProductCategory{{/if}} card-panel white-text grid-fluid-item" style="{{colorBackgroundClass color}}" data-category="{{name}}">
+                        <span>{{name}}<br><br><i class="white-text secondary-content">{{ifCategorySelectedGetImportance name}}</i></span>
+                    </div>
+                {{else}}
+                    <div class="manage-Categories card-panel teal lighten-1 white-text grid-fluid-item">
+                        <span>Go To Manage Categories</span>
+                    </div>
+                {{/each}}
+            </div> -->
+        </div>
+    </div>
+
+    <div id="taxModal" class="modal">
+        <div class="modal-content">
+            {{#each getTaxKeys}}
+                <div class="row valign-wrapper">
+                    <div class="col s4">
+                        <div class="{{#if getSelectedGroup}}addGroupTaxRule{{/if}} {{#if getSelectedProduct}}addTaxRule{{/if}} card-panel light-blue lighten-1 white-text" data-taxkey="{{this}}">
+                            <span data-taxkey="{{this}}">{{getTaxLabel this}}</span>
+                        </div>
+                    </div>
+                    <div class="col s8 valign">
+                        <p>{{getTaxDescription this}}</p>
+                    </div>
+                </div>
+            {{/each}}
+        </div>
+    </div>
+
+	<div id="productToVariantModal" class="modal">
+        <div class="modal-content">
+            <h4>Choose Products:<a class="{{#with getSelectedGroup}}addExistingProductsToGroup{{/with}} secondary-content btn-floating btn-large waves-effect waves-light green modal-action modal-close"><i class="material-icons">done</i></a></h4>
+            <div class="row">
+                <ul class="collection col s6" style="height:300px; overflow: auto;">
+                    {{#each getUngroupedUnselectedProductIds}}
+                        {{#with getProductOrGroup this}}
+                            <li class="collection-item addProductToVariantSet" data-productid="{{_id}}">
+                                <a style="{{getProductBackgroundColor this}}">&nbsp;&nbsp;</a>{{name}}<a class="secondary-content material-icons">keyboard_arrow_right</a>
+                            </li>
+                        {{/with}}
+                    {{/each}}
+                </ul>
+                <ul class="collection col s6" style="height:300px; overflow: auto;">
+                    {{#each getProductsToVariantSet}}
+                        <li class="collection-item removeProductFromConvertSet" data-productid="{{_id}}">
+                            <a style="{{getProductBackgroundColor this}}">&nbsp;&nbsp;</a>{{name}}<a class="secondary-content material-icons green-text">done</a>
+                        </li>
+                    {{/each}}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="dismantleGroupConfirm" class="modal">
+        <div class="modal-content">
+            <h4>Are you sure?</h4>
+            <p>This will break-out all the products in this group to individual products.</p>
+        </div>
+        <div class="modal-footer">
+            <a class="dismantleGroup modal-action modal-close waves-effect waves-green btn-large teal">Yes</a>&nbsp;&nbsp;<a class="setVariantStatus modal-action modal-close waves-effect waves-green btn-large grey">No</a>
+        </div>
+    </div>
+
+    <div id='newGroupOrExistingConfirm' class="modal">
+        <div class="modal-content">
+            {{#if isChooseExistingGroupMode}}
+                <h4>Choose From Existing Group:</h4>
+                <div class="row">
+                    <ul class="collection col s6" style="height:300px;">
+                        {{#each getAllGroups}}
+                            <li class="collection-item addProductToThisGroup modal-action modal-close" data-groupid="{{_id}}">
+                                <a style="{{getProductBackgroundColor this}}">&nbsp;&nbsp;</a>{{name}}<a class="secondary-content material-icons">keyboard_arrow_right</a>
+                            </li>
+                        {{/each}}
+                    </ul>
+                </div>
+            {{else}}
+                <h4>Create a new group or add to existing group?</h4>
+                <div class="row center-align">
+                    <a class="confirmProductToNewGroup waves-effect teal waves-light btn-large modal-action modal-close" style="width:150px;">New</a><a class="confirmProductToExistingGroup waves-effect waves-light btn-large blue lighten-2" style="width:150px;">Existing</a>
+                </div>
+            {{/if}}
+        </div>
+    </div>
+
+    <div id="confirmProductDeleteModal" class="modal">
+        <div class="modal-content">
+            <h4>Are you sure?</h4>
+            <p>Deleting a product is not reversible. Any historical orders or loyalty programs that contain this product may not have sufficient information if this product is deleted. As an alternative, you can consider archiving instead.</p>
+            <p>Are you sure you want to delete this product?</p>
+        </div>
+        <div class="modal-footer">
+            <a class="deleteThisProduct modal-action modal-close waves-effect waves-green btn-large red">Yes</a>&nbsp;&nbsp;<a class="modal-action modal-close waves-effect waves-green btn-large grey">No</a>
+        </div>
+    </div>
+
+    <div id="confirmCategoryClumpingModal" class="modal">
+		<div class="modal-content">
+			<h4>Clump Products By Categories</h4>
+			<p>Please keep in mind that this action will override any previous, custom, sorting of products that you may have set.</p>
+		</div>
+		<div class="modal-footer">
+            <a class="modal-action modal-close waves-effect btn-large grey left">Back</a>&nbsp;&nbsp;<a class="modal-action modal-close waves-effect btn-large clumpCategories right">Continue</a>
+        </div>
+    </div>
+
+    {{> ManageAddons}}
+    {{> ManageCategory}}
+    {{> ManageSize}}
+</template>

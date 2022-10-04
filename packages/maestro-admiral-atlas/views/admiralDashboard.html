@@ -1,0 +1,369 @@
+<template name="AdmiralDashboard">
+	<div class="row">
+		<ul class="collapsible col s8 offset-s2" data-collapsible="accordion">
+			<li>
+				<div class="collapsible-header">{{#if isBusinessSelected}}{{#with getSelectedBusinessInfo}}<a class="teal-text">{{name}}</a>{{/with}}{{else}}Select Business{{/if}}</div>
+				<div class="collapsible-body">
+					<ul class="collection">
+						{{#each getAllBusinesses}}
+							<li class="collection-item center-align selectBusiness">{{name}}</li>
+						{{/each}}
+					</ul>
+				</div>
+			</li>
+			<li>
+				<div class="collapsible-header">{{#if isLocationSelected}}{{#with getSelectedLocationInfo}}<a class="teal-text">{{name}}</a>{{/with}}{{else}}Select Location{{/if}}</div>
+				<div class="collapsible-body">
+					<ul class="collection">					
+						{{#each getAllLocations}}
+							<li class="collection-item center-align selectLocation">{{name}}</li>
+						{{/each}}
+					</ul>
+				</div>
+			</li>
+		</ul>
+	</div>
+
+	<h5 class="light-blue-text center-align">Dashboard</h5>
+
+	<div class="row center-align">
+		<a class="waves-effect waves-light btn-large btn-flat white {{#if DailyView}}light-blue-text{{else}}grey-text{{/if}} setDailyView">Daily</a>
+		<a class="waves-effect waves-light btn-large btn-flat white {{#if WeeklyView}}light-blue-text{{else}}grey-text{{/if}} setWeeklyView">Weekly</a>
+		<a class="waves-effect waves-light btn-large btn-flat white {{#if MonthlyView}}light-blue-text{{else}}grey-text{{/if}} setMonthlyView">Monthly</a>
+	</div>
+
+	{{#if DailyView}}
+		<div class="row valign-wrapper">
+			<div class="col s2 m4 right-align valign">
+				<a id="previousPeriod" class="waves-effect waves-light"><i class="material-icons teal-text medium">keyboard_arrow_left</i></a>
+			</div>
+			<h5 class="col s8 m4 center-align valign">
+		    	{{getSelectedDate}}&nbsp;&nbsp;<i class="material-icons small grey-text forceRefresh">refresh</i>
+		    </h5>
+		    <div class="col s2 m4 left-align valign">
+		    	<a id="nextPeriod" class="waves-effect waves-light"><i class="material-icons teal-text medium">keyboard_arrow_right</i></a>
+		    </div>
+		</div>
+	{{/if}}
+
+	{{#if WeeklyView}}
+		<div class="row valign-wrapper">
+			<div class="col s2 right-align valign">
+				<a id="previousPeriod" class="waves-effect waves-light"><i class="material-icons teal-text medium">keyboard_arrow_left</i></a>
+			</div>
+			<h5 class="col s8 center-align valign">
+		    	{{getSelectedWeeklyDate}}&nbsp;&nbsp;<i class="material-icons small grey-text forceRefresh">refresh</i>
+		    </h5>
+		    <div class="col s2 left-align valign">
+		    	<a id="nextPeriod" class="waves-effect waves-light"><i class="material-icons teal-text medium">keyboard_arrow_right</i></a>
+		    </div>
+		</div>
+	{{/if}}
+
+	{{#if MonthlyView}}
+		<div class="row valign-wrapper">
+	<!-- 		<div class="col s4 left-align valign">
+				<a id="previousDay" class="waves-effect waves-light btn btn-small"><i class="material-icons left">arrow_backward</i>Previous</a>
+			</div> -->
+			<div class="col s4 right-align valign">
+				<a id="previousPeriod" class="waves-effect waves-light"><i class="material-icons teal-text medium">keyboard_arrow_left</i></a>
+			</div>
+			<h5 class="col s4 center-align valign">
+		    	{{getSelectedMonthlyDate}}&nbsp;&nbsp;<i class="material-icons small grey-text forceRefresh">refresh</i>
+		    </h5>
+		    <div class="col s4 left-align valign">
+		    	<a id="nextPeriod" class="waves-effect waves-light"><i class="material-icons teal-text medium">keyboard_arrow_right</i></a>
+		    </div>
+		</div>
+	{{/if}}
+
+
+	{{#if isDashboardReady}}
+		<div class="row hide-on-large-only">
+			<div class="tally col s12 m6 card">
+				<div class="row center-align">
+					<h2>{{currency getSalesTally}}</h2>
+				</div>
+				<div class="row center-align">
+					Grand Total
+				</div>
+			</div>
+			<div class="tally col s12 m6 card">
+				<div class="row center-align">
+					<h2>{{currency getNetSalesTally}}</h2>
+				</div>
+				<div class="row center-align">
+					Net Sales
+				</div>
+			</div>
+			<div class="tally col s12 m6 card">
+				{{#if isTaxComponentsZero}}
+					<div class="row center-align">
+						<h4>{{currency getTaxesTotal}}</h4>
+					</div>
+					<div class="row center-align">
+						Taxes
+					</div>
+				{{else}}
+					<div class="row">
+						<div class="col s6">
+							<div class="row center-align">
+								<h4>{{currency getGSTTaxes}}</h4>
+							</div>
+							<div class="row center-align">
+								GST
+							</div>
+						</div>
+						<div class="col s6">
+							<div class="row center-align">
+								<h4>{{currency getHSTTaxes}}</h4>
+							</div>
+							<div class="row center-align">
+								HST
+							</div>
+						</div>
+					</div>
+				{{/if}}
+			</div>			
+			<div class="tally col s12 m6 card">
+				<div class="row center-align">
+					<h2>x{{getOrdersTally}}</h2>
+				</div>
+				<div class="row center-align">
+					Orders
+				</div>
+			</div>
+		</div>
+
+		<div class="row valign-wrapper hide-on-med-and-down">
+			<div class="tally col l4 card hide-on-med-and-down valign">
+				<div class="row center-align">
+					<h2>{{currency getSalesTally}}</h2>
+				</div>
+				<div class="row center-align">
+					Grand Total
+				</div>
+			</div>
+<!-- 			<div class="col s12 valign">
+				{{#if isTaxComponentsZero}}
+					<div class="row center-align">
+						<h4>{{currency getTaxesTotal}}</h4>
+					</div>
+					<div class="row center-align">
+						Taxes
+					</div>
+				{{else}}
+					<div class="row">
+						<div class="col s6">
+							<div class="row center-align">
+								<h4>{{currency getGSTTaxes}}</h4>
+							</div>
+							<div class="row center-align">
+								GST
+							</div>
+						</div>
+						<div class="col s6">
+							<div class="row center-align">
+								<h4>{{currency getHSTTaxes}}</h4>
+							</div>
+							<div class="row center-align">
+								HST
+							</div>
+						</div>
+					</div>
+				{{/if}}
+			</div> -->
+			<div class="tally col l4 hide-on-med-and-down valign">
+				<div class="row valign-wrapper">
+					<div class="col s12 valign">
+						<p class="center-align">
+							<h4>{{currency getNetSalesTally}}</h4>
+						</p>
+						<p class="center-align">
+							Net Sales
+						</p>
+					</div>
+				</div>
+				<div class="row valign-wrapper">
+					{{#if isTaxComponentsZero}}
+						<div class="col s12 valign">
+							<p class="center-align">
+								<h4>{{currency getTaxesTotal}}</h4>
+							</p>
+							<p class="center-align">
+								Taxes
+							</p>
+						</div>
+					{{else}}
+						<div class="col s6">
+							<p class="center-align">
+								<h4>{{currency getGSTTaxes}}</h4>
+							</p>
+							<p class="center-align">
+								GST
+							</p>
+						</div>
+						<div class="col s6">
+							<p class="center-align">
+								<h4>{{currency getHSTTaxes}}</h4>
+							</p>
+							<p class="center-align">
+								HST
+							</p>
+						</div>
+					{{/if}}
+				</div>
+			</div>			
+<!-- 			<div class="col m12 l6 hide-on-small-only">
+				<div id="barChart"></div>{{refreshGraph}}
+			</div>	 -->		
+			<div class="tally col l4 card hide-on-med-and-down valign">
+				<div class="row center-align">
+					<h2>x{{getOrdersTally}}</h2>
+				</div>
+				<div class="row center-align">
+					Orders
+				</div>
+			</div>
+		</div>
+		<div class="divider"></div>
+		<div class="row">
+			<div class="col s12 m10 push-m1 hide-on-small-only">
+				<div id="barChart"></div>{{refreshGraph}}
+			</div>
+		</div>
+		<div class="divider"></div>
+		<div class="row valign-wrapper">
+			<div class="col s12 valign center-align">
+				<div class="horizontalCategoryTallyDiv">
+					<div class="horizontalCategoryTallyContainer">
+						<div class="horizontalCategoryTallyContent">
+							{{#each getCategoryTable}}
+								<div class="fixedTallyCard chip" style="{{getCategoryColor categoryName}}">
+									<div class="row center-align white-text">
+										<h6>{{categoryName}}</h6>
+									</div>
+									<div class="row center-align white-text">
+										<h4>{{currency categoryTotal}}</h4>
+									</div>
+								</div>
+							{{/each}}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="divider"></div>
+
+		<div class="row">
+			<div class="col s12 m10 push-m1">
+				<ul class="tabs">
+					<li class="tab col s3"><a class="active" href="#productsTable">Products</a></li>
+					<li class="tab col s3"><a href="#loyaltyProgramsTable">Loyalty Programs</a></li>
+					<li class="tab col s3"><a href="#redemptionsTable">Redemptions</a></li>
+					<li class="tab col s3"><a href="#customersTable">Customers</a></li>
+				</ul>
+			</div>
+		</div>
+
+		<div id="productsTable" class="row">
+			<div class="col s12 m10 push-m1 card">
+				<table class="bordered highlight">
+					<thead>
+						<tr>
+						    <th data-field="id">Product</th>
+						    <th data-field="name" class="center-align">Quantity</th>
+						    <th data-field="price" class="center-align">Sales (after redemptions)</th>
+						</tr>
+					</thead>
+					<tbody>
+						{{#each getProductsTable}}
+							<tr>
+							    <td>{{this.name}}</td>
+							    <td class="center-align">{{formatQuantity quantity}}</td>
+							    <td class="center-align">{{currency total}}</td>
+					        </tr>
+				        {{/each}}
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<div id="loyaltyProgramsTable" class="row">
+			<div class="col s12 m10 push-m1 card">
+				<table class="bordered highlight">
+					<thead>
+						<tr>
+						    <th data-field="id">Loyalty Programs</th>
+						    <th data-field="name" class="center-align">Quantity</th>
+						    <th data-field="price" class="center-align">Sales</th>
+						</tr>
+					</thead>
+					<tbody>
+						{{#each getLoyaltyProgramsTable}}
+							<tr>
+							    <td>{{this.name}}</td>
+							    <td class="center-align">{{formatQuantity quantity}}</td>
+							    <td class="center-align">{{currency total}}</td>
+					        </tr>
+				        {{/each}}
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<div id="redemptionsTable" class="row">
+			<div class="col s12 m10 push-m1 card">
+				<table class="bordered highlight">
+					<thead>
+						<tr>
+						    <th data-field="id">Product Redemptions</th>
+						    <th data-field="name" class="center-align">Quantity</th>
+						    <th data-field="price" class="center-align">Sales</th>
+						</tr>
+					</thead>
+					<tbody>
+						{{#each getProductRedeemTable}}
+							<tr>
+							    <td>{{this.name}}</td>
+							    <td class="center-align">{{formatQuantity quantity}}</td>
+							    <td class="center-align">{{currency total}}</td>
+					        </tr>
+				        {{/each}}
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<div id="customersTable" class="row">
+			<div class="col s12 m10 push-m1 card">
+				<table class="bordered highlight">
+					<thead>
+						<tr>
+						    <th data-field="id">Top 30 Customers</th>
+						    <th data-field="name" class="center-align">Orders</th>
+						    <th data-field="price" class="center-align">Sales</th>
+						</tr>
+					</thead>
+					<tbody>
+						{{#each getCustomerTable}}
+							<tr>
+							    <td>{{this.name}}</td>
+							    <td class="center-align">{{formatQuantity quantity}}</td>
+							    <td class="center-align">{{currency total}}</td>
+					        </tr>
+				        {{/each}}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	{{else}}
+		<div class="row center-align">
+			<p>The report is being generated, this may take up to a minute.</p>
+			<div class="progress">
+				<div class="indeterminate"></div>
+			</div>
+		</div>
+	{{/if}}
+
+</template>

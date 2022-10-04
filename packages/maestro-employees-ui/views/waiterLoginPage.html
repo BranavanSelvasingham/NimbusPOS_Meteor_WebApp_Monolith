@@ -1,0 +1,64 @@
+<template name="WaiterLogin">
+    <div class="row horizontalListFlow">
+        {{#each listActiveEmployees}}
+            <div class="col l6 offset-l3 s8 offset-s2 {{#if employeeIsNotSelected _id}}hide{{/if}}">
+                <div class="card {{#if unlockThisEmployee _id}}{{else}}selectThisEmployee{{/if}}">
+                    <div class="row valign-wrapper">
+                        <div class="col s3 valign center-align">
+                            <i class="material-icons large grey-text">person</i>
+                        </div>
+                        <div class="col s8 valign">
+                            <h5>{{name}}</h5>
+                        </div>
+                        <div class="col s1 valign">
+                            {{#unless thisIsSystemEmployee _id}}
+                                {{#if unlockThisEmployee _id}}<a class="secondary-content"><i class="material-icons medium grey-text clearEmployeeSelection">keyboard_arrow_up</i></a>{{/if}}
+                            {{else}}
+                                <a class="secondary-content"><i class="material-icons medium grey-text lockPOS">exit_to_app</i></a>
+                            {{/unless}}
+                        </div>
+                    </div>
+
+                    {{#unless thisIsSystemEmployee _id}}
+                        {{#if unlockThisEmployee _id}}
+                            <div class="row center-align">
+                                {{#each getEmployeePinDigits}}
+                                    <a class="waiter-pin-entry-style" style="font-size:30px;">*</a>
+                                {{/each}}
+                                <a class="waiter-pin-entry-style" style="font-size:30px;">&nbsp;</a>
+                                {{#with getEmployeePinDigits}}<i class="material-icons small grey-text refreshPinEntered">refresh</i>{{/with}}
+                            </div>
+
+                            <!-- <div class="row center-align"><i class="material-icons medium grey-text refreshPinEntered">refresh</i></div> -->
+                            <div class="row">&nbsp;</div>
+
+                            <div class="row">
+                                <div class="row center-align">
+                                    <a class="waves-effect waves-light btn-floating center-align addToPinDigit btn-large blue-grey" data-pindigit="7">7</a>&nbsp;&nbsp;
+                                    <a class="waves-effect waves-light btn-floating center-align addToPinDigit btn-large blue-grey" data-pindigit="8">8</a>&nbsp;&nbsp;
+                                    <a class="waves-effect waves-light btn-floating center-align addToPinDigit btn-large blue-grey" data-pindigit="9">9</a>
+                                </div>
+                                <div class="row center-align">
+                                    <a class="waves-effect waves-light btn-floating center-align addToPinDigit btn-large blue-grey" data-pindigit="4">4</a>&nbsp;&nbsp;
+                                    <a class="waves-effect waves-light btn-floating center-align addToPinDigit btn-large blue-grey" data-pindigit="5">5</a>&nbsp;&nbsp;
+                                    <a class="waves-effect waves-light btn-floating center-align addToPinDigit btn-large blue-grey" data-pindigit="6">6</a>
+                                </div>
+                                <div class="row center-align">
+                                    <a class="waves-effect waves-light btn-floating center-align addToPinDigit btn-large blue-grey" data-pindigit="1">1</a>&nbsp;&nbsp;
+                                    <a class="waves-effect waves-light btn-floating center-align addToPinDigit btn-large blue-grey" data-pindigit="2">2</a>&nbsp;&nbsp; 
+                                    <a class="waves-effect waves-light btn-floating center-align addToPinDigit btn-large blue-grey" data-pindigit="3">3</a>
+                                </div>
+                                <div class="row center-align">
+                                    <!-- <a class="waves-effect waves-light btn-floating center-align addToPinDigit btn-large blue-grey">&nbsp;</a>&nbsp;&nbsp; -->
+                                    <a class="waves-effect waves-light btn-floating center-align addToPinDigit btn-large blue-grey" data-pindigit="0">0</a>
+                                    <!-- <a class="waves-effect waves-light btn-floating center-align btn-large grey white-text refreshPinEntered"><i class="material-icons">refresh</i></a> -->
+                                </div>
+                            </div>
+                        {{/if}}
+                    {{/unless}}
+                </div>
+            </div>
+        {{/each}}
+    </div>
+
+</template>

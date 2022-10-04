@@ -1,0 +1,8 @@
+<template name="ListBusinessUsers">
+    <ul class="collection with-header">
+        <li class="collection-header"><h4>Users</h4></li>
+        {{#each businessUsers}}
+            <li class="collection-item {{isSelected}}">{{profile.name}}</li>
+        {{/each}}
+    </ul>
+</template>

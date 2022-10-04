@@ -1,0 +1,1386 @@
+<template name="RestaurantView">
+    {{isLocationSelected}}
+
+    <ul id="order-checout-balance-tabs" class="tabs hide">
+        <li class="tab"><a class="" href="#orderDetailsTab">1</a></li>
+        <li class="tab"><a class="" href="#restaurantOrderCreateTab">1</a></li>
+        <li class="tab"><a href="#checkoutTab">2</a></li>
+    </ul>
+
+    <div id="orderDetailsTab" class="row order-page-body">
+        {{#if showOrderTypeOptions}}
+            <div class="row order-details-tab valign-wrapper">
+                <h4 class="col s12 valign center-align">
+                    <a class="{{#if inExpressMode}}orderTypeButtons-active light-blue white-text{{else}}orderTypeButtons{{/if}} startExpressMode">
+                        Express
+                    </a>
+                    &nbsp;
+                    <a class="{{#if inDineInMode}}orderTypeButtons-active light-blue white-text{{else}}orderTypeButtons{{/if}} startDineInMode">
+                        Dine-In
+                    </a>
+                    &nbsp;
+                    <a class="{{#if inTakeOutMode}}orderTypeButtons-active light-blue white-text{{else}}orderTypeButtons{{/if}} startTakeOutMode">
+                        Take-Out
+                    </a>    
+                    &nbsp;
+                    <a class="{{#if inDeliveryMode}}orderTypeButtons-active light-blue white-text{{else}}orderTypeButtons{{/if}} startDeliveryMode">
+                        Delivery
+                    </a>
+                </h4>
+            </div>
+        {{/if}}
+        
+        {{#if inTakeOutMode}}
+            <h5 class="row center-align">Take-Out</h5>
+            <div class="row">
+                <form id="takeOutForm">
+                    <div class="row">
+                        <div class="col s8 offset-s2">
+                            <label for="orderNameField">Name:</label>
+                            <input id="orderNameField" type="text" placeholder="{{getOrderInfoName}}">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col s8 offset-s2">
+                            <label for="orderPhoneField">Phone:</label>
+                            <input id="orderPhoneField" type="tel" placeholder="{{getOrderInfoPhone}}">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col s8 offset-s2">
+                            <label for="deliveryInstructionsField">Take-Out Instructions:</label>
+                            <input id="deliveryInstructionsField" type="text" placeholder="{{getOrderInfoInstructions}}">
+                        </div>
+                    </div>
+
+                    <div class="keyboardSpaceFiller">&nbsp;</div>
+                </form>
+            </div>
+        {{/if}}
+
+        {{#if inDeliveryMode}}
+            <h5 class="row center-align">Delivery</h5>
+            <div class="row">
+                <form id="takeOutForm">
+                    <div class="row">
+                        <div class="col s8 offset-s2">
+                            <label for="orderNameField">Name:</label>
+                            <input id="orderNameField" type="text" placeholder="{{getOrderInfoName}}">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col s8 offset-s2">
+                            <label for="orderPhoneField">Phone:</label>
+                            <input id="orderPhoneField" type="tel" placeholder="{{getOrderInfoPhone}}">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col s2 offset-s2">
+                            <label for="unitNumberField">Unit #:</label>
+                            <input id="unitNumberField" type="text" placeholder="{{getOrderInfoUnitNum}}">
+                        </div>
+                        <div class="col s2">
+                            <label for="buzzerNumberField">Buzzer #:</label>
+                            <input id="buzzerNumberField" type="text" placeholder="{{getOrderInfoBuzzer}}">
+                        </div>
+                        
+                    </div>
+
+                    <div class="row">
+                        <div class="col s2 offset-s2">
+                            <label for="streetNumberField">Street #:</label>
+                            <input id="streetNumberField" type="text" placeholder="{{getOrderInfoStreetNum}}">
+                        </div>
+
+                        <div class="col s6">
+                            <label for="streetField">Street:</label>
+                            <input id="streetField" type="text" placeholder="{{getOrderInfoStreet}}">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col s4 offset-s4">
+                            <label for="cityField">City:</label>
+                            <input id="cityField" type="text" placeholder="{{getOrderInfoCity}}">
+                        </div>
+                        <div class="col s2">
+                            <label for="postalCodeField">Postal Code:</label>
+                            <input id="postalCodeField" type="text" placeholder="{{getOrderInfoPostalCode}}">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col s8 offset-s2">
+                            <label for="deliveryInstructionsField">Delivery Instructions:</label>
+                            <input id="deliveryInstructionsField" type="text" placeholder="{{getOrderInfoInstructions}}">
+                        </div>
+                    </div>
+
+                    <div class="keyboardSpaceFiller">&nbsp;</div>
+                </form>
+            </div>
+        {{/if}}
+        
+        <footer class="page-footer order-details-page-footer" style="z-index: 5;">
+            <div class="white-text footer-content">
+                <div class="row valign-wrapper">
+                    {{#if showOrderTypeOptions}}
+                        <div class="col s6 offset-s3 valign center-align">
+                            {{#if rememberOrderSelected}}
+                                <a class="btn-flat white-text toggleRememberOrderType "><i class="material-icons left small">check_box</i>{{#with getRememberedOrderType}}Always start in {{this}} mode.{{else}}Remember Selection For Future Orders{{/with}}</a>
+                            {{else}}
+                                <a class="btn-flat white-text toggleRememberOrderType "><i class="material-icons left small">check_box_outline_blank</i>Remember Selection For Future Orders</a>
+                            {{/if}}
+                        </div>
+                    {{else}}
+                        <div class="col s12 right-align">
+                            <a class="clearOrderTypeSelection"><i class="material-icons large left white-text">clear</i></a>
+                            <a class="continueToOrder"><i class="material-icons large right white-text">arrow_forward</i></a>
+                        </div>
+                    {{/if}}
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- <div id="orderTab" class="row order-page-body"> -->
+    <div id="restaurantOrderCreateTab" class="row order-page-body saveHorizontalSpace saveVerticalSpace">
+        <div class="col s8 saveHorizontalSpace">
+            
+            <div class="row saveVerticalSpace">
+                <div class="col s1">&nbsp;</div>
+                <div class="col s10 saveVerticalSpace">
+                    <ul id="tables-product-customer-loyalty-tabs" class="tabs">
+                        <li class="tab col s3"><a href="#order-tables"><i class="material-icons center" style="font-size: 2.7rem;">group_work</i></a></li>
+                        <li class="tab col s3"><a class="active" href="#order-products"><i class="material-icons center" style="font-size: 2.7rem;">view_module</i></a></li>
+                        <li class="tab col s3 selectCustomerSearchBox"><a href="#order-customers"><i class="material-icons center" style="font-size: 2.7rem;">people</i></a></li>
+                        <li class="tab col s3"><a href="#order-loyalty"><i class="material-icons center" style="font-size: 2.7rem;">card_giftcard</i></a></li>
+                    </ul>
+                </div>
+                <div class="col s1">&nbsp;</div>
+            </div>
+            
+            <ul class="collection listViewContainer">
+                <li class="collection-item listViewContainer saveVerticalSpace">
+                    
+                    <div id="order-tables" class="listViewContainer order-tables-pos">
+                        <div id="tables-layout" class="tables-layout-pos"></div>
+                    </div>
+
+                    <div id="order-products" class="order-slide listViewContainer">
+                        <div class="row saveVerticalSpace">
+                            <div class="col s12 saveVerticalSpace">
+                                <div class="{{#unless isCategorySelected 'All'}}selectCategory posCategoryTile{{else}}posCategoryTileSelected{{/unless}} white-text" data-category="All" style="{{getCategoryTileColor 'All' ''}}">All</div>
+                                {{#each allCategories}}
+                                    <div class="{{#unless isCategorySelected name}}selectCategory posCategoryTile{{else}}posCategoryTileSelected{{/unless}} white-text" data-category="{{name}}" style="{{getCategoryTileColor name color}}">
+                                        {{name}}
+                                    </div>
+                                {{/each}}
+                            </div>
+                        </div>
+                        <div class="grid-fluid">
+                            {{#each getSortedFilteredProductsAndGroups}}
+                                {{#if isThisAGroupItem thisIsGroup}}
+                                    {{#if isThisSelectedGroup name}}
+                                        <div class="card-panel white-text grid-fluid-item-large" style="{{getTileBackgroundColor this}}" data-productid="{{_id}}">
+                                            <div class="row">
+                                                <h5 class="deselect-group-item">{{name}}<a class="secondary-content"><i class="material-icons white-text small">remove_circle_outline</i></a></h5>
+                                            </div>
+                                            <div class="row" style="background-color: white;">
+                                                <div class="grid-fluid">
+                                                    {{#each getProductsInGroupWithFilters name}}
+                                                        {{#if isThisProductExpanded this}}
+                                                            <div class="card-panel white-text sub-grid-fluid-item-large" style="{{getTileBackgroundColor this}}" data-productid="{{_id}}">
+                                                                <div class="row">
+                                                                    <h5 class="product-collapse">{{name}}<a class="secondary-content"><i class="material-icons white-text small">remove_circle_outline</i></a></h5>
+                                                                </div>
+                                                                <div class="row" style="background-color: white;">
+                                                                    <div class="grid-fluid">
+                                                                        {{#each sizes}}
+                                                                            <div class="product-size-select card-panel waves-effect waves-light white-text grid-fluid-item grid-fluid-item-small z-depth-0" style="{{getSizeTileBackgroundColor ../_id}}">
+                                                                                <span>{{sizeName (code)}}<br>{{currency (price)}}</span>
+                                                                            </div>
+                                                                        {{/each}}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        {{else}}
+                                                            <div class="card-panel waves-effect waves-light white-text product-item-select grid-fluid-item" style="{{getTileBackgroundColor this}}" data-productid="{{_id}}">{{name}}</div>
+                                                        {{/if}}
+                                                    {{/each}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {{else}}
+                                        <div class="card-panel waves-effect waves-light white-text group-item-select product-collapse grid-fluid-item" style="{{getTileBackgroundColor this}}" data-productid="{{_id}}">{{name}}<a class="secondary-content"><i class="material-icons white-text small">view_module</i></a></div>
+                                    {{/if}}
+                                {{else}}
+                                    {{#if isThisProductExpanded this}}
+                                        <div class="card-panel white-text grid-fluid-item-large" style="{{getTileBackgroundColor this}}" data-productid="{{_id}}">
+                                            <div class="row">
+                                                <h5 class="product-collapse">{{name}}<a class="secondary-content"><i class="material-icons white-text small">remove_circle_outline</i></a></h5>
+                                            </div>
+                                            <div class="row" style="background-color: white;">
+                                                <div class="grid-fluid">
+                                                    {{#each sizes}}
+                                                        <div class="product-size-select card-panel waves-effect waves-light white-text grid-fluid-item grid-fluid-item-small z-depth-0" style="{{getSizeTileBackgroundColor ../_id}}">
+                                                            <span>{{sizeName (code)}}<br>{{currency (price)}}</span>
+                                                        </div>
+                                                    {{/each}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {{else}}
+                                        <div class="card-panel waves-effect waves-light white-text product-item-select deselect-group-item grid-fluid-item" style="{{getTileBackgroundColor this}}" data-productid="{{_id}}">{{name}}</div>
+                                    {{/if}}
+                                {{/if}}                                            
+                            {{else}}
+                                <div class="preloader-wrapper big active">
+                                    <div class="spinner-layer spinner-blue">
+                                        <div class="circle-clipper left">
+                                            <div class="circle"></div>
+                                        </div>
+                                        <div class="gap-patch">
+                                            <div class="circle"></div>
+                                        </div>
+                                        <div class="circle-clipper right">
+                                            <div class="circle"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {{/each}}
+                        </div>
+                    </div>
+
+                    <!-- Customers -->
+                    <div id="order-customers" class=""> 
+                        <div class="row saveVerticalSpace customersSearchBar border-bottom">
+                            <div class="col s12 saveVerticalSpace">
+                                <div class="{{#unless isCustomerSearchTypeSelected 'Name'}}customerSearchField selectCustomerSearchField{{else}}selectedCustomerSearchField{{/unless}}" data-field="Name">{{#unless isCustomerSearchTypeSelected 'Name'}}Name{{else}}<input id="customer-name-search" type="search" placeholder="Search Name" style="font-size: 1.4rem;">{{/unless}}</div>
+                                <div class="{{#unless isCustomerSearchTypeSelected 'Phone'}}customerSearchField selectCustomerSearchField{{else}}selectedCustomerSearchField{{/unless}}" data-field="Phone">{{#unless isCustomerSearchTypeSelected 'Phone'}}Phone{{else}}<input id="customer-phone-search" type="search" placeholder="Search Phone" style="font-size: 1.4rem;">{{/unless}}</div>
+                                <div class="{{#unless isCustomerSearchTypeSelected 'Email'}}customerSearchField selectCustomerSearchField{{else}}selectedCustomerSearchField{{/unless}}" data-field="Email">{{#unless isCustomerSearchTypeSelected 'Email'}}Email{{else}}<input id="customer-email-search" type="search" placeholder="Search Email" style="font-size: 1.4rem;">{{/unless}}</div>
+                                <div class="right customerSearchField createNewCustomerForm"><i class="material-icons nimbus-fontcolor">person_add</i></div>
+                            </div>
+                        </div>
+                        <div class="customer-slide row saveVerticalSpace">
+                            <div id="newCustomerAdd" class="row border-full" style="display: none;">
+                                <form id="create-customer" name="add-user">
+                                    <div class="row">
+                                        <div class="col s2">&nbsp;</div>
+                                        <div class="col s8">
+                                            <div class="row saveVerticalSpace">
+                                                <label for="customer-name" data-error>Customer Name</label>
+                                                <input id="customer-name" type="text" class="validate text-capitalize">
+                                            </div>
+                                        
+                                            <div class="row saveVerticalSpace">
+                                                <label for="email" data-error>Email</label>
+                                                <input id="email" type="email" class="validate">
+                                            </div>
+
+                                            <div class="row saveVerticalSpace">
+                                                <label for="customerPhone">Phone Number</label>
+                                                <input id="customerPhone" type="tel" class="validate">
+                                            </div>
+                                        </div>
+                                        <div class="col s2 center-align">
+                                            <a id="submitNewCustomer" class="waves-effect waves-light btn-flat teal white-text">Add</a>
+                                            <br><br>
+                                            <a class="waves-effect waves-light btn-flat grey-text createNewCustomerForm">Cancel</a>
+                                        </div>
+                                    </div>                                
+                                </form>
+                            </div>
+
+                            <div class="row saveVerticalSpace">
+                                <div class="col s12">
+                                    {{#with orderCustomer}}
+                                        <div class="row saveVerticalSpace center-align">
+                                            <h5 class="forceIconAlignment"><i class="material-icons small grey-text deselectCustomer">clear</i> {{name}} &nbsp;&nbsp;&nbsp; <i class="material-icons small nimbus-fontcolor editCustomerDetails">edit</i></h5>
+                                        </div>
+                                        <div id="editCustomerDetails" class="row border-full" style="display: none; height: 100%;">
+                                            <!-- {{#with orderCustomer}}     -->
+                                                <form id="edit-customer-details">
+                                                    <div class="row">
+                                                        <div class="col s10">
+                                                            <label id="edit-customer-label" for="edit-customer-name" data-error>Customer Name</label>
+                                                            <input id="edit-customer-name" type="text" class="validate text-capitalize" value="{{name}}">
+
+                                                            <label id="edit-email-label" for="edit-email" data-error>Email</label>
+                                                            <input id="edit-email" type="email" class="validate" value="{{email}}">
+
+                                                            <label for="edit-customerPhone">Phone Number</label>
+                                                            <input id="edit-customerPhone" type="tel" class="validate" value="{{phone}}">
+                                                        </div>
+                                                        <div class="col s2 center-align">
+                                                            <a id="save-changes-customer" class="waves-effect waves-light btn-flat teal white-text">Save</a>
+                                                            <br><br>
+                                                            <a class="waves-effect waves-light btn-flat grey-text editCustomerDetails">Cancel</a>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            <!-- {{/with}} -->
+                                        </div>
+                                        <div class="row saveVerticalSpace border-bottom">
+                                            <div class="col s6 border-top border-right" style="height: 100%;">
+                                                <div class="section">
+                                                    <h6 class="grey-text">Loyalty Cards: </h6>
+                                                    {{#each getActivePrograms}}
+                                                        <div class="card row valign-wrapper {{#if thisProgramIsApplied apply}}doNotApplyThisProgram{{else}}applyThisProgram{{/if}}">
+                                                            <div class="col s9 valign">
+                                                                <div class="card-content">
+                                                                    <h6><b>{{getLoyaltyName this.programId}}</b></h6>
+                                                                    <p>{{getLoyaltyBalance this.remainingQuantity this.remainingAmount}}</p>
+                                                                    <p>{{getLoyaltyExpiration this.programId this.boughtOn}}</p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col s3 valign">
+                                                                {{#if thisProgramIsApplied apply}}
+                                                                    <a class="btn-floating btn-small waves-effect waves-light green"><i class="material-icons">done</i></a>
+                                                                {{else}}
+                                                                    <a class="btn-floating btn-small waves-effect waves-light white"></a>
+                                                                {{/if}}
+                                                            </div>
+                                                        </div>
+                                                    {{/each}}
+                                                        <div class="row center-align">
+                                                            <a class="btn waves-effect goToProgramsTab waves-light white grey-text">Add Program</a>
+                                                        </div>
+                                                    {{#with getActiveTallyPrograms _id}}
+                                                        <div class="divider"></div>
+                                                        <h6 class="grey-text">Tally Cards: </h6>
+                                                    {{/with}}
+                                                    {{#each getActiveTallyPrograms _id}}
+                                                        <div class="card row valign-wrapper">
+                                                            <div class="col s9 valign">
+                                                                <div class="card-content">
+                                                                    <h6>{{getLoyaltyName this.programId}}</h6>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col s3 valign">
+                                                                <h4>{{customerTally}}</h4>
+                                                            </div>  
+                                                        </div>
+                                                    {{/each}}
+                                                </div>
+                                            </div>
+                                            <div class="col s6 border-left border-top" style="height: 100%;">
+                                                <div class="row saveVerticalSpace">Notes And Preferences: <!-- <i id="saveCustomerNotesButton" class="material-icons saveCustomerNotes right blue-text posSaveButton" style="display: none;">save</i> --></div>
+                                                <textarea id="customerPreference" style="width: 100%; height: 200px;">{{notes}}</textarea>
+                                                <div class="row forceIconAlignment"><i class="material-icons small">email</i>{{#with email}}{{../email}}{{else}}Not provided{{/with}}</div>
+                                                <br>
+                                                <div class="row forceIconAlignment"><i class="material-icons small">phone</i>{{#with phone}}{{../phone}}{{else}}Not provided{{/with}}</div>
+                                                <div class="row">
+                                                    How to track loyalty cards online:<br>
+                                                    <a class="btn waves-light white grey-text {{#with email}}emailInstructionsTrackLoyalty{{else}}disabled{{/with}}">Email Instructions</a> {{#with email}}(Beta){{else}}<br>(Email not provided){{/with}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {{else}}
+                                        <div class="row saveVerticalSpace">
+                                            <div class="col s8 offset-s2">
+                                                <ul id="customers-list" class="collection">
+                                                    {{#each getCustomers}}
+                                                        <li class="row collection-item select-customer valign-wrapper" style='{{isSelectedCustomer _id}} vertical-align:middle;'>
+                                                            <div class="col s12 valign">
+                                                                <div style="font-size: 1.4rem;">{{name}}</div>
+                                                                <div style="font-size: 1.2rem;">{{#with email}}{{this}}{{/with}}</div>
+                                                                <div style="font-size: 1.2rem;">{{#with phone}}{{this}}{{/with}}</div>
+                                                            </div>
+                                                        </li>
+                                                    {{else}}
+                                                        <h6 class="row center-align grey-text">Search for Someone <br>(0 Matches So Far)</h6>
+                                                    {{/each}}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    {{/with}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Loyalty Programs -->
+                    <div id="order-loyalty" class="">
+                        {{#with orderCustomer}}
+                            <div class="row saveVerticalSpace saveHorizontalSpace orderCategoryTilesBar">
+                                <div class="col s12 saveVerticalSpace saveHorizontalSpace">
+                                    <div class="selectLoyaltyType black-text {{#if isLoyaltyProgramTypeSelected 'All'}}posCategoryTileSelected{{else}}posCategoryTile{{/if}} {{getLoyaltyTileColor 'All'}}" data-programtype='All' style="">All</div>
+                                    <div class="selectLoyaltyType black-text {{#if isLoyaltyProgramTypeSelected 'Quantity'}}posCategoryTileSelected{{else}}posCategoryTile{{/if}} {{getLoyaltyTileColor 'Quantity'}}" data-programtype='Quantity' style="">(#) Quantity Based</div>
+                                    <div class="selectLoyaltyType black-text {{#if isLoyaltyProgramTypeSelected 'Percentage'}}posCategoryTileSelected{{else}}posCategoryTile{{/if}} {{getLoyaltyTileColor 'Percentage'}}" data-programtype='Percentage' style="{{getLoyaltyTileColor 'Percentage'}}">(%) Percentage Based</div>
+                                    <div class="selectLoyaltyType black-text {{#if isLoyaltyProgramTypeSelected 'Amount'}}posCategoryTileSelected{{else}}posCategoryTile{{/if}} {{getLoyaltyTileColor 'Amount'}}" data-programtype='Amount' style="">($) Amount Based</div>
+                                </div>
+                            </div>
+
+                            <div class="divider"></div>
+
+                            <div class="loyalty-slide">
+                                <div class="grid-fluid">
+                                    {{#each getActiveLoyaltyPrograms}}
+                                        {{#with purchaseLoyalty}}
+                                            <div class="card-panel waves-effect waves-light selectLoyaltyProgram grid-fluid-item-loyalty {{getLoyaltyTileColor ../programType.type}} black-text" data-programid="{{../_id}}" style="">
+                                                <b>{{name}}</b><br>
+                                                {{getExpiryDays ../expiryDays}} {{getExpiryDate ../expiryDate}}<br>
+                                                {{#each sizes}}{{currency price}}{{/each}}<br>
+                                                <a class="secondary-content"><i class="material-icons small">card_giftcard</i></a>
+                                            </div>
+                                        {{/with}}
+                                    {{/each}}
+                                </div>
+                            </div>
+                           
+                        {{else}}
+                            <div class="row saveVerticalSpace orderCategoryTilesBar goToCustomersTab center-align">
+                                &nbsp;
+                            </div>
+                            <div class="loyalty-slide">
+                                <div class="row goToCustomersTab valign-wrapper">
+                                    <div class="col s12 center-align valign border-full">
+                                        <h5 class="grey-text">Choose or Create a Customer First</h5>
+                                        <i class="material-icons medium grey-text">people</i>
+                                    </div>
+                                </div>
+                            </div>
+                        {{/with}}
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Order summary -->
+        <div id="order-checkout" class="col s4 listViewContainer">    
+            <h6 class="row valign-wrapper saveVerticalSpace">
+                <div class="col s2 valign saveVerticalSpace saveHorizontalSpace">
+                    {{#if noItems}}
+                        &nbsp;
+                    {{else}}
+                        <i class="grey-text">{{#if isOrderEditMode}}{{getEditOrderNumber}}{{else}}{{getOrderNumber}}{{/if}}</i>
+                    {{/if}}
+                </div>
+                {{#with getSelectedTable}}
+                    <div class="col s8 grey-text valign center-align saveVerticalSpace saveHorizontalSpace truncate">
+                        {{#with orderCustomer}}
+                            {{name}}'s 
+                        {{/with}}
+                        {{#if inDineInMode}}Table - {{/if}} {{tableLabel}}
+                    </div>          
+                {{else}}
+                    <div class="col s8 grey-text valign center-align saveVerticalSpace saveHorizontalSpace truncate">
+                        {{#with orderCustomer}}
+                            {{name}}
+                        {{else}}
+                            Order Summary
+                        {{/with}}
+                    </div>
+                {{/with}}
+                <div class="col s2 valign center-align saveHorizontalSpace saveVerticalSpace">
+                    <i id='delete-order' class="material-icons grey-text" style="font-size: 2.5rem;">refresh</i>
+                </div>
+            </h6> 
+
+            {{#with getSelectedTable}}
+                <div class="row saveVerticalSpace">
+                    <div class="col s12">
+                        <div class="horizontalScrollDiv">
+                            <div class="horizontalScrollContainer">
+                                <div class="horizontalScrollContent">
+                                    <i class="grey-text">Seat:</i>
+                                    {{#each getTableSeats}}
+                                        <div class="chip seatSelectChip center-align {{#unless isSeatSelected seatNumber}}selectSeat{{/unless}} white-text" data-category="{{seatNumber}}" style="{{getSeatChipStyle seatNumber}}">
+                                            <b>{{seatNumber}}</b>
+                                        </div>
+                                    {{/each}}
+                                    <div class="chip center-align white-text addSeat" style="background-color: grey;">
+                                        <b>+</b>
+                                    </div>
+                                    &nbsp;&nbsp;
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>           
+            {{/with}}
+
+            <div id="orderItemsList" class="{{#with getSelectedTable}}orderTableSummaryContainer{{else}}orderSummaryContainer{{/with}}">
+                {{#if noItems}}
+                    <h5 class="row center-align grey-text">Ready.</h5>
+                {{else}}
+                    {{#each itemsListBySeat}}
+                        {{#if itemNotLoyalty product._id}}
+                            {{#if itemNotLoyaltyRedeem product._id}}
+                                <div id="{{_id}}" class="card">
+                                    <div class="row valign-wrapper saveVerticalSpace">
+                                        <!-- <div class="col s2 valign center-align increase-item-quantity" data-productid="{{product._id}}" data-sizecode="{{size.code}}">
+                                            <h5 data-productid="{{product._id}}" data-sizecode="{{size.code}}">x{{quantity}}</h5> -->
+                                        <div class="col s2 valign center-align" data-productid="{{product._id}}" data-sizecode="{{size.code}}">
+                                            <!-- <button class="increase-item-quantity" style="font-size: 1.3rem;">x{{quantity}}</button><br> -->
+                                            {{#if thisItemOptionsExpanded}}
+                                                <input id="{{this._id}}_large_quantity" type="number" placeholder="x{{quantity}}" min="1" step="1" class="enterLargeQuantity" style="font-size: 1.4rem; text-align:center;">
+                                            {{else}}
+                                                <h5 class="increase-item-quantity" data-productid="{{product._id}}" data-sizecode="{{size.code}}">x{{quantity}}</h5>
+                                            {{/if}}
+                                        </div>
+
+                                        <div class="col s10 valign">
+                                            <h6 class="orderItemFontSize">{{product.name}}
+                                                <span class="secondary-content black-text">{{ currency (itemTotal) }}</span>
+                                            </h6>
+
+                                            {{#if this.variablePrice}}
+                                                <div class="divider"></div>
+                                                <div class="row valign-wrapper saveVerticalSpace">
+                                                    <div class="col s7 saveHorizontalSpace valign">
+                                                        Variable Price:
+                                                    </div>
+                                                    <div class="col s5 saveHorizontalSpace valign">
+                                                        <input id="{{this._id}}_variable_price" type="number" placeholder="{{currency size.price}} ea." min="0.01" step="0.01" class="variablePricingInput">
+                                                    </div>
+                                                    <!-- <div class="col s2 saveHorizontalSpace valign">
+                                                        <i class="material-icons blue-text saveVariablePricing posSaveButton">save</i>
+                                                    </div> -->
+                                                </div>
+                                            {{/if}}
+                                            {{#if this.unitBasedPrice}}
+                                                <div class="divider"></div>
+                                                <div class="row valign-wrapper saveVerticalSpace">
+                                                    <div class="col s7 saveHorizontalSpace valign">
+                                                        Units Quantity ({{unitLabel}}):
+                                                    </div>
+                                                    <div class="col s5 saveHorizontalSpace valign">
+                                                        <input id="{{this._id}}_unit_quantity" type="number" placeholder="{{unitBasedPriceQuantity}} {{unitLabel}}" min="0.00" step="0.01" class="unitBasedPricingInput">
+                                                    </div>
+                                                    <!-- <div class="col s2 saveHorizontalSpace valign">
+                                                        <i class="material-icons blue-text saveUnitBasedPriceQuantity posSaveButton">save</i>
+                                                    </div> -->
+                                                </div>
+                                            {{/if}}
+                                            {{#if displaySizeLine this}}
+                                                <div class="divider"></div>
+                                                <i class="teal-text small-text">{{sizeName size.code}} {{#if this.unitBasedPrice}}({{unitBasedPriceQuantity}}{{unitLabel}} x {{currency unitPrice}}/{{unitLabel}}){{/if}}</i><i class="teal-text secondary-content">{{currency size.price}} ea.</i>
+                                            {{/if}}    
+                                            {{#each addOns}}
+                                                <div class="col s12">
+                                                    <i class="teal-text small-text">+ {{name}}</i><i class="teal-text secondary-content">{{currency price}} ea.</i>
+                                                </div>
+                                            {{/each}}
+                                            {{#each notes}}
+                                                <div class="col s12">
+                                                    <i class="teal-text small-text">* {{this}}</i>
+                                                </div>
+                                            {{/each}}
+                                        </div>
+                                    </div>
+                                    <div class="divider"></div>
+
+                                    <div class="order-item-options row saveVerticalSpace">
+                                        <div class="col s2 center-align">
+                                            {{#if itemQuantityMoreThanOne}}
+                                                <i class="decrease-item-quantity material-icons grey-text small center" data-productid="{{product._id}}" data-sizecode="{{size.code}}">exposure_neg_1</i>
+                                            {{else}}
+                                                &nbsp;
+                                            {{/if}}
+                                        </div>
+                                            <div class="col s8 center-align">
+                                                {{#if thisItemOptionsExpanded}}
+                                                    <a class="close-addon-select waves-effect waves-grey btn-flat grey white-text">Options <i class="material-icons white-text small right">keyboard_arrow_up</i></a>
+                                                {{else}}
+                                                    <a class="open-addon-select waves-effect waves-white btn-flat grey-text">Options <i class="material-icons grey-text small right">keyboard_arrow_down</i></a>
+                                                {{/if}}
+                                            </div>
+                                        <div class="col s2 valign">
+                                            <div class="left-align secondary-content"><i class="material-icons small grey-text delete-item left-align">delete</i></div>
+                                        </div>
+                                    </div>
+                                    {{#if thisItemOptionsExpanded}}
+                                        <ul class="collection with-header row saveVerticalSpace">
+                                            <!-- <li class="collection-item row valign-wrapper saveVerticalSpace">
+                                                <div class="col s7 saveHorizontalSpace valign right-align">
+                                                    Item Quantity:
+                                                </div>
+                                                <div class="col s5 saveHorizontalSpace valign">
+                                                    <input id="{{this._id}}_quantity" type="number" placeholder="x{{quantity}}" min="1" step="1" class="enterLargeQuantity" style="font-size: 1.3rem; text-align:right;">
+                                                </div>
+                                            </li> -->
+                                            <li class="collection-header row saveVerticalSpace">
+                                                <div class="horizontalScrollDiv">
+                                                    <div class="horizontalScrollContainer">
+                                                        <div class="horizontalScrollContent">
+                                                            <a class="pos-options-button options-expand-addons {{#if thisItemOptionsExpandAddons}} blue white-text {{else}} blue-text {{/if}}">ADD-ONS</a>
+                                                            &nbsp;&nbsp;
+                                                            <a class="pos-options-button options-expand-substitutions {{#if thisItemOptionsExpandSubstitutions}} blue white-text {{else}} blue-text {{/if}}">SUBSTITUTIONS</a>
+                                                            &nbsp;&nbsp;
+                                                            <a class="pos-options-button options-expand-notes {{#if thisItemOptionsExpandNotes}} blue white-text {{else}} blue-text {{/if}}">NOTES</a>
+                                                            &nbsp;&nbsp;
+                                                            <a class="pos-options-button options-expand-discount {{#if thisItemOptionsExpandDiscounts}} blue white-text {{else}} blue-text {{/if}}">MANUAL DISCOUNT</a>
+                                                            &nbsp;&nbsp;
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            {{#if thisItemOptionsExpandAddons}}
+                                                {{#with getThisOrderItem}}
+                                                    <li class="collection-item">
+                                                        {{#each getPureAddOns addOns}}
+                                                            <div class="chip">
+                                                                {{name}}
+                                                                <i data-addonid="{{_id}}" class="material-icons closeSelectedAddOnChip">close</i>
+                                                            </div>
+                                                        {{else}}
+                                                            <i>None selected</i>
+                                                        {{/each}}
+                                                    </li>
+                                                    {{#each getProductAttachedPureAddOns product.addOns}}
+                                                        <li class="collection-item product-add-on-select">
+                                                            <div>{{name}}<a class="secondary-content">{{currency (price)}}</a></div>
+                                                        </li>
+                                                    {{/each}}
+                                                    {{#each getPureAddOns (allOtherAddons product.addOns)}}
+                                                        <li class="collection-item product-add-on-select">
+                                                            <div>{{name}}<a class="secondary-content">{{currency (price)}}</a></div>
+                                                        </li>
+                                                    {{/each}}
+                                                    {{#if POSAddingofAddonsAllowed}}
+                                                        <li class="collection-item row">
+                                                            <div class="col s8"><input id="new-add-on-name" placeholder="New Add-On Name" type="text" class="validate"></div>
+                                                            <div class="col s4"><input id="new-add-on-price" placeholder="0.00" type="number" min="0.01" step="0.01" class="validate"></div>
+                                                            <br>
+                                                            <div class="col s12 center-align">
+                                                                <a class="create-new-add-on waves-effect waves-teal btn-flat teal white-text">Create New Add-On<i class="material-icons small right">add</i></a>
+                                                            </div>
+                                                        </li>
+                                                    {{/if}}
+                                                {{/with}}
+                                            {{/if}}
+
+                                            {{#if thisItemOptionsExpandSubstitutions}}
+                                                {{#with getThisOrderItem}}
+                                                    <li class="collection-item">
+                                                        {{#each getSubstituteAddOns addOns}}
+                                                            <div class="chip">
+                                                                {{name}}
+                                                                <i data-addonid="{{_id}}" class="material-icons closeSelectedAddOnChip">close</i>
+                                                            </div>
+                                                        {{else}}
+                                                            <i>None selected</i>
+                                                        {{/each}}
+                                                    </li>
+                                                    {{#each getProductAttachedSubstituteAddOns product.addOns}}
+                                                        <li class="collection-item product-add-on-select">
+                                                            <div>{{name}}<a class="secondary-content">{{currency (price)}}</a></div>
+                                                        </li>
+                                                    {{/each}}
+                                                    {{#each getSubstituteAddOns (allOtherAddons product.addOns)}}
+                                                        <li class="collection-item product-add-on-select">
+                                                            <div>{{name}}<a class="secondary-content">{{currency (price)}}</a></div>
+                                                        </li>
+                                                    {{/each}}
+                                                    {{#if POSAddingofSubstitutesAllowed}}
+                                                        <li class="collection-item row">
+                                                            <div class="col s6"><input id="new-substitute-label-NO" placeholder="NO:" type="text" class="validate"></div>
+                                                            <div class="col s6"><input id="new-substitute-label-ADD" placeholder="ADD:" type="text" class="validate"></div>
+                                                            <br>
+                                                            <div class="col s8"><input disabled id="substituteNamePreview" type="text" class="validate"></div>
+                                                            <div class="col s4"><input id="new-substitute-price" placeholder="0.00" type="number" min="0.01" step="0.01" class="validate"></div>
+                                                            <br>
+                                                            <div class="col s12 center-align">
+                                                                <a class="create-new-substitute waves-effect waves-teal btn-flat teal white-text">Create New Substitute<i class="material-icons small right">add</i></a>
+                                                            </div>
+                                                        </li>
+                                                    {{/if}}
+                                                {{/with}}
+                                            {{/if}}
+
+                                            {{#if thisItemOptionsExpandNotes}}
+                                                {{#with getThisOrderItem}}
+                                                    {{#each notes}}
+                                                        <li class="collection-item">
+                                                            <div>{{this}}<a class="secondary-content"><i class="material-icons small remove-note">clear</i></a></div>
+                                                        </li>
+                                                    {{else}}
+                                                        <li class="collection-item">
+                                                            <i>No Notes for this Item</i>
+                                                        </li>
+                                                    {{/each}}
+                                                    <li class="collection-item row">
+                                                        <div class="col s12"><input id="new-note-description" placeholder="Add a note" type="text" class="validate"></div>                                                    
+                                                        <br>
+                                                        <div class="col s12 center-align">
+                                                            <a class="create-new-note waves-effect waves-teal btn-flat teal white-text">Create New Note<i class="material-icons small right">add</i></a>
+                                                        </div>
+                                                    </li>
+                                                {{/with}}
+                                            {{/if}}
+
+                                            {{#if thisItemOptionsExpandDiscounts}}
+                                                <li class="collection-item row valign-wrapper">
+                                                    <div class="col s6 right-align valign">
+                                                        <h6>Include Add-Ons (if any): </h6>
+                                                    </div>
+                                                    <div class="col s6 left-align valign">
+                                                        {{#if this.manualDiscount.includeAddOns}}
+                                                            <a class="pos-options-button blue white-text">YES</a>
+                                                            <a class="pos-options-button blue-text toggleIncludeAddOn">NO</a>
+                                                        {{else}}
+                                                            <a class="pos-options-button blue-text toggleIncludeAddOn">YES</a>
+                                                            <a class="pos-options-button blue white-text">NO</a>
+                                                        {{/if}}
+                                                    </div>
+                                                </li>
+                                                <li class="collection-item row valign-wrapper">
+                                                    <div class="col s6 right-align valign">
+                                                        <h6>Discount percent: </h6>
+                                                    </div>
+                                                    <div class="col s6 valign">
+                                                        <input id="discount-percent" value="{{this.manualDiscount.discountPercent}}" type="number" min="1" max="100" step="1" class="validate">
+                                                    </div>
+                                                </li>
+                                                <li class="collection-item row valign-wrapper">
+                                                    <div class="col s6 right-align valign">
+                                                        <h6>Discount Quantity: </h6>
+                                                    </div>
+                                                    <div class="col s6 valign">
+                                                        <input id="discount-quantity" value="{{this.manualDiscount.quantity}}" type="number" min="1" max="{{this.quantity}}" step="1" class="validate">
+                                                    </div>
+                                                </li>
+                                                <li class="collection-item row">
+                                                    <div class="col s12 center-align">
+                                                        <a class="add-redeem-item waves-effect waves-teal btn-flat teal white-text">Add Redeem Item<i class="material-icons small right">add</i></a>
+                                                    </div>
+                                                </li>
+                                            {{/if}}
+                                        </ul>
+                                    {{/if}}
+                                </div>
+                            {{else}}
+                                {{#if this.isManualRedeem}}
+                                    <div id="{{_id}}" class="card">
+                                        <div class="row valign-wrapper saveVerticalSpace">
+                                            <div class="col s2 valign center-align">
+                                                <h5>x{{quantity}}</h5>
+                                            </div>
+                                            <div class="col s10 valign">
+                                                <h6 class="orderItemFontSize">{{product.name}}
+                                                <span class="secondary-content black-text">{{ currency (itemTotal) }}</span></h6>
+                                                <div class="divider"></div>
+                                                <i class="badge-m-outline">Manual Redeem</i>{{#with this.addOns}}<br><i class="badge-m-outline">Add-Ons Included</i>{{/with}}<!-- <span class="secondary-content grey-text"><i class="material-icons small grey-text delete-item left-align">delete</i></span> -->
+                                            </div>
+                                        </div>
+                                        <div class="divider"></div>
+                                        <div class="row valign-wrapper saveVerticalSpace">
+                                            <div class="col s12 right-align">
+                                                <i class="material-icons small grey-text delete-item">delete</i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {{else}}
+                                    <div id="{{_id}}" class="card">
+                                        <div class="row valign-wrapper">
+                                            <div class="col s2 valign center-align">
+                                                <h5>x{{quantity}}</h5>
+                                            </div>
+                                            <div class="col s10 valign">
+                                                <h6 class="orderItemFontSize">{{product.name}}
+                                                <span class="secondary-content black-text">{{ currency (itemTotal) }}</span></h6>
+                                                <div class="divider"></div>
+                                                <i class="badge-m-outline">Redeem</i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {{/if}}
+                            {{/if}}
+                        {{else}}
+                            <div id="{{_id}}" class="card">
+                                <div class="row valign-wrapper saveVerticalSpace">
+                                    <div class="col s2 valign center-align">
+                                        <h5 class="increase-loyaltyItem-quantity">x{{quantity}}</h5>
+                                    </div>
+                                    <div class="col s10 valign">
+                                        <h6 class="orderItemFontSize">{{product.name}}
+                                        <span class="secondary-content black-text">{{ currency (itemTotal) }}</span></h6>
+                                        <div class="divider"></div>
+                                        <i class="badge-m-outline">Loyalty Program</i>
+                                    </div>
+                                </div>
+                                <div class="divider"></div>
+                                <div class="order-item-options row saveVerticalSpace">
+                                    <div class="col s2 center-align">
+                                        {{#if itemQuantityMoreThanOne}}
+                                            <i class="decrease-loyaltyItem-quantity material-icons grey-text small center">exposure_neg_1</i>
+                                        {{else}}
+                                            &nbsp;
+                                        {{/if}}
+                                    </div>
+                                    <div class="col s8 center-align">
+                                        {{#with getLoyaltyOrderItemProgram product._id}}
+                                            {{#if thisProgramIsApplied apply}}
+                                                <a class="btn-small btn-flat waves-effect waves-light green white-text doNotApplyThisProgramPrePurchase">Apply Now<i class="material-icons right white-text">check_box</i></a>
+                                            {{else}}
+                                                <a class="btn-small btn-flat waves-effect waves-light white applyThisProgramPrePurchase">Apply Now<i class="material-icons right grey-text">check_box_outline_blank</i></a>
+                                            {{/if}}
+                                        {{/with}}
+                                    </div>
+                                    <div class="col s2">
+                                        <div class="left-align secondary-content"><i class="material-icons small circle grey-text delete-item left-align">delete</i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        {{/if}}
+                    {{/each}}
+                    <!-- This is in order to make sure any text inputs are able to be scrolled to the top half of the tablet screen avoiding keyboard blockage -->
+                    {{#if anyItemOptionsExpanded}}
+                        <div class="orderItemsListFiller">&nbsp;</div>
+                    {{/if}}
+                {{/if}}
+
+                <div id="orderItemsFooter" class="white-text col s4">
+                    {{#if showSubtotalsAndDetails}}
+                        <a class="toggleShowingOfSubtotalsDetails"><i class="material-icons right white-text" style="font-size: 2.5rem;">keyboard_arrow_down</i></a>
+                        <h5 class="goToOrderDetailsTab">
+                            <a class="waves-effect waves-green"><i class="material-icons white-text" style="font-size:2.5rem;">arrow_back</i></a>
+                            {{getOrderTypeLabel}} Order
+                        </h5>
+                        {{#with getSystemEmployee }}
+                            <h5>
+                                <a class="waves-effect waves-green" href="/waiterLogin"><i class="material-icons white-text" style="font-size:2.5rem;">person_outline</i></a>{{name}} <a class="waves-effect waves-green logoutEmployee"><i class="material-icons white-text" style="font-size:2.5rem;">exit_to_app</i></a>
+                            </h5>
+                        {{/with}}
+
+                        <h6 class="white-text">Subtotal<span class="secondary-content white-text">{{currency orderSubtotal}}</span></h6>
+                        {{#if anyDiscounts}}
+                            <h6 class="white-text">Discounts<span class="secondary-content orange-text">- {{currency orderDiscount}}</span></h6>
+                        {{/if}}
+
+                        <h6 class="white-text">Taxes<span class="secondary-content white-text">{{currency orderTax}}</span></h6>
+                        
+                        <h6>Total <span class="secondary-content white-text">{{currency orderTotal}}</span></h6>
+
+                        {{#if anyGiftCards}}
+                            <h6 class="white-text">Gift Card Used<span class="secondary-content white-text">- {{currency giftCardUsed}}</span></h6>
+                        {{/if}}
+                    {{else}}
+                        <div class="row saveVerticalSpace valign-wrapper">
+                            <div class="col s9 valign white-text">
+                                {{getOrderTypeLabel}} Order {{#with getSystemEmployee }} by {{name}} {{/with}}
+                                <h6 class="white-text">Subtotal: {{currency orderSubtotal}}</h6>
+                            </div>
+                            <div class="col s3 valign">
+                                <a class="toggleShowingOfSubtotalsDetails"><i class="material-icons right white-text" style="font-size: 2.5rem;">keyboard_arrow_up</i></a>
+                            </div>
+                        </div>
+                    {{/if}}
+
+                    {{#if noItems}}
+                        <h5 class="white-text center-align showPreviousOrder" style="border-style: solid; border-color: white; border-width: 1px;">Review Completed Order</h5>
+                    {{else}}
+                        {{#with getSelectedTable}}
+                            {{#if isOrderEditMode}}
+                                {{#if isCheckoutMode}}
+                                    <h4 class="white-text center-align beginTableCheckout" style="border-style: solid; border-color: white; border-width: 1px;">Checkout {{#if anyGiftCards}}{{currency orderPaymentDue}}{{else}}{{currency orderTotal}}{{/if}}</h4>
+                                {{else}}
+                                    <h4 class="white-text center-align update-order" style="border-style: solid; border-color: white; border-width: 1px;">Update Order</h4>
+                                {{/if}}
+                            {{else}}
+                                <h4 class="white-text center-align create-order" style="border-style: solid; border-color: white; border-width: 1px;">Create Order</h4>
+                            {{/if}}
+                        {{else}}    
+                            <h4 class="white-text center-align beginCheckout" style="border-style: solid; border-color: white; border-width: 1px;">Checkout {{#if anyGiftCards}}{{currency orderPaymentDue}}{{else}}{{currency orderTotal}}{{/if}}</h4>
+                        {{/with}}
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="checkoutTab" class="row order-page-body">
+        <br>
+        <div class="row valign-wrapper">
+            <div class="col s7 valign">
+                {{#with getSelectedTable}}
+                    {{#if splitByTableSelected}}
+                        <h5 class="light-blue-text">Checkout:&nbsp;
+                            <h6 id="splitByTable" class="waves-effect waves-grey {{#if splitByTableSelected}}pos-button-active blue white-text{{else}}pos-button teal white-text{{/if}}">&nbsp;Table&nbsp;</h6>
+                            &nbsp;
+                            <h6 id="splitByEqualAmount" class="waves-effect waves-grey {{#if splitByEqualAmountSelected}}pos-button-active blue white-text{{else}}pos-button teal white-text{{/if}}">&nbsp;Equal Split&nbsp;</h6>
+                            &nbsp;
+                            <h6 id="splitBySeats" class="waves-effect waves-grey {{#if splitBySeatSelected}}pos-button-active blue white-text{{else}}pos-button teal white-text{{/if}}">&nbsp;Individual Seats&nbsp;</h6>
+                            &nbsp;
+                            <h6 id="splitByCustomGroup" class="waves-effect waves-grey {{#if splitByCustomGroupSelected}}pos-button-active blue white-text{{else}}pos-button teal white-text{{/if}}">&nbsp;Custom&nbsp;</h6>
+                        </h5>
+                    {{/if}}
+
+                    {{#if splitByEqualAmountSelected}}
+                        <h5 class="light-blue-text">Equally split by:
+                            {{#each allOptionsForEqualOrderSplits}}
+                                <h6 class="chooseThisSplitType waves-effect waves-grey {{#if splitByThisNumber num}}pos-button-active blue white-text{{else}}pos-button teal white-text{{/if}}">&nbsp;{{num}}&nbsp;</h6>
+                            {{/each}}
+                            <h6 id="splitByTable" class="waves-effect waves-grey {{#if splitByTableSelected}}pos-button-active blue white-text{{else}}pos-button grey white-text{{/if}}">&nbsp;X&nbsp;</h6>
+                        </h5>
+                    {{/if}}
+
+                    {{#if splitBySeatSelected}}
+                        <h5 class="light-blue-text">Seat:&nbsp;&nbsp;
+                            {{#each allSeatsForCheckout}}
+                                {{#if thisSeatIsCheckedOut}}
+                                    <h6 class="waves-effect waves-grey pos-button green white-text">&nbsp;Seat {{seatNumber}}&nbsp;<i class="material-icons">done</i></h6>
+                                {{else}}
+                                    <h6 class="checkoutThisSeat waves-effect waves-grey {{#if thisSeatBeingCheckedOut seatNumber}}pos-button-active blue white-text{{else}}pos-button teal white-text{{/if}}">&nbsp;Seat {{seatNumber}}&nbsp;</h6>
+                                {{/if}}
+                            {{/each}}
+                            <h6 id="splitByTable" class="cancelSplit waves-effect waves-grey pos-button grey white-text">&nbsp;X&nbsp;</h6>
+                        </h5>
+                    {{/if}}
+
+                    {{#if splitByCustomGroupSelected}}                        
+                        <h5 class="light-blue-text">
+                            {{#with nextGroupDefinition}}
+                                Define Groups:&nbsp;&nbsp;
+                                {{#each getDefinedGroups}}
+                                    <h6 class="waves-effect waves-grey pos-button pos-rounded-corners teal white-text">&nbsp;Seat {{groupLabel}}&nbsp;</h6>
+                                {{/each}} 
+                                <h6 class="waves-effect waves-grey pos-group-undefined pos-rounded-corners white teal-text">&nbsp;Group {{groupNumber}}&nbsp;</h6> = 
+                                {{#each remainingUngroupedSeats}} 
+                                    <h6 class="waves-effect waves-grey pos-button {{#if thisSeatIsSelectedForGroup}} blue {{else}} teal {{/if}} white-text toggleSeatSelectionToGroup">&nbsp;Seat {{seatNumber}}&nbsp;</h6>
+                                {{/each}}
+                                <h6 id="thisGroupDone" class="waves-effect waves-grey pos-button blue white-text"><i class="material-icons tiny">done</i></h6>
+                            {{else}}
+                                Checkout Group:&nbsp;&nbsp;
+                                {{#each allSeatsForCheckout}}
+                                    {{#if thisSeatIsCheckedOut}}
+                                        <h6 class="waves-effect waves-grey pos-button green white-text">&nbsp;Seat {{seatNumber}}&nbsp;<i class="material-icons">done</i></h6>
+                                    {{else}}
+                                        <h6 class="checkoutThisSeat waves-effect waves-grey {{#if thisSeatBeingCheckedOut seatNumber}}pos-button-active blue white-text{{else}}pos-button teal white-text{{/if}}">&nbsp;Seat {{seatNumber}}&nbsp;</h6>
+                                    {{/if}}
+                                {{/each}}
+                            {{/with}}
+                            <h6 id="splitByTable" class="cancelSplit waves-effect waves-grey pos-button grey white-text">&nbsp;X&nbsp;</h6>
+                        </h5>
+                    {{/if}}
+                {{else}}
+                    <h5 class="light-blue-text">Checkout:</h5>
+                {{/with}}
+                        
+            </div>
+            <div class="col s5 valign right-align">
+                {{getOrderNumber}}
+                {{#with orderCustomer}}
+                    {{#if emailReceiptSelected}}
+                        <a class="btn-medium btn-flat waves-effect waves-light white-text teal deselectEmailReceipt"><i class="material-icons left white-text">email</i>Email Receipt<i class="material-icons right white-text">check_box</i></a>
+                    {{else}}
+                        <a class="btn-medium btn-flat waves-effect waves-light white selectEmailReceipt"><i class="material-icons left grey-text">email</i>Email Receipt<i class="material-icons right grey-text">check_box_outline_blank</i></a>
+                    {{/if}}
+                {{/with}}                    
+                {{#if printReceiptSelected}}
+                    <a class="btn-medium btn-flat waves-effect waves-light deselectPrintReceipt white-text teal"><i class="material-icons left white-text">print</i>Print Receipt<i class="material-icons right white-text">check_box</i></a>
+                {{else}}
+                    <a class="btn-medium btn-flat waves-effect waves-light white selectPrintReceipt"><i class="material-icons left grey-text">print</i>Print Receipt<i class="material-icons right grey-text">check_box_outline_blank</i></a>
+                {{/if}}
+                {{#if alwaysPrintReceipt}}
+                    <a class="btn-flat btn-small grey-text toggleAlwaysPrintReceipt">Always Print<i class="material-icons grey-text right">check_box</i></a>
+                {{else}}
+                    <a class="btn-flat btn-small grey-text toggleAlwaysPrintReceipt">Always Print<i class="material-icons grey-text right">check_box_outline_blank</i></a>
+                {{/if}}
+            </div>
+        </div>
+
+        <div class="row saveVerticalSpace" style="border-top-style: solid;
+                                border-top-color: #e0e0e0;
+                                border-top-width: 1px;
+                                border-bottom-style: solid;
+                                border-bottom-color: #e0e0e0;
+                                border-bottom-width: 1px;">
+            <div class="col s10" style="border-right-style: solid;
+                                        border-right-color: #e0e0e0;
+                                        border-right-width: 1px;
+                                        height: calc(100vh - 275px);
+                                        overflow-y:auto;">&nbsp;
+                {{#if showCashPaymentInfo}}
+                    <div class="row saveVerticalSpace">
+                        <div class="col s2 center-align">
+                            <div class="row">
+                                <a class="waves-effect waves-light btn addToCashAmountGiven btn-large blue-grey" style="width:125px;" data-cashamount="20">$20</a>
+                            </div>
+                            <div class="row">
+                                <a class="waves-effect waves-light btn addToCashAmountGiven btn-large blue-grey" style="width:125px;" data-cashamount="10">$10</a>
+                            </div>
+                            <div class="row">
+                                <a class="waves-effect waves-light btn addToCashAmountGiven btn-large blue-grey" style="width:125px;" data-cashamount="5">$5</a>
+                            </div>
+                        </div>
+                        <div class="col s4 center-align">
+                            <div class="row">
+                                <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="7">7</a>
+                                <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="8">8</a>
+                                <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="9">9</a>
+                            </div>
+                            <div class="row">
+                                <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="4">4</a>
+                                <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="5">5</a>
+                                <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="6">6</a>
+                            </div>
+                            <div class="row">
+                                <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="1">1</a>
+                                <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="2">2</a>
+                                <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="3">3</a>
+                            </div>
+                            <div class="row">
+                                <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="0">0</a>
+                            </div>
+                        </div>
+                        <div class="col s6 saveVerticalSpace">
+                            <div class="row saveVerticalSpace right-align">
+                                {{#if defaultCashPayment}}
+                                    <a class="btn-flat grey-text">Default To Cash<i class="material-icons grey-text right">check_box</i></a>
+                                {{else}}
+                                    <a class="btn-flat grey-text setDefaultPaymentToCash">Default To Cash<i class="material-icons grey-text right">check_box_outline_blank</i></a>
+                                {{/if}}
+                            </div>
+                            <div class="row">
+                                <div class="col s12">
+                                    {{#if anyGiftCards}}
+                                        <h4 class="light-blue-text">Pay: <span class="secondary-content light-blue-text">{{currency (orderPaymentDue)}}<!-- <i class="material-icons small">credit_card</i> --></span></h4>
+                                        <h5 class="light-blue-text">Cash Rounded: <span class="secondary-content light-blue-text">{{currency (orderCashPaymentDue)}}<i class="material-icons small right">local_atm</i></span></h5>
+                                        <h5>Gift Card Used: <span class="secondary-content">- {{currency giftCardUsed}}<i class="material-icons small">card_giftcard</i></span></h5>
+                                        <h5>Order Total: <span class="secondary-content">{{currency orderTotal}}</span></h5>
+                                        {{#if splitByEqualAmountSelected}}
+                                            <h5 class="light-blue-text row">Split into Equal Payments of: <span class="secondary-content">{{currency (splitPaymentDueAmount orderCashPaymentDue "cash" )}} x {{splitEquallyBy}}</span></h5>
+                                            {{#if splitIsNotReconciling orderCashPaymentDue "cash" }}
+                                                <h5 class="indigo-text row">(OR) into Fair Payments of: <span class="secondary-content indigo-text">{{currency (splitPaymentDueAmount orderCashPaymentDue "cash" )}} x {{splitEquallyByLessOne}} <br> {{currency (splitFairPayment orderCashPaymentDue "cash")}} x 1</span></h5>
+                                            {{/if}}
+                                        {{/if}}
+                                    {{else}}
+                                        <h4 class="light-blue-text">Pay: <span class="secondary-content">{{currency orderTotal}} <!-- <i class="material-icons small">credit_card</i> --></span></h4>
+                                        <h5 class="light-blue-text">Cash Rounded: <span class="secondary-content">{{currency (orderCashTotal)}} <i class="material-icons small right">local_atm</i></span></h5>
+                                        {{#if splitByEqualAmountSelected}}
+                                            <h5 class="light-blue-text row">Split into Equal Payments of: <span class="secondary-content">{{currency (splitPaymentDueAmount orderCashTotal "cash")}} x {{splitEquallyBy}}</span></h5>
+                                            {{#if splitIsNotReconciling orderCashTotal "cash"}}
+                                                <h5 class="indigo-text row">(OR) into Fair Payments of: <span class="secondary-content indigo-text">{{currency (splitPaymentDueAmount orderCashTotal "cash")}} x {{splitEquallyByLessOne}} <br> {{currency (splitFairPayment orderCashTotal "cash")}} x 1</span></h5>
+                                            {{/if}}
+                                        {{/if}}
+                                    {{/if}}
+                                </div>
+                            </div>
+                            <div class="row valign-wrapper setNumberPadFocusToCashGiven {{#if isNumberPadFocusOnCashGiven}}numberPadFocus-active{{else}}numberPadFocus-inactive{{/if}}">
+                                <div class="col s12 valign">
+                                    <h5>Amount Given: <span class="secondary-content">
+                                        {{currency (cashAmountGiven)}}
+                                        <i class="clearCashAmountGiven material-icons grey-text small right">refresh</i></span>
+                                    </h5>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col s12">
+                                    <h5>Change Due: <span class="secondary-content">
+                                        {{#if splitByEqualAmountSelected}}
+                                            {{currency (splitCashChangeDue)}}
+                                        {{else}}
+                                            {{currency (cashChangeDue)}}
+                                        {{/if}}
+                                    </span></h5>
+                                </div>
+                            </div>
+                            {{#if isTipsTracked}}
+                                <div class="row valign-wrapper setNumberPadFocusToTipGiven {{#if isNumberPadFocusOnTipGiven}}numberPadFocus-active{{else}}numberPadFocus-inactive{{/if}}">
+                                    <div class="col s12 valign">
+                                        <h5>Tip Given: <span class="secondary-content">
+                                            {{currency (getTipGiven)}}
+                                            <i class="clearCashAmountGiven material-icons grey-text small right">refresh</i></span>
+                                        </h5>
+                                        {{#if anyGiftCards}}*Will NOT be deducted from Gift Card balance{{/if}}
+                                    </div>
+                                </div>
+                            {{/if}}
+                        </div>
+                    </div>
+                {{/if}}
+
+                {{#if showCardPaymentInfo}}
+                    <div class="row">
+                        {{#if isTipsTracked}}
+                            <div class="col s2 center-align">
+                                <div class="row">
+                                    <a class="waves-effect waves-light btn addToCashAmountGiven btn-large blue-grey" style="width:125px;" data-cashamount="20">$20</a>
+                                </div>
+                                <div class="row">
+                                    <a class="waves-effect waves-light btn addToCashAmountGiven btn-large blue-grey" style="width:125px;" data-cashamount="10">$10</a>
+                                </div>
+                                <div class="row">
+                                    <a class="waves-effect waves-light btn addToCashAmountGiven btn-large blue-grey" style="width:125px;" data-cashamount="5">$5</a>
+                                </div>
+                            </div>
+                            <div class="col s4 center-align">
+                                <div class="row">
+                                    <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="7">7</a>
+                                    <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="8">8</a>
+                                    <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="9">9</a>
+                                </div>
+                                <div class="row">
+                                    <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="4">4</a>
+                                    <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="5">5</a>
+                                    <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="6">6</a>
+                                </div>
+                                <div class="row">
+                                    <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="1">1</a>
+                                    <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="2">2</a>
+                                    <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="3">3</a>
+                                </div>
+                                <div class="row">
+                                    <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="0">0</a>
+                                </div>
+                            </div>
+                        {{else}}
+                            <div class="col s6">&nbsp;</div>
+                        {{/if}}
+                        <div class="col s6">
+                            <div class="row saveVerticalSpace right-align">
+                                {{#if defaultCardPayment}}
+                                    <a class="btn-flat grey-text">Default To Card<i class="material-icons grey-text right">check_box</i></a>
+                                {{else}}
+                                    <a class="btn-flat grey-text setDefaultPaymentToCard">Default To Card<i class="material-icons grey-text right">check_box_outline_blank</i></a>
+                                {{/if}}
+                            </div>
+                            <div class="row">
+                                {{#if anyGiftCards}}
+                                    <h4 class="light-blue-text">Pay: <span class="secondary-content light-blue-text">{{currency (orderPaymentDue)}}<i class="material-icons small">credit_card</i></span></h4>
+                                    <h5>Gift Card Used: <span class="secondary-content">- {{currency giftCardUsed}}<i class="material-icons small">card_giftcard</i></span></h5>
+                                    <h5>Order Total: <span class="secondary-content">{{currency orderTotal}}</span></h5>
+                                    {{#if splitByEqualAmountSelected}}
+                                        <h5 class="light-blue-text row">Split into Equal Payments of: <span class="secondary-content">{{currency (splitPaymentDueAmount orderPaymentDue "card")}} x {{splitEquallyBy}}</span></h5>
+                                        {{#if splitIsNotReconciling (orderPaymentDue "card")}}
+                                            <h5 class="indigo-text row">(OR) into Fair Payments of: <span class="secondary-content indigo-text">{{currency (splitPaymentDueAmount orderPaymentDue "card")}} x {{splitEquallyByLessOne}} <br> {{currency (splitFairPayment orderPaymentDue "card")}} x 1</span></h5>
+                                        {{/if}}
+                                    {{/if}}
+                                {{else}}
+                                    <h4 class="light-blue-text">Pay: <span class="secondary-content">{{currency orderTotal}} <i class="material-icons small">credit_card</i></span></h4>
+                                    {{#if splitByEqualAmountSelected}}
+                                        <h5 class="light-blue-text row">Split into Equal Payments of: <span class="secondary-content">{{currency (splitPaymentDueAmount orderTotal "card")}} x {{splitEquallyBy}}</span></h5>
+                                        {{#if splitIsNotReconciling orderTotal "card"}}
+                                            <h5 class="indigo-text row">(OR) into Fair Payments of: <span class="secondary-content indigo-text">{{currency (splitPaymentDueAmount orderTotal "card")}} x {{splitEquallyByLessOne}} <br> {{currency (splitFairPayment orderTotal "card")}} x 1</span></h5>
+                                        {{/if}}
+                                    {{/if}}
+                                {{/if}}
+                            </div>
+                            {{#if isTipsTracked}}
+                                <div class="row valign-wrapper setNumberPadFocusToTipGiven {{#if isNumberPadFocusOnTipGiven}}numberPadFocus-active{{else}}numberPadFocus-inactive{{/if}}">
+                                    <div class="col s12 valign">
+                                        <h5>Tip Given: <span class="secondary-content">
+                                            {{currency (getTipGiven)}}
+                                            <i class="clearCashAmountGiven material-icons grey-text small right">refresh</i></span>
+                                        </h5>
+                                        {{#if anyGiftCards}}*Will NOT be deducted from Gift Card balance{{/if}}
+                                    </div>
+                                </div>
+                            {{/if}}
+                        </div>
+                    </div>
+                {{/if}}
+
+                {{#if showAdjustmentAmountInfo}}
+                    <div class="row">
+                        <div class="col s6">
+                            <div class="row">
+                                <div class="col s12"><h5>On The House:<span class="secondary-content green-text">- {{currency showAdjustmentAmount}}</span></h5></div>
+                            </div>
+                            <div class="row">
+                                <div class="col s4 left-align">
+                                    <a class="manualAdjustment btn-floating btn-large btn-flat waves-effect waves-light white-text {{#if isAdjustmentSelected 0}}blue lighten-1{{else}}grey{{/if}}" data-percent="0">0%</a>
+                                </div>
+                                <div class="col s4 center-align">
+                                    <a class="manualAdjustment btn-floating btn-large btn-flat waves-effect waves-light white-text {{#if isAdjustmentSelected 50}}blue lighten-1{{else}}grey{{/if}}" data-percent="50">50%</a>
+                                </div>
+                                <div class="col s4 right-align">
+                                    <a class="manualAdjustment btn-floating btn-large btn-flat waves-effect waves-light white-text {{#if isAdjustmentSelected 100}}blue lighten-1{{else}}grey{{/if}}" data-percent="100">100%</a>
+                                </div>
+                            </div>
+                            <div class="row valign-wrapper">
+                                <h3 class="col s12 center-align light-blue-text valign">
+                                    <a class="decreaseAdjustment"><i class="material-icons small grey-text">remove_circle</i></a>
+                                    &nbsp;&nbsp;{{getAdjustmentValue}}%&nbsp;&nbsp;
+                                    <a class="increaseAdjustment"><i class="material-icons small grey-text">add_circle</i></a>
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="col s6">
+                            {{#if anyGiftCards}}
+                                <h4 class="light-blue-text">Pay: <span class="secondary-content light-blue-text">{{currency (orderPaymentDue)}}<i class="material-icons small">local_atm</i></span></h4>
+                                <h5>Gift Card Used: <span class="secondary-content">- {{currency giftCardUsed}}<i class="material-icons small">card_giftcard</i></span></h5>
+                                <h5>Order Total: <span class="secondary-content">{{currency orderTotal}}</span></h5>
+                            {{else}}
+                                <h4 class="light-blue-text">Pay: <span class="secondary-content">{{currency orderTotal}} <i class="material-icons small">{{getPaymentMethodIcon}}</i></span></h4>
+                            {{/if}}
+                        </div>
+                    </div>
+                {{/if}}
+            </div>
+
+            <div class="col s2 center-align" style="height: calc(100vh - 2em - 300px); overflow-y:auto;">
+                <p><i class="material-icons medium showCashPaymentInfo select-payment-method {{#if showCashPaymentInfo}}light-blue-text{{else}}grey-text{{/if}}" data-paymentkey="cash">local_atm</i></p>
+                <p><i class="material-icons medium showCardPaymentInfo select-payment-method {{#if showCardPaymentInfo}}light-blue-text{{else}}grey-text{{/if}}" data-paymentkey="card">credit_card</i></p>
+                <p><i class="material-icons medium showAdjustmentInfo {{#if showAdjustmentAmountInfo}}light-blue-text{{else}}grey-text{{/if}}" data-paymentkey="adjustment">home</i></p>
+            </div>
+        </div>
+
+        <footer class="page-footer order-page-footer teal" style="z-index: 5;">
+            <div class="footer-content row valign-wrapper">
+                <div class="col s1 valign">
+                    <a id="cancel-checkout" class="goToOrderTab waves-effect waves-green"><i class="material-icons large white-text">arrow_back</i></a>
+                </div>
+                <div class="col s4 valign center-align">
+
+                    {{#if splitBySeatSelected}}
+                        <h5 id="checkout-split-order-separately" class="waves-effect waves-green teal white-text" style="border-style: solid;
+                                                                                                            border-color: white;
+                                                                                                            border-width: 2px;
+                                                                                                            padding-color: teal; padding: 15px;">
+                                                                                                            &nbsp;Split Order <br>(but don't checkout)&nbsp;</h5>
+                    {{/if}}
+
+                    {{#if splitByCustomGroupSelected}}
+                        <h5 id="checkout-split-order-separately" class="waves-effect waves-green teal white-text" style="border-style: solid;
+                                                                                                            border-color: white;
+                                                                                                            border-width: 2px;
+                                                                                                            padding-color: teal; padding: 15px;">
+                                                                                                            &nbsp;Split Order <br>(but don't checkout)&nbsp;</h5>
+                    {{/if}}
+                </div>
+                <div class="col s7 valign right-align">
+                    {{#if splitByTableSelected}}
+                        <h4 id="checkout-order" class="waves-effect waves-green teal white-text" style="border-style: solid;
+                                                                                                        border-color: white;
+                                                                                                        border-width: 2px;
+                                                                                                        padding-color: teal; padding: 15px;">
+                                                                                                        &nbsp;Order Completed By {{#if showCashPaymentInfo}}Cash <i class="material-icons white-text">local_atm</i>{{/if}}{{#if showCardPaymentInfo}}Card <i class="material-icons white-text">credit_card</i>{{/if}}&nbsp;</h4>
+                    {{/if}}
+
+                    {{#if splitByEqualAmountSelected}}
+                        <h4 id="checkout-order" class="waves-effect waves-green teal white-text" style="border-style: solid;
+                                                                                                        border-color: white;
+                                                                                                        border-width: 2px;
+                                                                                                        padding-color: teal; padding: 15px;">
+                                                                                                        &nbsp;Order Completed By {{#if showCashPaymentInfo}}Cash <i class="material-icons white-text">local_atm</i>{{/if}}{{#if showCardPaymentInfo}}Card <i class="material-icons white-text">credit_card</i>{{/if}}&nbsp;</h4>
+                    {{/if}}
+
+                    {{#if splitBySeatSelected}}
+                        {{#if getSelectedCheckoutSeat}}
+                            <h4 id="checkout-seat" class="waves-effect waves-green teal white-text" style="border-style: solid;
+                                                                                                            border-color: white;
+                                                                                                            border-width: 2px;
+                                                                                                            padding-color: teal; padding: 15px;">
+                                                                                                            &nbsp;Checkout Seat {{getSelectedCheckoutSeat}} By {{#if showCashPaymentInfo}}Cash <i class="material-icons white-text">local_atm</i>{{/if}}{{#if showCardPaymentInfo}}Card <i class="material-icons white-text">credit_card</i>{{/if}}&nbsp;</h4>
+                        {{/if}}
+                        
+                        {{#if allSeatsCheckedOut}}
+                            <h4 id="split-order-completed" class="waves-effect waves-green teal white-text" style="border-style: solid;
+                                                                                                            border-color: white;
+                                                                                                            border-width: 2px;
+                                                                                                            padding-color: teal; padding: 15px;">
+                                                                                                            &nbsp;Order Completed&nbsp;</h4>
+                        {{/if}}
+                    {{/if}}
+
+                    {{#if splitByCustomGroupSelected}}
+                        {{#if getSelectedCheckoutSeat}}
+                            <h4 id="checkout-seat" class="waves-effect waves-green teal white-text" style="border-style: solid;
+                                                                                                            border-color: white;
+                                                                                                            border-width: 2px;
+                                                                                                            padding-color: teal; padding: 15px;">
+                                                                                                            &nbsp;Checkout Seat {{getSelectedCheckoutSeat}} By {{#if showCashPaymentInfo}}Cash <i class="material-icons white-text">local_atm</i>{{/if}}{{#if showCardPaymentInfo}}Card <i class="material-icons white-text">credit_card</i>{{/if}}&nbsp;</h4>
+                        {{/if}}
+                        
+                        {{#if allSeatsCheckedOut}}
+                            <h4 id="split-order-completed" class="waves-effect waves-green teal white-text" style="border-style: solid;
+                                                                                                            border-color: white;
+                                                                                                            border-width: 2px;
+                                                                                                            padding-color: teal; padding: 15px;">
+                                                                                                            &nbsp;Order Completed&nbsp;</h4>
+                        {{/if}}
+                    {{/if}}
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <div id="waiterLoginUnderlay" class="closeWaiterLogin"></div>
+
+    <div id="waiterLoginScreen" class="waiterLoginPopup z-depth-3">
+        <div class="row saveVerticalSpace right-align"><a class="closeWaiterLogin grey-text"><i class="material-icons medium">clear</i></a></div>
+        {{> WaiterLogin}}
+    </div>
+
+    <div id="recentOrderSummaryUnderlay" class="closeRecentOrderSummaryPopup"></div>
+
+    <div id="recentOrderSummary" class="z-depth-3">
+        <div class="row saveVerticalSpace right-align"><a class="closeRecentOrderSummaryPopup grey-text"><i class="material-icons medium">clear</i></a></div>
+        {{#with previousOrder}}
+            <div class="row valign-wrapper saveVerticalSpace">
+                <div class="col s12 left-align">
+                    {{#if alwaysOpenPriorOrderSummary}}
+                        <a class="btn-flat grey-text toggleAlwaysOpenOrderSummary">Always Open After Order<i class="material-icons grey-text right">check_box</i></a>
+                    {{else}}
+                        <a class="btn-flat grey-text toggleAlwaysOpenOrderSummary">Always Open After Order<i class="material-icons grey-text right">check_box_outline_blank</i></a>
+                    {{/if}}
+                </div> 
+            </div>
+            <div class="divider"></div>
+            <div class="row">
+                <div class="col s12">
+                    <h5>Order Summary<span class="secondary-content">{{formatOrderNumber dailyOrderNumber}}</span></h5>
+                    <p>Order#: {{uniqueOrderNumber}}<span class="secondary-content">{{formatOrderDateAndTime createdAt}}</span></p>
+                    <div class="divider"></div>
+                    {{#if isPaymentMethodCash payment.method}}
+                        <p>Payment Method: <b> {{getPaymentMethod payment.method}}</b></p>
+                        <p>Payment Due: <b> {{currency payment.received}} (cash rounding of {{currency payment.rounding}})</b></p>
+                        <p>Cash Given: <b> {{currency payment.cashGiven}}</b></p>
+                        <p>Change Due: <b> {{currency payment.change}}</b></p>
+                    {{else}}
+                        <p>Payment Method: <b> {{getPaymentMethod payment.method}}</b></p>
+                        <p>Payment Due: <b> {{currency payment.received}}</b></p>
+                    {{/if}}
+                    {{#with payment.giftCardTotal}}
+                        <p>Gift Card Used: <b> - {{currency this}}</b></p>
+                    {{/with}}
+                    <div class="divider"></div>
+                    <a class="pos-button white center-align printRecentlyCompletedOrder" style="display: block;"><i class="material-icons teal-text medium">print</i></a>
+                    
+                    <a class="pos-button teal white-text center-align closePreviousOrderTab" href="orders/history/select/{{_id}}" style="display: block;">View Full Order Details</a>
+                    {{#with getOrderCustomer customerId}}
+                        <div class="divider"></div>
+                        <h5 class="">{{name}}</h5>
+                        <h6 class="grey-text">Active Loyalty Programs: </h6>
+                        {{#each getCustomerActivePrograms _id}}
+                            <div class="row card valign-wrapper">
+                                <div class="col s12 valign">
+                                    <div class="card-content">
+                                        <h6>{{getLoyaltyName this.programId}}</h6>
+                                        <h6>{{getLoyaltyBalance this.remainingQuantity this.remainingAmount}}</h6>
+                                        <p>{{getLoyaltyExpiration this.programId this.boughtOn}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {{else}}
+                            <h6 class="row center-align grey-text">No Active Programs</h6>
+                        {{/each}}
+                        <div class="divider"></div>
+                        <h6 class="grey-text">Tally Programs: </h6>
+                        {{#each getActiveTallyPrograms _id}}
+                            <div class="card row valign-wrapper">
+                                <div class="col s9 valign">
+                                    <div class="card-content">
+                                        <h6>{{getLoyaltyName this.programId}}</h6>
+                                    </div>
+                                </div>
+                                <div class="col s3 valign">
+                                    <h4>{{tally}}</h4>
+                                </div>  
+                            </div>
+                        {{/each}}
+                    {{/with}}
+                </div>
+            </div>
+        {{/with}}
+    </div>
+
+</template>

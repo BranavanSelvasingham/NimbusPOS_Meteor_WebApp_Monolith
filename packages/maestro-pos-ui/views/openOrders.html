@@ -1,0 +1,144 @@
+<template name="OpenOrders">
+
+    <div class="row saveVerticalSpace valign-wrapper border-bottom">
+        <div class="saveVerticalSpace col s4 center-align">
+            <h4>&nbsp;&nbsp;Open Orders (x{{getOpenOrdersCount}})</h4>
+        </div>
+        <div class="saveVerticalSpace col s4 input-field ">
+            <input id="order_number" type="number" class="validate orderNumberSearch" placeholder="Search Order Number">
+        </div>
+        <div class="saveVerticalSpace col s4 right-align valign">
+            <a class="btn-flat teal white-text waves-effect waves-light" href="/orders">New Order <i class="material-icons small right">add</i></a>
+        </div>
+    </div>
+
+    <div id="AllActiveOrders">
+        {{#each getAllActiveOrders}}
+            <div id="{{_id}}" class="activeOrderBlock border-right">
+                <div class="row">
+                    <a id="sendToKitchen" class="btn btn-medium waves-effect waves-light"><i class="material-icons left">{{#if itemsWaiting}}send{{else}}done{{/if}}</i>Kitchen</a>
+                    &nbsp;&nbsp;
+                    
+                    <a id="editThisOrder" class="btn btn-medium waves-effect waves-light" href="/orders/edit/{{this._id}}/false"><i class="material-icons left">edit</i>Edit</a>
+
+                    <span class="secondary-content">
+                       <a data-orderid="{{_id}}" class="cancelOrder btn-floating btn-medium waves-effect waves-light red lighten-2"><i class="material-icons">delete</i>></a> 
+                    </span>
+                </div>
+                <div class="row center-align">
+                    <a id="checkoutThisOrder" class="btn btn-medium light-blue waves-effect waves-light" href="/orders/edit/{{this._id}}/true" style="width: 100%;"><i class="material-icons left">done</i>Checkout</a>
+                </div>
+
+                <div class="row saveVerticalSpace">
+                    {{#with orderInformation}}
+                        <h5>{{#with getOrderType orderType}}{{this}}{{/with}}<a class="secondary-content">{{#if isDineInType orderType}}<i class="material-icons left">group_work</i><b>{{getTableLabel ../tableId}}</b>{{/if}}</a></h5>
+                        <h6>{{#with orderName}}Name: {{this}}{{/with}}</h6>
+                        <h6>{{#with orderPhone}}Phone: {{this}}{{/with}}</h6>
+                        <h6>{{#with unitNumber}}Unit #{{this}}{{/with}}{{#with buzzerNumber}}(buzzer #: {{this}}), {{/with}}
+                        {{#with streetNumber}}#{{this}}{{/with}}{{#with street}} {{this}}{{/with}}
+                        {{#with city}}{{this}}{{/with}}{{#with postalCode}}, {{this}}{{/with}}</h6>
+                        <h6>{{#with instructions}}<b>Note: {{this}}</b>{{/with}}</h6>
+                    {{/with}}
+                </div>
+
+                <div class="row saveVerticalSpace">
+                    <h5 class="secondary-content forceIconAlignment">
+                        <i class="material-icons small">timelapse</i>{{getTimeElapsed createdAt}}
+                    </h5>
+                </div>
+
+                {{#with getWaiterName waiterId}}
+                    <div class="row saveVerticalSpace">
+                        <div class="secondary-content forceIconAlignment">
+                            by {{this.name}}
+                        </div>
+                    </div>
+                {{/with}}
+
+                <div class="row receiptSlip card border-full">
+                    <h5>{{#with getCustomerName customerId}}{{this}}{{else}}Order Summary{{/with}}<span class="secondary-content">{{formatOrderNumber dailyOrderNumber}}</span></h5>
+                    <p><b>Order#: {{uniqueOrderNumber}}</b><span class="secondary-content">{{formatOrderDateAndTime createdAt}}</span></p>
+                    <ul class="collection">
+                        {{#each getGroupedItems items}}
+                            <b>Seat Number {{seatNum}}:</b>
+                            <div class="divider"></div>
+                            {{#each seatItems}}
+                                {{#if this.isRedeemItem}}                                            
+                                    <li class="collection-item row">
+                                        <p class="col s2">
+                                            &nbsp;
+                                        </p>
+                                        <p class="col s10">
+                                            <b>x{{quantity}}</b> {{product.name}} <i class="teal-text small-text">({{sizeName size.code}})</i><span class="secondary-content">{{ currency total }}</span>
+                                            <!-- <div class="col s12">
+                                                <i class="teal-text small-text">{{sizeName size.code}}</i><i class="teal-text secondary-content">{{currency size.price}} ea.</i>
+                                            </div> -->
+                                        </p>    
+                                    </li>
+                                {{else}}
+                                    {{#if itemIsLoyaltyProgram product._id}}
+                                        <li class="collection-item row valign-wrapper">
+                                            <p class="col s2 valign">
+                                                <i class="material-icons right">card_giftcard</i>
+                                            </p>
+                                            <p class="col s10">
+                                                <b>x{{quantity}}</b> {{product.name}}<span class="secondary-content">{{ currency total }}</span>
+                                                <div class="col s12">
+                                                    <i class="teal-text small-text">{{sizeName size.code}}</i><i class="teal-text secondary-content">{{currency size.price}} ea.</i>
+                                                </div>
+                                            </p>
+                                        </li>
+                                    {{else}}
+                                        <li class="collection-item saveHorizontalSpace">
+                                            <div class="row valign-wrapper saveHorizontalSpace">
+                                                <div class="col s2 valign center-align saveHorizontalSpace">
+                                                    {{#if sentToKitchen}}
+                                                        <i class="material-icons small">content_paste</i>
+                                                    {{else}}
+                                                        <a data-orderid="{{../../_id}}" class="btn-floating btn-medium waves-effect waves-light sendItemToKitchen"><i class="material-icons">send</i></a>
+                                                    {{/if}}
+                                                </div>
+                                                <div class="col s10 saveVerticalSpace">
+                                                    <div class="row saveVerticalSpace">
+                                                        <b>x{{quantity}}</b> {{product.name}} <i class="teal-text small-text">({{sizeName size.code}} {{#if this.variablePrice}}, Variable Price{{/if}} {{#if this.unitBasedPrice}}, {{unitBasedPriceQuantity}}{{unitLabel}} x {{currency unitPrice}}/{{unitLabel}}{{/if}})</i><span class="secondary-content">{{ currency total }}</span>
+                                                        <!-- <div class="col s12">
+                                                            <i class="teal-text small-text">{{sizeName size.code}}</i><i class="teal-text secondary-content">{{currency size.price}} ea.</i>
+                                                        </div> -->
+                                                        <!-- <p>Seat Number: <b>{{seatNumber}}</b></p> -->
+                                                    </div>
+
+                                                    {{#each addOns}}
+                                                        <p class="row">
+                                                            <i class="teal-text small-text">+ {{name}}</i><i class="teal-text secondary-content">{{currency price}} ea.</i>
+                                                        </p>
+                                                    {{/each}}
+                                                    {{#each notes}}
+                                                        <p class="row">
+                                                            <i class="teal-text small-text">* {{this}}</i>
+                                                        </p>
+                                                    {{/each}}
+                                                </div>
+                                            </div>
+                                        </li>
+                                    {{/if}}
+                                {{/if}}
+                            {{/each}}
+                        {{/each}}
+                    </ul>
+
+                    <div class="divider"></div>
+
+                    {{#with subtotals}}
+                        <div>Subtotal<span class="secondary-content">{{currency subtotal}}</span></div>
+                        {{#if amountIsNotZero discount}}<div>Discounts<span class="secondary-content">- {{currency discount}}</span></div>{{/if}}
+                        {{#if amountIsNotZero adjustments}}<div>Adjustments<span class="secondary-content">- {{currency adjustments}}</span></div>{{/if}}
+                        <div>Taxes<span class="secondary-content">{{currency tax}}</span></div>
+                        <div class="divider"></div>
+                        <div>Total <span class="secondary-content">{{currency total}}</span></div>
+                        <div class="divider"></div>
+                    {{/with}}
+                </div>
+            </div>
+        {{/each}}
+    </div>
+</template>

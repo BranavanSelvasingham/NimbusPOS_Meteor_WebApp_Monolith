@@ -1,0 +1,65 @@
+<template name="SupportChat">
+    <!-- <div class="row"> -->
+        <!-- <div class="col s12 m8 offset-m2 l6 offset-l3"> -->
+            {{#if isSystemIsOnline}}
+                {{#with getSelectedConversation}}
+                    <div id="messagesBox" class="messageBoxStyle">
+                        {{#each getAllMessagesInConversation}}
+                            {{#if isYourMessage businessId}}
+                                <div class="yourMessageBubble">
+                                    {{messageText}}<br>
+                                    <div class="messageFromAndTime">
+                                        {{getMessageTime}}
+                                    </div>
+                                </div>
+                            {{else}}
+                                <div class="theirMessageBubble">
+                                    {{messageText}}<br>
+                                    <div class="messageFromAndTime">
+                                        {{getMessageTime}}
+                                    </div>
+                                </div>
+                            {{/if}}
+                        {{else}}
+                            <div class="theirMessageBubble">
+                                Hi. How can we help? 
+                            </div>
+                        {{/each}}
+                    </div>
+                    <div class="messageCreateStyle row valign-wrapper">
+                        <div class="col s10 valign">
+                            <textarea id="messageTextInput"  class="materialize-textarea" placeholder="Enter your message"></textarea>
+                        </div>
+                        <div class="col s2 valign right-align">
+                            <a id="sendMessageButton" class="btn-floating btn-medium"><i class="material-icons">send</i></a>
+                        </div>
+                    </div>
+                {{else}}
+                    <div id="messagesBox" class="messageBoxStyle">
+                        <div class="theirMessageBubble">
+                            Hi. How can we help? 
+                        </div>
+                    </div>
+                    <div class="messageCreateStyle row valign-wrapper">
+                        <div class="col s12 center-align valign">
+                            <a class="startSupportChat">
+                                <i class="material-icons small blue-text">chat</i><br>
+                                <h6>Start Support Chat</h6>
+                            </a>
+                        </div>
+                    </div>
+                {{/with}}
+            {{else}}
+                <div class="row">
+                    <div class="col s12 center-align grey-text">
+                        <i class="material-icons large grey-text">signal_wifi_off</i><br>
+                        Seems you're not connected to the internet.
+                    </div>
+                </div>
+            {{/if}}            
+        <!-- </div> -->
+    <!-- </div> -->
+<!--     <div class="row keyboardSpaceFiller">
+        &nbsp;
+    </div> -->
+</template>

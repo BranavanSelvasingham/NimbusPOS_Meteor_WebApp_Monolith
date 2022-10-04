@@ -1,0 +1,113 @@
+<template name="CreateExpense">
+	<div class="row">
+		<h4 class="row grey-text center-align">New Expense</h4>
+		<div class="card col s12 m10 l10 push-m1 push-l1">
+			<div class="col s12">
+				<form id="enterExpenseInfo">
+<!-- 					<div class="row valign-wrapper">
+						<div class="col s12 m12 valign">
+							<label for="expenseCategory">Expense Category</label>
+							<input id="expenseCategory" type="text" list="categoryList">
+						</div>
+						<datalist id="categoryList">
+							{{#each getCategoryList}}
+								<option value="{{this.category}}"></option>
+							{{/each}}
+			            </datalist>
+					</div> -->
+					<div class="row valign-wrapper">
+						<div class="input-field col s11">
+							<select id="expenseCategory">
+								<option value="" disabled selected>Choose CRA Expense Category</option>
+								{{#each getExpenseCategoriesKeys}}
+									<option value="{{this}}">{{getCategoryLabel this}}</option>
+								{{/each}}
+							</select>
+						</div>
+						<div class="col s1">
+							<a href="#categoryDescriptions"><i class="material-icons small light-blue-text">info_outline</i></a>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col s12 m12">
+							<label for="expenseVendor">Vendor Name</label>
+							<input id="expenseVendor" type="text" list="vendorList" >
+						</div>
+						<datalist id="vendorList">
+							{{#each getVendorList}}
+								<option value="{{this.vendor}}"></option>
+							{{/each}}
+			            </datalist>
+					</div>
+					<div class="row">
+						<div class="col s12 m12">
+							<label for="expenseDetails">Expense Details</label>
+							<input id="expenseDetails" type="text" class="validate">
+						</div>
+					</div>
+					<div class="row valign-wrapper">		
+	    				<div class="col s4">	
+	    					<label for="expenseDate">Date of Expense:</label>	
+	    					<input id="expenseDate" class='datepicker' type="date" placeholder="Today"/>
+	    				</div>
+<!-- 	    				<div class="col s4 center-align">
+							<input type="checkbox" id="isTaxableCheckBox"/>
+				      		<label for="isTaxableCheckBox">Taxable</label>
+						</div> -->
+	    				<div class="col s4">
+							<label for="expenseTaxes">Taxes Paid</label>
+							<input id="expenseTaxes" type="number" min="0.00" step="0.01" class="validate">
+						</div>
+						<div class="col s4">
+							<label for="expenseTotal">Total Amount (incl taxes)</label>
+							<input id="expenseTotal" type="number" min="0.00" step="0.01" class="validate">
+						</div>
+					</div>
+					<div class="row valign-wrapper">
+						<div class="col s3">
+							<input class="choosePaymentMethod" data-method="out-of-pocket" name="method" type="radio" id="outOfPocket" />
+      						<label for="outOfPocket">Out of Pocket <i class="material-icons tiny">account_circle</i></label>
+						</div>
+						<div class="col s3">
+							<input class="choosePaymentMethod" data-method="out-of-register" name="method" type="radio" id="outOfRegister" />
+      						<label for="outOfRegister">Out of Register <i class="material-icons tiny">local_atm</i></label>
+						</div>
+						<div class="col s3">
+							<input class="choosePaymentMethod" data-method="card" name="method" type="radio" id="card" />
+      						<label for="card">Card <i class="material-icons tiny">credit_card</i></label>
+						</div>
+						<div class="col s3">
+							<input class="choosePaymentMethod" data-method="invoiced" name="method" type="radio" id="invoiced"/>
+      						<label for="invoiced">Invoiced <i class="material-icons tiny">description</i></label>
+						</div>
+					</div>
+					<div class="row valign-wrapper">
+						<div class="col s12 center-align red-text valign" id="errorMessages"></div>
+					</div>
+					<div class="row valign-wrapper">
+						<div class="col s12 right-align">
+		                	<a id="cancelCreateExpense" class="waves-effect waves-teal btn-flat" type="reset">Exit</a>
+		                    <a id="createExpense" class="waves-effect waves-light btn orange darken-1">Record Expense</a>
+		                </div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<div class='divider' id='categoryDescriptions'></div>
+
+	<div class="row">
+		<h5 class="row center-align light-blue-text">CRA Expense Category Descriptions</h5>
+		<p class="center-align grey-text">Descriptions provided for reference purposes only. Please visit www.cra-arc.gc.ca for the latest and complete list of Business Expenses and Form T2125.</p>
+		<ul class="collapsible col s12 m10 l10 push-m1 push-l1" data-collapsible="accordion">
+			{{#each getExpenseCategoriesKeys}}
+				<li>
+					<div class="collapsible-header">{{getCategoryLabel this}}<a class="secondary-content grey-text">Form T2125 Line {{getCategoryLines this}}</a></div>
+					<div class="collapsible-body" style="white-space: pre-line;"><p>{{getCategoryDescription this}}</p></div>
+				</li>
+			{{/each}}
+		</ul>
+	</div>
+
+</template>

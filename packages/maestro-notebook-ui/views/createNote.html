@@ -1,0 +1,39 @@
+<template name="CreateNote">
+	<div class="row">&nbsp;</div>
+	<form id="createNoteForm">
+		<div class="row">
+			<div class="card col s12">
+				<div class="row">
+					<div class="input-field col s12">
+						<input id="note_title" type="text">
+						<label for="note_title">Title (optional)</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="input-field col s12">
+						<textarea id="note_description" class="materialize-textarea"></textarea>
+	         			<label for="note_description">Enter Note</label>
+					</div>
+				</div>
+				<div class="divider"></div>
+				<div class="row">
+					<p class="grey-text center-align"><b>Visible to:</b></p>
+					<p class="grey-text center-align">
+						<input name="visibilityStatus" type="radio" id="setBusinessWide" checked />
+						<label for="setBusinessWide">Business Wide</label>
+						&nbsp;&nbsp;&nbsp;
+						<input name="visibilityStatus" type="radio" id="setLocationSpecific" />
+						<label for="setLocationSpecific">This Location Only</label>
+						&nbsp;&nbsp;&nbsp;
+						<input class="with-gap" name="visibilityStatus" type="radio" id="setUserSpecific" />
+						<label for="setUserSpecific">This User Account</label>
+				    </p>
+				</div>
+				<div class="row right-align">
+					<a id="cancelNote" class="waves-effect waves-teal btn-flat">Exit</a>
+	                <button id="createNote" class="waves-effect waves-light btn teal">save</button>
+				</div>
+			</div>
+		</div>
+	</form>
+</template>

@@ -1,0 +1,169 @@
+<template name="ListCustomers">
+    <div id="addNewCustomerModal" class="modal">
+        <div class="modal-content">
+            {{>CreateCustomer}}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col s12">
+            <ul class="collection with-header">
+                <li class="collection-header">
+                    <div class="row valign-wrapper">
+                        <div class="col s6 left-align valign">
+                            <h3>Customers</h3>
+                        </div>
+                        <div class="col s6 right-align valign">
+                            <a id="add-Customer" class="waves-effect waves-light btn-floating btn-large"><i class="material-icons large">add</i></a>
+                        </div>
+                    </div>
+                </li>
+                <li class="collection-item">
+                    <div class="row">
+                        <div class="col s12">
+                            <div class="horizontalScrollDiv">
+                                <div class="horizontalScrollContainer">
+                                    <div class="horizontalScrollContent">
+                                        <div class="col s5">
+                                            <form name="customer-list">
+                                                <!-- <label for="customer-name-search"><i class="material-icons grey-text left">search</i></label> -->
+                                                <input id="customer-name-search" type="search" placeholder="Search Name" style="font-size: 1.4rem;">
+                                            </form>
+                                        </div>
+                                        <!-- <div class="chip selectAlphabet" data-alphabet="All" style="{{isAlphabetSelected 'All'}}">All</div> -->
+                                        <div class="chip clear-customer-search selectAlphabet white grey-text" data-alphabet="All" style="font-size:1.2rem;">Clear</div>
+                                        {{#each alphabet}}
+                                            <div class="chip alphabetFilter selectAlphabet" data-alphabet="{{this.letter}}" style="{{isAlphabetSelected letter}}">
+                                                {{this.letter}}
+                                            </div>
+                                        {{/each}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s5 fixedHeightContainer">
+<!--                             <div class="row">
+                                <div class="col s12">
+                                    <div class="horizontalScrollDiv">
+                                        <div class="horizontalScrollContainer">
+                                            <div class="horizontalScrollContent">
+                                                <div class="col s6">
+                                                    <form name="customer-list">
+                                                        <label for="customer-name-search"><i class="material-icons grey-text left">search</i></label>
+                                                        <input id="customer-name-search" type="search">
+                                                    </form>
+                                                </div>
+                                                <div class="chip selectAlphabet" data-alphabet="All" style="{{isAlphabetSelected 'All'}}">All</div>
+                                                {{#each alphabet}}
+                                                    <div class="chip alphabetFilter selectAlphabet" data-alphabet="{{this.letter}}" style="{{isAlphabetSelected letter}}">
+                                                        {{this.letter}}
+                                                    </div>
+                                                {{/each}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> -->
+<!--                             <div class="row">
+                                <div class="col s12 fixedHeightContainer"> -->
+                                    <ul class="collection">
+                                        {{#each customers}}
+                                            <li class="collection-item avatar customerSelected" style='{{isSelectedCustomer _id}}' data-customerid="{{this._id}}">
+                                                <div class="row" data-customerid="{{this._id}}">
+                                                    <div class="col s9">                  
+                                                        <i class="material-icons circle small left" data-customerid="{{this._id}}">person_outline</i>
+                                                        <span class="title">{{this.name}}</span>
+                                                        <p>{{this.email}}</p>
+                                                    </div>
+                                                    <div class="col s3">
+                                                        <h6>${{getCustomerSpend _id}}</h6>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        {{else}}
+                                            <h6 class="row center-align grey-text">Search for Someone</h6>
+                                        {{/each}}
+                                    </ul>
+                                </div>
+<!--                             </div>
+                        </div> -->
+                        <div class="col s7 fixedHeightContainer">
+                            {{#with getSelectedCustomer}}
+                                <div class="row">
+                                    <form id="edit-customer" class="col s12">
+                                        <div class="row">
+                                            <div class="col s12">
+                                                <label for="customer-name">Name</label>
+                                                <input id="customer-edit-name" type="text" class="validate" value="{{this.name}}">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col s12">
+                                                <label for="customer-email">Email</label>
+                                                <input id="customer-email" type="text" class="validate" value="{{this.email}}">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col s12 right-align">
+                                                <button id="save-edit-customer" class="waves-effect waves-light btn green lighten-1">Save Changes</button>
+                                                <div id='save-error-message' class='red-text right-align'></div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <div class="divider"></div>
+
+                                <div class="row valign-wrapper">
+                                    <div class="col s12 valign">
+                                        <h6 class="teal-text">Customer Spend: <a class="badge-m-outline">${{getCustomerSpend _id}}</a></h6>
+                                    </div>
+                                </div>
+
+                                <div class="divider"></div>
+
+                                <div class="row valign-wrapper">
+                                    <div class="col s12 valign">
+                                        <h6 class="teal-text">Active Loyalty Programs:</h6>
+                                        {{#each getActivePrograms _id}}
+                                            <div class="row">
+                                                <div class="card col s10 push-s1">
+                                                    <div class="card-content">
+                                                        <h6>{{getLoyaltyName this.programId}}</h6>
+                                                        <p>{{getLoyaltyBalance this.remainingQuantity this.remainingAmount}}</p>
+                                                        <p>{{getLoyaltyExpiration this.programId this.boughtOn}}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {{/each}}
+                                        <div class="divider"></div>
+                                        <h6 class="teal-text">Expired/Depleted Loyalty Programs:</h6>
+                                        {{#each getInactivePrograms _id}}
+                                            <div class="row">
+                                                <div class="card col s10 push-s1">
+                                                    <div class="card-content">
+                                                        <h6>{{getLoyaltyName this.programId}}</h6>
+                                                        <p>{{getLoyaltyBalance this.remainingQuantity this.remainingAmount}}</p>
+                                                        <p>{{getLoyaltyExpiration this.programId this.boughtOn}}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {{/each}}
+                                    </div>
+                                </div>
+
+                                <div class="divider"></div>
+
+                                <div class="row center-align"><button id="deleteCustomer" class="center-align">Delete Customer</button></div>
+                                
+                            {{/with}}
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</template>

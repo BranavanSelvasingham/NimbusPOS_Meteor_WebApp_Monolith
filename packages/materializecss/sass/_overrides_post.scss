@@ -1,0 +1,21 @@
+//additional container layout
+/*
+@media #{$medium-and-up} {
+  .layout-container {
+    margin: 0 auto;
+    width: 85%;
+  }
+}
+*/
+
+
+$tablet-screen-up: 2048px !default;
+$tablet-and-up: "only screen and (min-width : #{$tablet-screen-up})" !default;
+
+@media #{$tablet-and-up} {
+    .layout-container {
+        margin: 0 auto;
+        width: 75%;
+    }
+}
+// END additional layout

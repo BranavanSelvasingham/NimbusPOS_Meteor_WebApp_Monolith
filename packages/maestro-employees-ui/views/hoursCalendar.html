@@ -1,0 +1,85 @@
+<template name="HoursCalendar">
+	<div class="row">
+		<div class="card col s12">
+			<div class="row">
+				<div class="col s3 m3 left-align">
+					<a id="previousPayPeriod" class="waves-effect waves-light btn btn-small"><i class="material-icons left">arrow_backward</i>Pay Period</a>
+				</div>
+				<div class="col s6 m6 center-align">
+				    <div class="col s12 m12">
+				      <ul class="tabs">
+				        <li class="tab col s6 m6"><a id="showPlanned" class="active">Planned</a></li>
+				        <li class="tab col s6 m6"><a id="showActuals">Actuals</a></li>				       
+				      </ul>
+				    </div>
+				</div>
+				<div class="col s3 m3 right-align">
+					<a id="nextPayPeriod" class="waves-effect waves-light btn btn-small"><i class="material-icons right">arrow_forward</i>Pay Period</a>
+				</div>
+			</div>
+			<div class="row">
+				<table id="hoursTable" class="centered highlight small-text">
+					<thead>
+						<tr>
+							<th></th>
+							{{#each getPayWeekHeader}}
+								<th bgcolor='{{isItToday date}}'>{{formatHeaderDateMonth date}}</th>
+							{{/each}}
+						</tr>
+						<tr>
+							<th></th>
+							{{#each getPayWeekHeader}}
+								<th>{{formatHeaderDay date}}</th>
+							{{/each}}
+							<th>Total</th>
+						</tr>
+					</thead>
+					<thead>
+						<tr>
+							<th>Total</th>
+							{{#each getPayWeekHeader}}
+								<th>
+									<div class="plannedHours">
+										{{getDailyPlannedTableTotal date}}
+									</div>
+									<div class="actualHours">
+										{{getDailyActualTableTotal date}}
+									</div>
+								</th>
+							{{/each}}
+						</tr>
+					</thead>
+					<tbody>
+						{{#each getEmployees}}
+							<tr>
+								<td>
+									<div class="teal-text">	
+										{{this.name}}
+									</div>
+								</td>
+								{{#each getPayWeekHeader}}
+									<td>
+										<div class="plannedHours">
+											<input id="{{../_id}}_{{date}}_planned" data-employee-id="{{../_id}}" data-date="{{date}}" type="number" class="plannedHoursInput validate center-align" min="0" max="24" step="0.50" value="{{getEmployeePlannedHours ../_id date}}">
+										</div>
+										<div class="actualHours">
+											<input id="{{../_id}}_{{date}}_actual" data-employee-id="{{../_id}}" data-date="{{date}}" type="number" class="actualHoursInput validate center-align" min="0" max="24" step="0.50" value="{{getEmployeeActualHours ../_id date}}">
+										</div>
+									</td>
+								{{/each}}
+								<td> 
+									<div class="teal-text plannedHours">
+										{{getEmployeePlannedTableTotal _id}}
+									</div>
+									<div class="teal-text actualHours">
+										{{getEmployeeActualTableTotal _id}}
+									</div>
+								</td>
+							</tr>
+						{{/each}}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</template>

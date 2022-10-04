@@ -1,0 +1,19 @@
+<template name="CreateTable">
+	<h6 class="center-align grey-text">Table Label</h6>
+	<p class="row center-align">
+		<input id="tableLabelField" type="text" class="validate" style='width:100px;'>
+	</p>
+    <!-- &nbsp;&nbsp;&nbsp; -->
+    <p class="row center-align">
+		<a class="btn-floating btn-large waves-effect waves-light white decreaseSeats"><i class="material-icons grey-text">keyboard_arrow_down</i></a>
+		Seats: {{getDefaultSeats}}
+		<a class="btn-floating btn-large waves-effect waves-light white increaseSeats"><i class="material-icons grey-text">keyboard_arrow_up</i></a>
+	</p>
+	<p class="row center-align">
+		<a class="btn-floating btn-large waves-effect waves-light white disabled"><i class="material-icons grey-text">keyboard_arrow_left</i></a>Shapes: {{getTableShape}}
+		<a class="btn-floating btn-large waves-effect waves-light white disabled"><i class="material-icons grey-text">keyboard_arrow_right</i></a>
+	</p><br>
+	<p class="row center-align">
+		<a class="waves-effect waves-light btn createTable">Create Table</a>
+	</p>
+</template>

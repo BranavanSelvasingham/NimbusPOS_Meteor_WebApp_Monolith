@@ -1,0 +1,239 @@
+<template name="ReportsHome">
+<!-- 	{{#if isDesktop}}
+		<div class="row center-align"><button id="migrateOrders">Migrate</button></div> 
+	{{/if}} -->
+	<div class="row">
+		<div class="col s10 offset-s1">
+			<div class="row grey-text valign-wrapper">
+				<div class="col s6 center-align valign">
+					<i id="emailReport" class="material-icons grey-text small waves-light waves-effect">email</i>
+				</div>
+				<div class="col s6 center-align valign">
+					<i id="printReport" class="material-icons grey-text small">print</i>
+				</div>
+			</div>
+			{{#if emailNotSet}}
+				<div class="row">
+					{{> PrimaryContactEmail}}
+				</div>
+			{{/if}}
+			<ul class="collection with-header">
+				<li class="collection-item center-align row valign-wrapper">
+					<div class="col s2 valign">
+						<i id="previousDay" class="material-icons waves-effect waves-light grey-text">arrow_backward</i>
+				    </div>
+				    <div class="col s8 valign">
+				    	<h5>{{getSelectedDailyDate}}</h5>
+				    </div>
+				    <div class="col s2 valign">
+				    	<i id="nextDay" class="material-icons waves-effect waves-light btn-flat grey-text">arrow_forward</i>
+					</div>
+				</li>
+				{{#if isSubscriptionReady}}
+					<li class="collection-item row valign-wrapper">
+						<div class="col s3 valign">
+							<h5 class="row center-align">
+								Grand Total
+							</h5>
+							<h4 class="row center-align">
+								{{currency getDailySalesTally}}
+							</h4>
+						</div>
+						{{#if isTaxComponentsZero}}
+							<div class="col s3 valign center-align">
+								<h6>Taxes:</h6>
+								<h5>{{currency getDailyTaxesTotal}}</h5>
+							</div>
+							<div class="col s3">&nbsp;</div>
+						{{else}}
+							{{#each getTaxComponentKeysForLocation}}
+								<div class="col s3 valign">
+									<h6 class="row center-align">
+										{{label}}
+									</h6>
+									<h5 class="row center-align">
+										{{currency (getDailyTaxComponentTotal key)}}
+									</h5>
+								</div>
+							{{/each}}
+							<!-- <div class="col s3 valign">
+								<h6 class="row center-align">
+									HST
+								</h6>
+								<h5 class="row center-align">
+									{{currency getDailyHSTTaxes}}
+								</h5>
+							</div> -->
+						{{/if}}
+						<div class="col s3 valign">
+							<h5 class="row center-align">
+								Orders
+							</h5>
+							<h4 class="row center-align">
+								x{{getDailyOrdersTally}}
+							</h4>
+						</div>
+					</li>
+					<li class="collection-item row valign-wrapper">
+						<div class="col s3 valign">
+							<h5>Cash:</h5>
+						</div>
+						<div class="col s9 valign center-align">
+							<div class="row valign-wrapper">
+								{{#with getCashSales}}
+									<div class="col s3 valign">
+										<h6>Grand Total:</h6>
+										<h5>{{currency grandTotal}}</h5>
+									</div>
+									{{#if isTaxComponentsZero}}
+										<div class="col s6 valign">
+											<h6>Taxes:</h6>
+											<h6>{{currency taxes}}</h6>
+										</div>
+									{{else}}
+										{{#each getTaxComponentKeysForLocation}}
+											<div class="col s3 valign">
+												<h6>{{label}}:</h6>
+												<h6>{{currency (getAssociatedTaxComponentTotal key ../gstTax ../hstTax ../pstTax)}}</h6>
+											</div>
+										{{/each}}
+										<!-- <div class="col s3 valign">
+											<h6>HST:</h6>
+											<h6>{{currency hstTax}}</h6>
+										</div> -->
+									{{/if}}
+									<div class="col s3 valign">
+										<h6>Orders:</h6>
+										<h5>x{{transactions}}</h5>
+									</div>
+								{{/with}}
+							</div>
+						</div>
+					</li>
+					<li class="collection-item row valign-wrapper">
+						<div class="col s3 valign">
+							<h5>Credit/Debit:</h5>
+						</div>
+						<div class="col s9 valign center-align">
+							<div class="row valign-wrapper">
+								{{#with getCardSales}}
+									<div class="col s3 valign">
+										<h6>Grand Total:</h6>
+										<h5>{{currency grandTotal}}</h5>
+									</div>
+									{{#if isTaxComponentsZero}}
+										<div class="col s6 valign">
+											<h6>Taxes:</h6>
+											<h6>{{currency taxes}}</h6>
+										</div>
+									{{else}}
+										{{#each getTaxComponentKeysForLocation}}
+											<div class="col s3 valign">
+												<h6>{{label}}:</h6>
+												<h6>{{currency (getAssociatedTaxComponentTotal key ../gstTax ../hstTax ../pstTax)}}</h6>
+											</div>
+										{{/each}}
+										<!-- <div class="col s3 valign">
+											<h6>HST:</h6>
+											<h6>{{currency hstTax}}</h6>
+										</div> -->
+									{{/if}}
+									<div class="col s3 valign">
+										<h6>Orders:</h6>
+										<h5>x{{transactions}}</h5>
+									</div>
+								{{/with}}
+							</div>
+						</div>
+					</li>
+					<li class="collection-item row valign-wrapper">
+						<div class="col s3 valign">
+							<h5>Monetary Gift Cards:</h5>
+						</div>
+						<div class="col s9 valign center-align">
+							<div class="row valign-wrapper">
+								{{#with getGiftCardRedemptions}}
+									<div class="col s3 valign">
+										<h6>Redemption Value:</h6>
+										<h5>{{currency total}}</h5>
+									</div>
+									<div class="col s6 valign">&nbsp;</div>
+									<div class="col s3 valign">
+										<h6>Redemption Count:</h6>
+										<h5>x{{count}}</h5>
+									</div>
+								{{/with}}
+							</div>
+						</div>
+					</li>
+					{{#if isTipsTracked}}
+						<li class="collection-item row valign-wrapper">
+							<div class="col s3 valign">
+								<h5>Tips:</h5>
+							</div>
+							<div class="col s9 valign center-align">
+								<div class="row valign-wrapper">
+									{{#with getTipsGiven}}
+										<div class="col s3 valign">
+											<h6>Paid by Cash:</h6>
+											<h5>{{currency cash}}</h5>
+										</div>
+										<div class="col s3 valign">
+											<h6>Paid by Credit/Debit:</h6>
+											<h5>{{currency card}}</h5>
+										</div>
+										<div class="col s6 valign">*Not included in Grand Totals</div>
+									{{/with}}
+								</div>
+							</div>
+						</li>
+					{{/if}}
+	<!-- 				<li class="collection-item row valign-wrapper">
+						<div class="col s4 valign">
+							<h5>Loyalty:</h5>
+						</div>
+						<div class="col s8 valign">
+							<div class="row">
+
+							</div>
+							<div class="row">
+
+							</div>
+						</div>
+					</li> -->
+					<li class="collection-item row valign-wrapper">
+						<div class="col s10 offset-s1 center-align valign">
+							<h5>Categories:</h5>
+							<ul class="collection">
+								{{#each getDailyCategoryTable}}
+									<li class="collection-item" style="{{getCategoryColor categoryName}}">
+										<p class="left-align white-text">{{categoryName}}: <a class="secondary-content">{{currency categoryTotal}}</a></p>
+									</li>
+								{{/each}}
+							</ul>
+						</div>
+					</li>
+					<li class="collection-item row valign-wrapper">
+						<div class="col s10 offset-s1 center-align valign">
+							<h5>Products:</h5>
+							<ul class="collection">
+								{{#each getDailyProductsTable}}
+									<li class="collection-item">
+										<p class="left-align">{{this.product}}  {{formatQuantity productQuantity}}<a class="secondary-content">{{formatCurrency productTotal}}</a></p>
+									</li>
+						        {{/each}}
+							</ul>
+						</div>
+					</li>
+				{{else}}
+					<li class="collection-item row valign-wrapper center-align">
+						<p>The report is being generated, this may take up to a minute.</p>
+						<div class="progress">
+							<div class="indeterminate"></div>
+						</div>
+					</li>
+				{{/if}}
+			</ul>
+		</div>
+	</div>
+</template>

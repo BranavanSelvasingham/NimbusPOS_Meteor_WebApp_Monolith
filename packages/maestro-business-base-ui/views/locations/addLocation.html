@@ -1,0 +1,55 @@
+<template name="AddLocation">
+    <h5 class="row center-align">Add Location</h5>
+    <div class="row">
+        <form id="add-location" name="add-location" class="col s12">
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="location-name" type="text" class="validate">
+                    <label for="location-name">Location Name</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="address-street" type="text" class="validate">
+                    <label for="address-street">Street Address</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s6">
+                    <input id="address-city" type="text" class="validate">
+                    <label for="address-city">City</label>
+                </div>
+                <div class="input-field col s3">
+                    <input id="address-pin" type="text" class="validate">
+                    <label for="address-pin">Postal Code</label>
+                </div>
+                <div class="input-field col s3">
+                    <select id="address-state" class="browser-default">
+                        <option value="" selected disabled class="grey-text">Choose Province</option>
+                        {{#each provinces}}
+                            <option value="{{this.code}}">{{this.name}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <select id="address-country" class="browser-default">
+                        <option value="CA" selected>Canada</option>
+                        <option value="" disabled>(At the moment, we only support locations in Canada.)</option>
+                        <!-- {{#each countries }}
+                            <option value="{{this.code}}">{{this.name}}</option>
+                        {{/each}} -->
+                    </select>
+                    <!-- <label for="address-country">Country</label> -->
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12 right-align">
+                    <a class="waves-effect waves-light btn-flat" href="{{pathFor 'ListLocations'}}">Back</a>
+                    <a id="save-new-location-info" class="waves-effect waves-light btn orange darken-1">Create</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</template>

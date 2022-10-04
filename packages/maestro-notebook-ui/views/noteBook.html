@@ -1,0 +1,51 @@
+<template name="NoteBook">
+
+	<div class="row saveVerticalSpace saveHorizontalSpace">
+		<div class="col s12 saveVerticalSpace saveHorizontalSpace">
+	  		<ul class="collection with-header">
+				<li class="collection-header saveVerticalSpace">
+					<div class="row valign-wrapper saveVerticalSpace">
+				        <div class="col s4 left-align valign">
+				            <h3>&nbsp;&nbsp;&nbsp;Notes</h3>
+				        </div>
+				        <div class="col s8 right-align valign">
+							<a class="waves-effect waves-light btn-floating btn-large" href="/notebook/createNote"><i class="material-icons">library_add</i></a> 
+						</div>
+					</div>
+				</li>
+
+				<li id="noteBook" class="collection-item listViewContainer">
+					<div class="row listViewContainer">
+						<div class="col s4 fixedHeightContainer listViewContainer itemsListStyle">
+							<ul class="collection listViewContainer">
+								{{#each getVisibleNotes}}
+									<li class="selectNote collection-item row valign-wrapper" style="{{#if isNoteSelected _id}}background-color: lightblue;{{/if}}">
+										<p class="truncate"><b class="truncate">{{title}}</b>
+										{{description}}</p>
+									</li>
+								{{/each}}
+							</ul>
+						</div>
+						<div class="col s8 fixedHeightContainer">
+							{{#with getSelectedNote}}
+								<form id="selectedNoteForm">
+									<b><input id="selectedNoteTitle" type="text" value="{{title}}"></b>
+									<p><textarea id="selectedNoteDescription" class="materialize-textarea" value="{{description}}"></textarea></p>
+									<br>
+									<p class="grey-text">Note Visible to <b>{{getNoteVisibility visibleTo}}</b></p>
+									<br>
+									<p class="row"><i class="material-icons small red-text deleteThisNote">delete</i><a class="secondary-content"><i class="material-icons small grey-text refreshChanges">refresh</i>
+										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<i class="material-icons small grey-text saveChanges">save</i></a></p>
+								</form>
+								{{initializeForm}}
+							{{/with}}
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+</template>
+

@@ -1,0 +1,63 @@
+<template name="Login">
+    {{#unless currentUser}}
+        <div class="row">
+            <div class="col l6 offset-l3 m8 offset-m2 s12">
+                <p class="center-align"><i class="material-icons grey-text medium">account_circle</i></p>
+                <h4 class="row center-align grey-text">Welcome Back!</h4>
+                <form id="sign-in">
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="user-name" type="text" class="validate" autocorrect="off" autocapitalize="off" spellcheck="false">
+                                <label for="user-name" data-error="Username is taken">Username</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="password" type="password" class="validate">
+                                <label for="password">Password</label>
+                            </div>
+                        </div>
+                        {{#if message}}
+                            <div class="row">
+                                <div class="col s12 red-text">&nbsp;{{ message }}</div>
+                            </div>
+                        {{/if}}
+                        <div class="row">
+                            <div class="col s12 right-align">
+                                <a id="cancel-login" class="goBackToPrevious waves-effect waves-teal btn-flat" type="reset">Cancel</a>
+                                <a id="submit-sign-in" class="waves-effect waves-light btn-flat light-blue accent-2 white-text" form="sign-in">Log In</a>
+                            </div>
+                        </div>
+                </form>
+            </div>
+        </div>
+    {{else}}
+        {{#if isDesktop }}
+            <div class="row center-align">{{> LoadingSpinner }}</div>
+            {{waitForSessionStart}}
+        {{/if}}
+
+        {{#if isPos}}
+            <div class="row center-align">
+                <h5><i class="material-icons medium">lock_outline</i></h5>
+            </div>
+            <div class="row center-align">
+                <h5>Waiting for Device Approval</h5>
+            </div>
+            {{waitForDeviceApproval}}
+        {{/if}}
+    {{/unless}}
+
+    {{#if isPos}}
+        <!-- <h6 class="row center-align grey-text">Manage your account at www.nimbuspos.com</h6> -->
+
+        <div class="divider"></div>
+        
+        <div class="row center-align">
+            <div class="col s10 push-s1">
+                <h6 class="center-align grey-text">If you require assistance or have any questions, please contact us:<br><br><a style="color: #40c4ff;" href="mailto:info@nimbuspos.com">info@nimbuspos.com</a></h6>
+                <img src="contact_info.png" alt="contact info" height="100">
+            </div>
+        </div>
+    {{/if}}
+</template>

@@ -1,0 +1,71 @@
+<template name="ManageDevices">
+	<h5>Manage Devices:</h5>
+    <div class="row">
+        <div class="col s6 right-align">
+            Auto-Enable New Device Logins:
+        </div>
+        <div class="col s6 left-align">
+            <div class="switch">
+                <label>
+                    Disabled
+                    <input id="enableAutoEnroll" type="checkbox" checked="{{autoEnrollConfig}}">
+                    <span class="lever"></span>
+                    Enabled
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12">
+            {{! -- #with business --}}
+	            <ul>
+	                {{#each devices}}
+	                    <li class="row" style="border: 2px solid grey; border-radius: 5px;">
+                            <p class="row">
+    	                    	<div class="col s3">
+                                    <span><b>{{deviceInfo.manufacturer}} {{deviceInfo.model}}</b> {{deviceInfo.platform}}</span>
+                                    <br>
+                                    <span>Status: <i class="{{#if (deviceOffline appId)}}red-text{{else}}green-text{{/if}}">{{deviceStatus appId}}</i></span>
+                                </div>
+                                <div class="col s3">
+                                    <span>Username: {{userName appId}}</span>
+                                    <br>
+                                    <span>Status: <i class="{{#if (userOffline appId)}}red-text{{else}}green-text{{/if}}">{{userStatus appId}}</i></span>
+                                </div>
+                                <div class="col s6">&nbsp;</div>
+                            </p>
+                            <div class="divider"></div>
+                            
+                            <ul id='dropdown_{{@index}}' class='dropdown-content'>
+                                {{#each getAllLocations}}
+                                    <li><a class="saveLocationSetting" data-appid="{{../appId}}" data-locationid="{{_id}}">{{name}}</a></li>
+                                {{/each}}
+                            </ul>
+
+                            <div class="row valign-wrapper">
+                                <div class="col s6">
+                                    Set to: <a class='dropdown-button btn-flat teal-text' data-beloworigin="true" data-activates='dropdown_{{@index}}'>{{getDeviceLocationSetting appId}} <i class="material-icons right">arrow_drop_down</i></a>
+                                </div>
+                                <div class="col s6 center-align">
+                                    <div class="switch">
+                                        <label>
+                                            POS Disabled
+                                            <input type="checkbox" class="togglePosEnable" checked="{{#if isPosEnabled posEnabled}}true{{/if}}">
+                                            <span class="lever"></span>
+                                            POS Enabled
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col s1 valign center-align">
+                                    {{#if (deviceOffline appId)}}
+                                        <a id="removeDevice" class="btn-floating white"><i class="material-icons small red-text">delete</i></a>
+                                    {{/if}}
+                                </div>
+                            </div>
+	                   	</li>
+	                {{/each}}
+	            </ul>
+            {{!-- /with --}}
+        </div>
+    </div>
+</template>

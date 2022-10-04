@@ -1,0 +1,118 @@
+<template name="AccountingMain">
+	<h5 class="light-blue-text center-align">Accounting Data</h5>
+
+	{{#if isPos}}
+		<h6 class="row grey-text center-align">The downloading of Accounting Data is currently only available by logging on to www.nimbuspos.com</h6>
+	{{/if}}
+	
+	{{#if isDesktop}}
+		{{#if moreThanOneLocation}}
+			<p class="center-align">
+				{{#if inAllLocationsMode}}
+					<a class="btn-flat small light-blue-text toggleAllLocationMode">All Locations <i class="material-icons right">check_box_outline</i></a>
+				{{else}}
+					<a class="btn-flat small grey-text toggleAllLocationMode">All Locations <i class="material-icons right">check_box_outline_blank</i></a>
+				{{/if}}
+			</p>
+		{{/if}}
+
+		<div class="row valign-wrapper">
+			<div class="col s4 right-align valign">
+				<a id="previousPeriod" class="waves-effect waves-light"><i class="material-icons teal-text medium">keyboard_arrow_left</i></a>
+			</div>
+			<h5 class="col s4 center-align valign">
+		    	{{getSelectedMonthlyDate}}&nbsp;&nbsp;<i class="material-icons small grey-text forceRefresh">refresh</i>
+		    </h5>
+		    <div class="col s4 left-align valign">
+		    	<a id="nextPeriod" class="waves-effect waves-light"><i class="material-icons teal-text medium">keyboard_arrow_right</i></a>
+		    </div>
+		</div>
+
+		{{#if isDashboardReady}}
+			<div class="row">
+				<ul class="collection col s10 offset-s1">
+					{{#if ordersAvailableForMonth}}
+						<li class="collection-item">
+							<h5 class="grey-text">All Orders: <b>{{getAccountingOrdersCount}}</b> {{#if moreThanOneLocation}}at {{getLocationName}}{{/if}}<a class="secondary-content"><a id="downloadOrdersCSV" class="btn btn-flat light-blue white-text">Download CSV<i class="material-icons right white-text">file_download</i></a></a></h5>
+							<div class="divider"></div>
+							<!-- <ul class="collection"> -->
+								<li class="collection-item">
+									<h5 class="grey-text">Daily Totals: <b>{{getAccountingDailyTotalsCount}}</b> days {{#if moreThanOneLocation}}at {{getLocationName}}{{/if}}
+										<a class="secondary-content"><a id="downloadDailyTotalsCSV" class="btn btn-flat light-blue white-text">Download CSV<i class="material-icons right white-text">file_download</i></a></a></h5>
+									<br><i class="grey-text">*Any gift card payments will be deducted from the 'Total' calculation for the day (gift card value already included in 'Total' on day of card purchase).</i>
+								</li>
+							<!-- </ul> -->
+							<div class="divider"></div>
+						</li>		
+					{{else}}
+						<li class="collection-item">
+							<h5 class="grey-text">All Orders: <a class="secondary-content">There are no orders for this month.</a></h5>
+						</li>
+					{{/if}}
+
+					{{#if expensesAvailableForMonth}}
+						<li class="collection-item">
+							<h5 class="grey-text">All Expenses: <b>{{getAccountingExpensesCount}}</b> {{#if moreThanOneLocation}}from all locations{{/if}}<a class="secondary-content"><a id="downloadExpensesCSV" class="btn btn-flat light-blue white-text">Download CSV<i class="material-icons right white-text">file_download</i></a></a></h5>						
+						</li>
+					{{else}}
+						<li class="collection-item">
+							<h5 class="grey-text">All Expenses: <a class="secondary-content">There are no expenses for this month.</a></h5>
+						</li>
+					{{/if}}
+
+					{{#if timeEntriesAvailableForMonth}}
+						<li class="collection-item">
+							<h5 class="grey-text">All Time-Sheet Entries: <b>{{getAccountingTimeSheetCount}}</b> {{#if moreThanOneLocation}}from all locations{{/if}}<a class="secondary-content"><a id="downloadTimeEntriesCSV" class="btn btn-flat light-blue white-text">Download CSV<i class="material-icons right white-text">file_download</i></a></a></h5>						
+						</li>
+					{{else}}
+						<li class="collection-item">
+							<h5 class="grey-text">All Time-Sheet Entries: <a class="secondary-content">There are no entries for this month.</a></h5>
+						</li>
+					{{/if}}
+				</ul>
+			</div>		
+		{{else}}
+			<div class="row center-align">
+				<p>The report is being generated, this may take up to a minute.</p>
+				<ul class="collection col s10 offset-s1">
+					<li class="collection-item">
+						<h5 class="grey-text">Orders <div class="progress"><div class="indeterminate"></div></div></h5>
+					</li>
+					<li class="collection-item">
+						<h5 class="grey-text">Expenses <div class="progress"><div class="indeterminate"></div></div></h5>
+					</li>
+					<li class="collection-item">
+						<h5 class="grey-text">Time-Sheet Entries <div class="progress"><div class="indeterminate"></div></div></h5>
+					</li>
+				</ul>
+			</div>
+		{{/if}}
+
+		<div class="row">
+			<ul class="collection col s10 offset-s1">
+				{{#if loyaltyCardsAvailableForMonth}}
+					<li class="collection-item">
+						<h5 class="grey-text">All Loyalty Cards: <b>{{getAccountingLoyaltyCardsCount}}</b> {{#if moreThanOneLocation}}from all locations{{/if}}<a class="secondary-content"><a id="downloadLoyaltyCardsCSV" class="btn btn-flat light-blue white-text">Download CSV<i class="material-icons right white-text">file_download</i></a></a></h5>						
+					</li>
+				{{else}}
+					<li class="collection-item">
+						<h5 class="grey-text">All Loyalty Cards: <a class="secondary-content">There are no loyalty cards.</a></h5>
+					</li>
+				{{/if}}
+
+				{{#if customersAvailableForMonth}}
+					<li class="collection-item">
+						<h5 class="grey-text">All Customers: <b>{{getAccountingCustomersCount}}</b> {{#if moreThanOneLocation}}from all locations{{/if}}<a class="secondary-content"><a id="downloadCustomersCSV" class="btn btn-flat light-blue white-text">Download CSV<i class="material-icons right white-text">file_download</i></a></a></h5>						
+					</li>
+				{{else}}
+					<li class="collection-item">
+						<h5 class="grey-text">All Customers: <a class="secondary-content">There are no customer records.</a></h5>
+					</li>
+				{{/if}}
+			</ul>
+		</div>
+
+	{{/if}}
+
+
+</template>

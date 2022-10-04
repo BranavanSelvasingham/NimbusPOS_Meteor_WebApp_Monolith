@@ -1,0 +1,49 @@
+<template name="Login">
+    {{#unless currentUser}}
+        <div class="row">
+            <div class="col s12">
+                <form id="sign-in">
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="user-name" type="text" class="validate" autocorrect="off" autocapitalize="off" spellcheck="false">
+                                <label for="user-name" data-error="Username is taken">Username</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="password" type="password" class="validate">
+                                <label for="password">Password</label>
+                            </div>
+                        </div>
+                        {{#if message}}
+                            <div class="row">
+                                <div class="col s12 red-text">&nbsp;{{ message }}</div>
+                            </div>
+                        {{/if}}
+                        <div class="row">
+                            <div class="col s12 right-align">
+                                <a id="cancel-login" href="/" class="waves-effect waves-teal btn-flat" type="reset">Cancel</a>
+                                <a id="submit-sign-in" class="waves-effect waves-light btn-flat light-blue accent-2 white-text" type="submit" form="sign-in">Log In</a>
+                            </div>
+                        </div>
+                </form>
+            </div>
+        </div>
+    {{else}}
+        {{#if isDesktop }}
+            <div class="row center-align">{{> LoadingSpinner }}</div>
+            {{waitForSessionStart}}
+        {{/if}}
+
+        {{#if isPos}}
+            <div class="row center-align">
+                <h5><i class="material-icons medium">lock_outline</i></h5>
+            </div>
+            <div class="row center-align">
+                <h5>Waiting for Device Approval</h5>
+            </div>
+            {{waitForDeviceApproval}}
+        {{/if}}
+    {{/unless}}
+
+</template>

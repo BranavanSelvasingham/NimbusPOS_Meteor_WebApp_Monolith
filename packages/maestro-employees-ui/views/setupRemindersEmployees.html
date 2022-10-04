@@ -1,0 +1,90 @@
+<template name="SetupRemindersEmployees">
+	<h4 class="center-align">Reminders</h4>
+	<div class="row">
+		<div class="col s1">&nbsp;</div>
+		<div class="col s10">
+			<div class="row">
+				<div class="col s12 card">
+					<div class="row">
+						<h5>Send A One-Time E-Mail Reminder</h5>
+					</div>
+					<p>Send a reminder to enter hours to all active employees with an email address in their profile.</p>
+					<div class="row valign-wrapper">
+						<div class="col s12 right-align valign">
+							<a class="sendEmployeeReminders waves-effect waves-light btn"><i class="material-icons left">email</i>Send Reminder</a>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row createReminder">
+				<div class="col s12 card">
+					<form id="setupEmployeeReminders">
+						<div class="row">
+							<h5>Setup Periodic Reminders for Hours Entry</h5>
+						</div>
+						<div class="row valign-wrapper">
+							<div class="col s12 valign">
+								<div class="row valign-wrapper">
+								
+										Send an email reminder on every
+							
+									<div class="input-field col s4 valign">
+									    <select id="weekDayField">
+									        <option>Sunday</option>
+									        <option>Monday</option>
+									        <option>Tuesday</option>
+									        <option>Wednesday</option>
+									        <option>Thursday</option>
+									        <option>Friday</option>
+									        <option selected>Saturday</option>
+									    </select>
+									</div>
+									at
+									<div class="col s1 valign input-field">
+										<input  id="hourField"  type='number' min="1" max="12" value="6">
+									</div>
+									:
+									<div class="col s1 valign input-field">
+										<input id="minutesField" type='number' min="0" max="59" value="00">
+									</div>
+									<div class="col s1 valign input-field">
+										<select id="amPMField">
+											<option>AM</option>
+											<option selected>PM</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col s12 right-align">
+								<a class="waves-effect waves-light btn-flat" href="/business/employees">Exit</a>
+								<a id='createReminder' class="waves-effect waves-light btn"><i class="material-icons left">add_alarm</i>Create Reminder</a>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="col l8 push-l2 s12 divider"></div>
+			{{#each existingReminders}}
+				<div class="row existingReminders">
+					<div class="card col s12 l8 push-l2">
+						<div class="row valign-wrapper">
+							<div class="col s1 valign">
+								<i class="material-icons left medium">alarm</i>
+							</div>
+							<div class="col s10 valign">
+								<p><h5>{{this.name}}</h5></p>
+								<p>{{this.details}}</p>
+							</div>
+							<div class="col s1 right-align">
+								<a class="waves-effect waves-light btn-flat deleteReminder" data-reminderid="{{this._id}}"><i class="material-icons" data-reminderid="{{this._id}}">clear</i></a>
+							</div>
+						</div>
+					</div>
+				</div>
+			{{/each}}
+		</div>
+	</div>
+</template>

@@ -1,0 +1,45 @@
+<template name="AddBusinessUser">
+    <div class="row">
+        <form id="add-business-user-form" name="add-business-user-form" class="col s12">
+            <h4 class="grey-text">Add new user</h4>
+            <div class="row">
+                <div class="input-field col s6">
+                    <input id="first-name" type="text" class="validate">
+                    <label for="first-name">First Name</label>
+                </div>
+                <div class="input-field col s6">
+                    <input id="last-name" type="text" class="validate">
+                    <label for="last-name">Last Name</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="email" type="email" class="validate">
+                    <label for="email" data-error="User exists with this email">Email</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="user-name" type="text" class="validate">
+                    <label for="user-name" data-error="Username is taken">Username</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s6">
+                    <input id="password" type="password" class="validate">
+                    <label for="password">Password</label>
+                </div>
+                <div class="input-field col s6">
+                    <input id="confirm-password" type="password" class="validate">
+                    <label for="confirm-password" data-error="Passwords do not match">Confirm Password</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <button id="submit-add-business-user" class="waves-effect waves-light btn orange darken-1" type="submit" form="create-business">Submit</button>
+                    <a id="cancel-add-business-user" href="{{pathFor 'Users'}}" class="waves-effect waves-teal btn-flat" type="reset">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</template>

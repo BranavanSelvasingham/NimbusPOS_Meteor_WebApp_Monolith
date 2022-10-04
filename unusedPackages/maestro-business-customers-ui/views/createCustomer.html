@@ -1,0 +1,32 @@
+<template name="CreateCustomer">
+    <div class="row">
+        <form id="create-customer" name="add-user" class="col s12">
+            
+            <div class="row">
+                <div class="col s12">
+                    <label id="customer-label" for="customer-name" data-error>Customer Name</label>
+                    <input id="customer-name" type="text" class="validate text-capitalize" >
+                </div>
+            </div>
+            <div class='row'><div id='error-message-name' class='col s12 red-text right-align'></div></div>
+            
+            <div class="row">
+                <div class="col s12">
+                    <label id="email-label" for="email" data-error>Email</label>
+                    <input id="email" type="email" class="validate">
+                </div>
+            </div>
+            <div class='row'><div id='error-message-email' class='col s12 red-text right-align'></div></div>
+
+            <div class="row">
+                <div class="col s12">
+                    <button id="submit-create-customer" class="waves-effect waves-light btn orange darken-1" type="submit" form="create-customer">Submit</button>
+                    <a id="cancel-create-customer" class="waves-effect waves-teal btn-flat" type="reset">Exit</a>
+                    <div id='error-message-submit' class='red-text right-align'></div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</template>
+

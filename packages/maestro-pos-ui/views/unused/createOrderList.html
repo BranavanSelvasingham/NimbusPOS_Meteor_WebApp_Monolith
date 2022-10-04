@@ -1,0 +1,133 @@
+<template name="CreateOrderList">
+    <div class="row">
+        <div class="col s7">
+            <div class="card">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col s12">
+                            <ul id="create-order-tabs" class="tabs">
+                                <li class="tab col s6"><a class="active" href="#products-list-tab">Products</a></li>
+                                <li class="tab col s6"><a href="#customers-list-tab">Customers</a></li>
+                            </ul>
+                        </div>
+                        <div id="products-list-tab" class="col s12">
+                            <nav class="z-depth-0 white">
+                                <div class="nav-wrapper">
+                                    <form name="product-list-search">
+                                        <div class="input-field">
+                                            <input id="product-search" type="search">
+                                            <label for="product-search"><i class="material-icons grey-text">search</i></label>
+                                            <i id="clear-product-search" class="material-icons">close</i>
+                                        </div>
+                                    </form>
+                                </div>
+                            </nav>
+                            <ul id="products-list" class="collapsible" data-collapsible="expandable">
+                                {{#each products}}
+                                    <li id="product-id-{{_id}}" class="product-item">
+                                        <div class="collapsible-header"><i class="material-icons">filter_drama</i>{{name}}
+                                            <span class="right">
+                                                {{#each sizes}}
+                                                    {{#if defaultSize}}
+                                                        <span class="product-size chip lime waves-effect waves-light z-depth-1" data-size-code="{{code}}">{{sizeName code}}</span>
+                                                    {{/if}}
+                                                {{/each}}
+                                            </span>
+                                        </div>
+                                        <div class="collapsible-body">
+                                            <p>
+                                            <h6 class="orange-text">Sizes</h6>
+                                            <div class="section">
+                                                {{#each sizes}}
+                                                    <span class="product-size chip teal white-text waves-effect waves-light z-depth-1" data-size-code="{{code}}">{{sizeName code}} - {{currency price}}</span>
+                                                {{/each}}
+                                            </div>
+
+                                            <div class="divider"></div>
+
+                                            <h6 class="orange-text">Add Ons</h6>
+                                            <div class="section">
+                                                <span> All add ons here</span>
+                                            </div>
+                                            </p>
+                                        </div>
+                                    </li>
+                                {{else}}
+                                    <li>
+                                        <div class="collapsible-header"><i class="material-icons">warning</i>
+                                            No products found!
+                                        </div>
+                                    </li>
+                                {{/each}}
+                            </ul>
+                        </div>
+                        <div id="customers-list-tab" class="col s12">
+                            <nav class="z-depth-0 white">
+                                <div class="nav-wrapper">
+                                    <form name="customer-list">
+                                        <div class="input-field">
+                                            <input id="customer-search" type="search">
+                                            <label for="customer-search"><i class="material-icons grey-text">search</i></label>
+                                            <i id="clear-customer-search" class="material-icons">close</i>
+                                        </div>
+                                    </form>
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col s5">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title orange-text">Order Summary<button id="begin-checkout" data-target="checkout-order" class="btn modal-trigger secondary-content {{#if noItems}}disabled{{/if}}">Pay {{currency orderTotal}}</button></span>
+
+                    {{#if noItems}}
+                        <p>Add an item</p>
+                    {{else}}
+                        <ul id="invoice-collection" class="collection">
+                            {{#each itemsList}}
+                                <li class="collection-item avatar">
+                                    <i class="material-icons circle red darken-2 action-icon delete-item">clear</i>
+                                    <span class="title">{{quantity}} {{product.name}}<span class="badge-m-outline">{{sizeName size.code}}</span></span>
+                                    <p class="grey-text darken-2">{{quantity}} x {{currency size.price}}</p>
+                                    <span class="secondary-content">{{ currency (itemTotal) }}</span>
+                                </li>
+                            {{/each}}
+                        </ul>
+
+                        <ul class="collection with-header">
+                            <li class="collection-item"><div>Subtotal<span class="secondary-content">{{currency orderSubtotal}}</span></div></li>
+                            <li class="collection-item"><div>Discounts<span class="secondary-content">{{currency orderDiscount}}</span></div></li>
+                            <li class="collection-item"><div>Taxes (GST/HST)<span class="secondary-content">{{currency orderTax}}</span></div></li>
+                            <li class="collection-header"><h4>Total <span class="secondary-content">{{currency orderTotal}}</span></h4></li>
+                        </ul>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkout-order" class="modal modal-fixed-footer">
+        <div class="modal-content">
+            <h4>Checkout<span class="secondary-content"><i class="material-icons teal-text">receipt</i></span></h4>
+            <form class="col s12">
+                <div class="row">
+                    <span>Choose a payment method</span>
+                    <div>
+                        <span><i class="material-icons large grey-text">attach_money</i></span>
+                        <span><i class="material-icons large grey-text">credit_card</i></span>
+                    </div>
+                </div>
+            </form>
+            <p>A bunch of text</p>
+        </div>
+        <div class="modal-footer">
+            <button id="cancel-checkout" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</button>
+            <button id="complete-checkout" class="modal-action modal-close waves-effect waves-green btn-flat">Pay</button>
+        </div>
+    </div>
+</template>

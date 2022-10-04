@@ -1,0 +1,213 @@
+<template name="CreateLoyaltyProgram">
+    <div class="row valign-wrapper">
+    	<div class="card col s9">
+	        <form id="create-loyalty" name="add-loyalty" class="col s12">
+	            <div class="row">
+	                <div class="col s12">
+	                	<h5 class="center-align">New Loyalty Program</h5>
+	                	<label id="loyalty-label" for="loyalty-name" data-error>Name</label>
+	                    <input id="loyalty-name" type="text" class="validate" >
+	                </div>
+	            </div>
+	            <div class="row col s12 grey-text">Program Type:</div>
+	            <div class="row">
+	            	<div class="col s12">
+    				    <div class="col s3 valign">
+            				<input name="creditType" id="radioQuantity" class="selectProgramType" type="radio" value="Qauntity"/>
+	      					<label for="radioQuantity">Quantity</label>
+	      					<input type="number" min="0.00" step="1" id="quantityField" value='0'/>
+        				</div>
+        				<div class="col s3 valign">
+            				<input name="creditType" id="radioPercentage" class="selectProgramType" type="radio" value="Percentage"/>
+	      					<label for="radioPercentage">Credit Percentage (%)</label>
+	      					<input type="number" min="0.00" step="0.01" id="percentageField" value='0'/>
+        				</div>
+        				<div class="col s3 valign">
+            				<input name="creditType" id="radioAmount" class="selectProgramType" type="radio" value="Amount"/>
+	      					<label for="radioAmount">Gift Card ($)</label>
+	      					<input type="number" min="0.00" step="0.01" id="amountField" value='0'/>
+        				</div>
+        				<div class="col s3 valign">
+            				<input name="creditType" id="radioTally" class="selectProgramType" type="radio" value="Tally"/>
+	      					<label for="radioTally">Buy __ , get next 1 free</label>
+	      					<input type="number" min="0.00" step="0.01" id="tallyField" value='0'/>
+        				</div>
+	            	</div>
+	            </div>
+	            <div class="row"></div>
+
+	            <div id= "quantityAppliesTo">
+		            <div class="row col s12 grey-text" style="">Applies to:</div>
+		            <div class="row">
+		            	<div class="col s12">
+		                    <div class="col s4 valign">
+		        				<input name="appliesTo" id="appliesToProducts" class="programAppliesTo" type="radio" value="Products"/>
+		      					<label for="appliesToProducts">Products</label>
+		    				</div>
+		    				<div class="col s4 valign">
+		        				<input name="appliesTo" id="appliesToCategories" class="programAppliesTo" type="radio" value="Categories"/>
+		      					<label for="appliesToCategories">Categories</label>
+		    				</div>
+		    			</div>
+	    			</div>
+	    		</div>
+
+	    		<div id= "percentageAppliesTo">
+		            <div class="row col s12 grey-text" style="">Applies to:</div>
+		            <div class="row">
+		            	<div class="col s12">
+		                    <div class="col s4 valign">
+		        				<input name="percentageApplies" id="percentageAppliesToEntirePurchase" class="percentageProgramAppliesTo" type="radio" value="Purchase"/>
+		      					<label for="percentageAppliesToEntirePurchase">Entire Purchase</label>
+		    				</div>
+		    				<div class="col s4 valign">
+		        				<input name="percentageApplies" id="percentageAppliesToCategories" class="percentageProgramAppliesTo" type="radio" value="Categories"/>
+		      					<label for="percentageAppliesToCategories">Categories</label>
+		    				</div>
+		    			</div>
+	    			</div>
+	    		</div>
+
+	            <div class="row"></div>
+
+	            <div class="row grey-text">{{selectProductsCategories}}</div>
+	            
+	            <div id="selected_Products" class="row">
+	            	<div class="col s12">
+	            		{{#each selectedProducts}}
+							<div class="card">
+								<div class="row valign-wrapper">
+	            					<div class="card-title teal-text col s6 valign">{{this.name}}</div>
+	            					<div class="col s6 right-align">
+	            						<a data-productid="{{this.productId}}" class="removeProduct waves-effect right-align waves-teal valign btn-flat btn-small"><i class="material-icons large">clear</i></a>
+	            					</div>
+	            				</div>
+	            				<div class="divider"></div>
+	        					<div class="row valign-wrapper">
+	        						<div class="col s1 valign">Size(s):</div>
+	        						<div class="col s10 valign">
+			            				{{#each getSizes productId}}
+			            					<div class="col s2 m2">
+				            					<input value="{{this.code}}" checked type="checkbox" id="{{../productId}}_{{this.code}}"/>
+				      							<label for="{{../productId}}_{{this.code}}">{{this.label}}</label>
+				      						</div>
+			            				{{/each}}
+			            			</div>
+		            			</div>
+	            			</div>
+	            		{{/each}}
+            		</div>
+	            </div>
+
+	            <div id="selected_Categories" class="row">
+	            	<div class="col s12">
+	            		{{#each selectedCategories}}
+							<div class="card">
+								<div class="row valign-wrapper">
+	            					<div class="card-title teal-text col s6 valign">{{this.name}}</div>
+	            					<div class="col s6 right-align">
+										<a data-categoryname="{{this.name}}" class="removeCategory waves-effect right-align waves-teal valign btn-flat btn-small"><i class="material-icons large">clear</i></a>
+									</div>
+	            				</div>
+	            			</div>
+	            		{{/each}}
+            		</div>
+
+	            </div>
+
+    			<div class="divider"></div>
+
+    			<div class="row valign-wrapper {{#if isTallyProgram}}hide{{/if}}">
+    				<div class="col s3 valign right-align grey-text">
+    					Expires (days) after purchase:
+    				</div>   		
+    				<div class="col s3 valign">		
+    					<input id="programExpiryField" class='pricingCells' type="number" min="0" step="1" placeholder="Never"/>
+    				</div>
+<!--     			</div>
+
+    			<div class="row valign-wrapper"> -->
+    				<div class="col s3 valign grey-text right-align">
+    					Expires on (date):
+    				</div>   		
+    				<div class="col s3 valign">		
+    					<input id="programExpiryDateField" class='datepicker' type="date" placeholder="Never"/>
+    				</div>
+    			</div>
+
+    			<div class="row valign-wrapper">
+    				<div class="col s3 grey-text valign right-align">
+    					Price of loyalty program: $
+    				</div>   		
+    				<div class="col s3 valign">		
+    					<input id="programPriceField" class='pricingCells' type="number" min="0" step="0.01" placeholder="A free reward/coupon"/>
+    				</div>
+    				<div class="col s3 grey-text valign right-align">
+    					Tax on Program Price:
+    				</div>
+    				<div class="col s3 grey-text valign">
+    					<div class="col s6 center-align">
+	    					<input name="applyTax" type="radio" id="yesTax" class="chooseProgramTax" />
+	      					<label for="yesTax">Yes</label>
+	      				</div>
+	      				<div class="col s6 center-align">
+	      					<input name="applyTax" type="radio" id="noTax" checked class="chooseProgramTax"/>
+	      					<label for="noTax">No</label>
+	      				</div>
+    				</div>
+    			</div>
+
+	            <div class="row valign-wrapper">
+	            	<div class="col s12 center-align red-text valign" id="errorMessages"></div>
+	            </div>
+	            <div class="row valign-wrapper">
+	                <div class="col s12 right-align">
+	                	<a id="cancel-create-loyalty" class="waves-effect waves-teal btn-flat" type="reset">Cancel</a>
+	                    <button id="createLoyaltyProgram" class="waves-effect waves-light btn orange darken-1" >Create</button>
+	                </div>
+	            </div>
+	        </form>
+	    </div>
+
+	   	<div class="col s3 valign fixedHeightContainer">
+	    	<div class="card grey-text">
+	    		<div id="chooseProductsCard">
+	    			<ul class="collection with-header">
+				    	<li class="collection-header black-text"><h6>Choose Product(s):</h6></li>
+	        			{{#each getSortedFilteredProductsAndGroups}}
+                            {{#if isThisAGroupItem thisIsGroup}}
+                                <li class="collection-item row selectGroup" data-groupname="{{name}}">
+                                    <a style="{{getProductBackgroundColor this}}">&nbsp;&nbsp;</a>{{name}}<a class="secondary-content"><i
+                                class="material-icons small" style="{{getProductTextColor this}}">view_module</i></a>
+                                </li>
+                                {{#if isThisSelectedGroup name}}
+                                    <li class="collection-item">
+                                        {{#each getProductsInGroup name}}  
+                                            <li class="collection-item row selectProduct" data-productid="{{_id}}">
+                                                <a style="{{getProductBackgroundColor this}}">&nbsp;&nbsp;</a>{{name}}
+                                            </li>
+                                        {{/each}}
+                                    </li>
+                                {{/if}}
+                            {{else}}
+                                <li class="collection-item row selectProduct deselectGroup" data-productid="{{_id}}">
+                                    <a style="{{getProductBackgroundColor this}}">&nbsp;&nbsp;</a>{{name}}
+                                </li>
+                            {{/if}}
+                        {{/each}}
+			        </ul>
+		        </div>
+		        <div id="chooseCategoriesCard">
+			    	<ul class="collection with-header">
+				    	<li class="collection-header black-text"><h6>Choose Category(ies):</h6></li>
+			        	{{#each category}}
+			        		<li class="collection-item selectCategory" data-categoryname="{{this.name}}" style="{{getCategoryColor name}}">
+			        			<a data-categoryname="{{this.name}}" class="selectCategory white-text">{{this.name}}</a>
+			        		</li>
+			        	{{/each}}
+			        </ul>
+		        </div>
+	        </div>
+        </div>
+    </div>
+</template>

@@ -1,0 +1,176 @@
+<template name="AppInfo">
+    <div class="row">&nbsp;</div>
+    <h4 class="row center-align grey-text">App Version:</h4>
+    <h3 class="row center-align grey-text nimbus-fontcolor">1.33.0</h3>
+
+    <div class="row">
+        <div class="col s12 m10 offset-m1">
+            <ul class="collapsible popout" data-collapsible="accordion">
+                <li>
+                    <h5 class="collapsible-header grey-text">1.33.0: Introducing 'My Nimbus'</h5>
+                    <div class="collapsible-body">
+                        <div class="row">
+                            <div class="col s12">
+                                <p>
+                                    We have been working on a way for your customers to be able to track and manage their loyalty cards online (if they want to). This is the first phase.<br><br>
+                                    <b>At the moment:</b><br>
+                                        - 'My Nimbus' is a site for your customers to be able to track their loyalty card balances quickly and with minimal fuss.<br>
+                                        - The key is to make sure they have provided you with their email address for their customer account.<br>
+                                        - And with this email address they can go to my.nimbuspos.com and choose to login with a password of their choosing or just get an email message of all their latest loyalty card balances. <br>
+
+                                    <b>Upcoming:</b><br>
+                                        Near-term:<br>
+                                         - Soon, (before the holiday season), customers will be able to transfer their gift/loyalty cards to others. (For those that want to buy a loyalty card as a gift for someone else)<br>
+                                        Long-term:<br>
+                                         - View their order history <br>
+                                         - An iOS and Android app (if there is demand for it)<br>
+                                         - Ability for them to see your latest menu items<br>
+                                         - And more... but we'll start slow<br><br>
+
+                                    Of course, all of this is open to your feedback. For now, we are testing it out internally with our business owners and their teams. We would NOT recommend actively telling ALL your customers about this but if a customer specifically asks for a way to track online you can point them to this. To help with telling customers who ask for this, We've added a button in the POS, under the Customer's details view (below the "Notes and Preferences" field), labeled "Email Instructions". You can use this to send the customer an automatic email about how to track their loyalty and the site address.<br><br>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <h5 class="collapsible-header grey-text">1.32.0: Multiples (Qty > 1) of Same Loyalty Cards in Order</h5>
+                    <div class="collapsible-body">
+                        <div class="row">
+                            <div class="col s12">
+                                <p>
+                                    Major improvement:<br><br>
+                                    You can now add multiples of the same loyalty card to the order. And as usual, you can apply the total value of the cards to redeem items in the same order. <br><br>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <h5 class="collapsible-header grey-text">1.31.0: Large Quantity Order Items & Fully Visible Category Tiles</h5>
+                    <div class="collapsible-body">
+                        <div class="row">
+                            <div class="col s12">
+                                <p>
+                                    Two improvements/features:<br><br>
+                                    1. For situations where a large quantity (>5) of an item is being ordered, you can now simply enter the quantity directly. Click on 'Options' for that order item and you will notice that the quantity number becomes editable. You can now click on it and enter whatever quantity is being ordered. Note: quantity entered must be > 0 and a whole number.<br><br>
+                                    2. For businesses that have a lot of 'Category' tiles, you will notice that you no longer need to scroll. All of your 'Category' tiles will be visible at all times. This is to eliminate an extra step during the ordering process.<br><br>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <h5 class="collapsible-header grey-text">1.30.0: Customers, Loyalty Cards, Open Orders & Orders History Search</h5>
+                    <div class="collapsible-body">
+                        <div class="row">
+                            <div class="col s12">
+                                <p>
+                                    Some of the major improvements/features:<br><br>
+                                    1. A major update to the back-end management of Loyalty Cards<br><br>
+                                    2. Loyalty Cards: It is now possible to see and modify all the Active and Expired Loyalty Cards for any given Loyalty Program (via the 'Loyalty' page)<br><br>
+                                    3. Customer Search: It is now possible to search for customers by email and phone (if provided) in addition to their name<br><br>
+                                    4. Customer Notes: You can now store notes on customers and their preferences<br><br>
+                                    5. POS UI: Update to the User Interface of selecting Loyalty Programs and Customers in the POS view<br><br>
+                                    6. Data Export: It is now possible to export all of your issued loyalty cards (with current remaining balances) and all of your customers (with their name and provided contact info) to an excel spreadsheet. In addition, we've added the ability to export a 'Daily Totals' data set for the selected month under the 'Orders' category.<br><br>
+                                    7. Orders History: Added ability to search by "Daily Order #" and Customer Name in addition to the Order Number.<br><br>
+                                    8. Customers Page: You can now browse the entire Order History of selected customer and see the recent 30-Day Spend and Total Spend<br><br>
+                                    9. Open Orders: For businesses that accept Dine-In, Take-Out, and Delivery orders, you can now track all 'open' orders by going to the 'Open Orders' page.<br><br>
+
+                                    Bug fixes:<br><br>
+                                    1. Issue with freezing 'Review Completed Order' summary slide-out tab should now be fixed.<br><br>
+                                    2. Issue with printed daily reports appearing to have two labels of 'Cash' now corrected. (a typo)<br><br>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <h6 class="collapsible-header grey-text">1.29.1: Bug-fix: Default Checkout Payment Method</h6>
+                    <div class="collapsible-body">
+                        <div class="row">
+                            <div class="col s12">
+                                <p>
+                                    Fixed an issue with selecting the default checkout payment method as 'credit / debit card'. 
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <h5 class="collapsible-header grey-text">1.29.0: Support chat, App Info page, Category Tiles</h5>
+                    <div class="collapsible-body">
+                        <div class="row">
+                            <div class="col s12">
+                                <p>
+                                    Some of the major improvements/features:<br><br>
+                                    1. Added ability to directly chat with us through the <a href="/help">help page</a>.<br><br>
+                                    2. Added an App Info page to provide information on latest version and recent updates (this page).<br><br>
+                                    3. Reformatting of Category Tiles to make it bigger but also more compact in the POS Orders view.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <h5 class="collapsible-header grey-text">1.28.0: Increased Screen Real-Estate and New Configurable Options</h5>
+                    <div class="collapsible-body">
+                        <div class="row">
+                            <div class="col s12">
+                                <p>
+                                    Some of the major improvements/features:<br><br>
+                                    1. Increased screen real-estate by shrinking the header and consolidating all navigation options in to the main menu (accessed by the persistent menu button at the top-left corner).<br><br>
+                                    2. Tips-Field is now optional, you can go to settings to hide or show it.<br><br>
+                                    3. For Cash orders, the exact total amount due is now shown above the cash rounded amount.<br><br>
+                                    4. For Cash orders, if cash given is entered then the cash given and balance owing amount will now be printed on the receipt.<br><br>
+                                    5. Option to set default payment method at checkout to Cash or Card.<br><br>
+                                    6. Option to always print receipt by default.<br><br>
+                                    7. Option to always show the Order Summary Tab after completing the order.<br><br>
+                                    8. Option to auto-enroll new device logins automatically.<br><br>
+                                    9. Bug fixes and tweaks
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <h5 class="collapsible-header grey-text">1.27.0: Organize Product Tiles</h5>
+                    <div class="collapsible-body">
+                        <div class="row">
+                            <div class="col s12">
+                                <p>
+                                    We have just added the capability to order/organize tiles in whatever order you like. You can change the order of the 'Category' filter chips, the order in which 'Product' tiles and 'Group' tiles appear, and also the order of 'Product' tiles inside a 'Group'.
+                                    <br><br>
+                                    You can access the 'Organize Tiles' feature by going to the 'Products' page from your laptop browser, or tablet app.
+                                    <br><br>
+                                    Please keep in mind that any changes to the ordering of the tiles will automatically apply to all locations.
+                                    <br><br>
+                                    {{#if isDesktop}}
+                                        Here is a quick demo (from a laptop browser) of the feature: 
+                                        https://youtu.be/wVyiG0VUqAE
+                                    {{/if}}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <h5 class="collapsible-header grey-text">1.26.0: Variable-Priced, Weight-based Products and Product Menu Builder</h5>
+                    <div class="collapsible-body">
+                        <div class="row">
+                            <div class="col s12">
+                                <p>
+                                    Some of the major improvements/features:<br><br>
+                                    1. Variable price products - We now support variable priced products that have an average price but sometimes requires modification to the price at time of checkout.<br><br>
+                                    2. Weight-based (or Unit-based) products - We now support weight-based products where there is a fixed unit rate and the weight (or some unit of measure) is entered at checkout.<br><br>
+                                    3. Product Menu Builder - We are transitioning the "Products" page layout to what we are calling "Product Menu Builder". This is the first step in enabling more flexibility down the road in terms of how you would like to organize your POS screen.<br><br>
+                                    4. Bug fixes and tweaks
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</template>

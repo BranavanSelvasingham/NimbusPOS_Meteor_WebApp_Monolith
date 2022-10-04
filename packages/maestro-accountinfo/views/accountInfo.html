@@ -1,0 +1,142 @@
+<template name="AccountInfo">
+	<div class="row">
+		{{#with getBusinessInfo}}
+		<ul class="collection col s12 l8 offset-l2 grey-text">
+			<li class="collection-item row valign-wrapper">
+				<h5 style="color: #40c4ff;">
+					{{this.name}}
+				</h5>
+			</li>
+			<li class="collection-item row valign-wrapper">
+				<p>Account Started On: <b>{{formatDate createdAt}}</b></p>
+			</li>
+			<li class="collection-item row valign-wrapper">
+				<p>Business Email: <b>{{email}}</b><br>
+				Business Phone: <b>{{phone}}</b></p>
+			</li>
+			{{#if isDesktop}}
+				<li class="collection-item row valign-wrapper">
+					Invoices issued on the 1st of each month.
+				</li>
+				
+				{{#if isAlreadyStripeCustomer billing}}
+					<li class="collection-item">
+						<p class="row valign-wrapper">
+							Automatic Billing: 
+							{{#if cardSource}}
+								&nbsp;&nbsp;<b class="green-text">Enabled</b>&nbsp;&nbsp;- Payment collected on the 15th of each month (if balance owing).
+							{{else}}
+								&nbsp;&nbsp;<b class="grey-text">Disabled</b>&nbsp;&nbsp;- Please add a valid credit card to enable.
+							{{/if}}
+						</p>
+						{{#with getStripeCustomerDetails}}
+							{{#each sources.data}}
+								<div class="row valign-wrapper">
+									<i class="material-icons">credit_card</i>{{brand}} x{{last4}} &nbsp;&nbsp;&nbsp;
+									<a class="btn-flat removeThisCard">remove</a>
+								</div>
+							{{else}}
+								<div>No card on file</div>
+							{{/each}}
+							<div class="row"><a class="btn-flat addNewCard">add card</a></div>
+						{{/with}}
+					</li>
+				{{else}}
+					<li class="collection-item row valign-wrapper">
+						Automatic Billing: &nbsp;&nbsp;
+						<a class='secondary-content right-align'><a class="waves-effect waves-light btn-flat blue white-text automaticBilling">Sign Up</a>&nbsp;&nbsp;- It's secure, fast and simple.</a>
+					</li>
+				{{/if}}
+			
+				<li class="collection-item row valign-wrapper right-align">
+					Balance Owing:&nbsp;&nbsp;<h4>{{currency getBalanceOwing}}</h4>
+				</li>
+			{{/if}}
+		</ul>
+		{{/with}}
+	</div>
+
+	{{#if isDesktop}}
+		<br>
+		<h5 class="row grey-text center-align">Monthly Statements</h5>
+		<div class="row">
+			<div class="col s12 l8 offset-l2">
+				<ul class="collapsible" data-collapsible="accordion">
+					{{#each businessInvoices}}
+						<li>
+							<div class="collapsible-header grey-text">
+								{{getMonthName billingMonth}}, {{billingYear}}
+								<a class="secondary-content">
+									{{#if isAmountZero paymentDue}}
+										<a class="green-text">FREE</a>
+									{{else}}
+										<a class="blue-text">{{currency paymentDue}}</a>
+										{{#if isInvoicePaid status}}
+											&nbsp;&nbsp;<a class="green-text">PAID</a>
+										{{/if}}
+									{{/if}}
+								</a>
+							</div>
+							<div class="collapsible-body">
+								<div class="row">
+									<div class="col s12">
+										<h5 class="center-align blue-text">Invoice: {{getMonthName billingMonth}}, {{billingYear}}</h5>
+										<ul class="collection grey-text">
+											<li class="collection-item">
+												Business Name: <b>{{#with getBusinessInfo businessId}}{{name}}{{/with}}</b>
+											</li>
+											{{#unless thisInvoicePricingByLocation pricingPlanType}}
+												<li class="collection-item">
+													Total Sales: <b>{{currency sales}}</b> (x{{orders}} orders)
+												</li>
+											{{/unless}}
+											<li class="collection-item">
+												<ul class="collection">
+													{{#each lineItems}}
+														<li class="collection-item">
+															{{description}} <b>{{currency amount}}</b>
+														</li>
+													{{/each}}
+												</ul>
+											</li>
+											<li class="collection-item">
+												Payment Due: <b>{{currency paymentDue}}</b>
+											</li>
+											<li class="collection-item">
+												Payment Due Date: <b>{{formatDate paymentDueDate}}</b>
+											</li>
+										</ul>
+									</div>
+								</div>								
+								{{#if isAmountZero paymentDue}}
+									<div class="row center-align">
+										<a class="green-text">FREE</a>
+									</div>
+								{{else}}
+									{{#if isInvoicePaid status}}
+										<div class="row center-align">
+											<a class="green-text">PAID - Thank you!</a>
+										</div>
+									{{else}}
+										<div class="row center-align">
+											{{#if cardSource}}
+												<p class="grey-text">Your Credit Card will be charged on {{getMonthName billingMonth}}, 15th.<br>Please contact us if you have any questions.</p>
+											{{else}}
+												{{#unless processing}}
+													<a class="btn-flat payBalance light-blue-text">Pay Balance of {{currency paymentDue}}</a>
+											        <!-- <p>To demo, use any email address along with the card number <strong>4242 4242 4242 4242</strong>, any <em>future</em> expiration date, and any 3 digit security code (e.g 555)</p> -->
+											    {{else}}
+											        <p class="grey-text">Processing payment...</p>
+											    {{/unless}}
+											{{/if}}
+										</div>
+									{{/if}}
+								{{/if}}
+							</div>
+						</li>
+					{{/each}}
+				</ul>
+			</div>
+		</div>
+	{{/if}}
+</template>

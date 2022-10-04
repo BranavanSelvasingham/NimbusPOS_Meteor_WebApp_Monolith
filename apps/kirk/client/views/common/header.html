@@ -1,0 +1,116 @@
+<template name="AppHeader">
+    <div id="sideNavMenuUnderlay" class="closeNav"></div>
+
+    <div id="sideNavMenu" class="sidenav z-depth-3">
+        <div class="row valign-wrapper">
+            <div class="col s2 valign">
+                <a href="/" class="brand-logo hide-on-med-and-down closeNav"><img src="nimbus_logo_name.png" alt="nimbus" height="20"></a>
+                <a href="/" class="brand-logo hide-on-large-only closeNav"><img src="nimbus_logo_only.png" alt="nimbus" height="20"></a>
+            </div>
+            <div class="col s9 valign">
+                {{#if showBusinessHeader}}
+                    <ul id="location-select" class="dropdown-content">
+                        {{#each locations}}
+                            <li><a href="#" class="location-select-ids" data-location-id="{{this._id}}" data-location-name="{{this.name}}">{{this.name}}</a></li>
+                        {{/each}}
+                        {{#if isDesktop}}
+                            <li><a class="closeNav" href="/business/locations">+ Manage Locations</a></li>
+                        {{/if}}
+                    </ul>
+                    {{#if isDesktop}}
+                        {{#if isBusinessUser}}
+                            <a class="center-align menu-btn-group">
+                                <a class="closeNav" href="/selectBusiness"> 
+                                    <i class="material-icons left">business</i>{{ getBusinessName }}
+                                </a>
+                            </a>
+                        {{/if}}
+                    {{/if}}
+
+                    {{#if isDesktop }}
+                        <a class="center-align menu-btn-group">
+                            {{isItSingleLocation}}
+                            <a id="location-selection" class="dropdown-button" href="#" data-activates="location-select">
+                                {{#if selectedLocation}}
+                                    <i class="material-icons left">location_on</i>{{ selectedLocation }}
+                                {{else}}
+                                    <i class="material-icons left">location_off</i>Select a location...
+                                {{/if}}
+                                <i class="material-icons right">arrow_drop_down</i>
+                            </a>
+                        </a>
+                        <a class="center-align menu-btn-group">
+                            <a id="employee-selection" class="closeNav" href="/waiterLogin">
+                                {{#with getSystemEmployee }}
+                                    <i class="material-icons left">person</i>{{this.name}}
+                                {{else}}
+                                    <i class="material-icons left">person_outline</i>Select Team Member...
+                                {{/with}}
+                            </a>
+                        </a>
+                    {{else}}
+                        <a class="center-align menu-btn-group">
+                            {{getDeviceLocation}}
+                            <a id="show-location-selection" class="dropdown-button" href="#" data-activates="selected-location">
+                                {{#if selectedLocation}}
+                                    <i class="material-icons left">location_on</i>{{ selectedLocation }}
+                                {{else}}
+                                    <i class="material-icons left">location_off</i>Location Not Set
+                                {{/if}}
+                            </a>
+                        </a>
+                        <a class="center-align menu-btn-group">
+                            <a id="employee-selection" class="closeNav" href="/waiterLogin">
+                                {{#with getSystemEmployee }}
+                                    <i class="material-icons left">person</i>{{this.name}}
+                                {{else}}
+                                    <i class="material-icons left">person_outline</i>Select Team Member...
+                                {{/with}}
+                            </a>
+                        </a>
+                    {{/if}}
+                    {{#if isPos}}
+                        <a class="center-align menu-btn-group nimbus-bgcolor">
+                            <a id="openTill"><i class="material-icons left">open_in_browser</i>Open Till</a>
+                        </a>
+                    {{/if}}
+                    {{initHeader}}
+                {{/if}}
+            </div>
+            <div class="col s1 valign">
+                <a class="closeNav white-text"><i class="material-icons medium right">clear</i></a>
+            </div>
+        </div>
+
+        {{#if isDesktop}}                         
+            <div class="row center-align">
+                {{#each getOrderedGroupMenuNames}}
+                    {{#each menuItems}}
+                       <a class="center-align card waves-effect waves-light white-text sideNavMenuButton closeNav" href="{{pathFor routeName}}">
+                            <div class="row valign-wrapper sideNavMenuButtonContent">
+                                <div class="col s12 valign center-align">
+                                    {{label}}<br><i class="material-icons white-text medium">{{icon}}</i>
+                                </div>
+                            </div>
+                        </a>
+                    {{/each}}
+                {{/each}}
+            </div>
+            <div class="row saveVerticalSpace valign-wrapper"><div class="col s12 saveVerticalSpace valign"><a href="/appInfo" class="menu-btn-group white-text closeNav"><i class="material-icons left">info_outline</i>App Info</a></div></div>
+        {{else}}
+            {{>POSMenu}}
+        {{/if}}
+    </div>
+
+    <a class="topHeaderBar nimbus-bgcolor">&nbsp;</a>
+    <a class="topHeaderFiller">&nbsp;</a>
+    {{#if showBusinessHeader}}
+        <a class="btn-floating btn-large waves-effect waves-light nimbus-bgcolor openNav mainMenuButton z-depth-1"><i class="material-icons">menu</i></a>
+        <!-- <a class="waves-effect waves-light nimbus-bgcolor openNav mainMenuButton z-depth-1"><i class="material-icons">menu</i></a> -->
+    {{else}}
+        {{#if isUserLoggedIn}}
+            <a class="btn-floating btn-large waves-effect waves-light nimbus-bgcolor z-depth-1 topLogoutButton" href="{{pathFor 'Logout'}}"><i class="material-icons">exit_to_app</i></a>
+        {{/if}}
+    {{/if}}
+
+</template>

@@ -1,0 +1,478 @@
+<template name="ListEmployees">
+	<div class="row saveVerticalSpace saveHorizontalSpace">
+		<div class="col s12 saveVerticalSpace saveHorizontalSpace">
+	  		<ul class="collection with-header">
+				<li class="collection-header saveVerticalSpace">
+				    <div class="row valign-wrapper saveVerticalSpace">
+				        <div class="col s4 center-align valign">
+				            <h3>Employees</h3>
+				        </div>
+				        <div class="col s8 right-align valign">
+							<a id='addNewEmployee' class="waves-effect waves-light btn-floating btn-large" href="/business/employees/create"><i class="material-icons left">person_add</i></a> 
+							<a id='hoursSummary' class="waves-effect waves-light btn-flat btn-large" href="/business/employees/hoursSummary"><i class="material-icons left">list</i>Summary</a>
+							{{#if businessSettingEmailOn}}<a class="waves-effect waves-light btn-flat btn-large" href="/business/employees/setupReminders"><i class="material-icons left">add_alert</i>Reminders</a>{{/if}}
+							<!-- <a id='setPayrollInfo' class="waves-effect waves-light btn-flat btn-large modal-trigger" href="/business/employees/setPayrollInfo"><i class="material-icons left">access_time</i></a> -->
+				      		<a id='enterEmployeeHours' class="waves-effect waves-light btn-flat btn-large modal-trigger" href="/business/employees/enterEmployeeHours"><i class="material-icons left">access_time</i>Timesheets</a>
+				      	</div>
+				    </div>
+				</li>
+				{{#unless payRollSettingsDone}}
+					<li class="collection-item">
+						{{> SetPayrollInfo}}
+					</li>
+				{{/unless}}
+				<li class="collection-item listViewContainer">
+					<div class="row listViewContainer">
+						<div class="col s4 fixedHeightContainer listViewContainer itemsListStyle">
+							<ul class="collection listViewContainer">
+								{{#each listActiveEmployees}}
+									<li class="selectEmployee collection-item row valign-wrapper" style="{{#if isEmployeeSelected _id}}background-color: lightblue;{{/if}}">
+										<div class="col s1 valign">
+											<i class="material-icons small">person</i>
+										</div>
+										<div class="col s8 valign">
+											<div class="card-title">
+												{{this.name}}
+											</div>
+										</div>
+										<div class="col s3 valign">
+											&nbsp;
+											<!-- {{#if isEmailAvailable email}}<i class="material-icons">email</i>{{/if}}
+											{{#if isPhoneAvailable phone}}<i class="material-icons">phone</i>{{/if}} -->
+										</div>
+									</li>
+								{{/each}}
+								{{#if anyDeactivatedEmployees}}
+									{{#unless inShowDeactivatedMode}}
+										<div class="row">
+											<div class="col s12 right-align">
+												<a id="showDeactivated" class="waves-effect waves-light btn-flat grey-text"><i class="material-icons left">keyboard_arrow_down</i>Show Deactivated Employees</a>
+											</div>	 
+										</div>
+									{{else}}
+										<div class="row">
+											<div class="col s12 right-align">
+												<a id="hideDeactivated" class="waves-effect waves-light btn-flat grey-text"><i class="material-icons left">keyboard_arrow_up</i>Hide Deactivated Employees</a>
+											</div>	 
+										</div>
+										{{#each listDeactivatedEmployees}}
+											<li class="selectDeactivatedEmployee collection-item row valign-wrapper" style="{{#if isEmployeeSelected _id}}background-color: lightblue;{{/if}}">
+												<div class="col s1 valign">
+													<i class="material-icons small">person_outline</i>
+												</div>
+												<div class="col s11 valign">
+													<div class="card-title">
+														{{this.name}}
+													</div>
+												</div>
+											</li>
+										{{/each}}
+									{{/unless}}
+								{{/if}}
+							</ul>
+						</div>
+						<div class="col s8 fixedHeightContainer">
+							{{#with getSelectedEmployee}}
+								{{#if isActiveEmployee _id}}
+									{{#unless inEditMode}}
+										<div class="row valign-wrapper">
+<!-- 											<div class="col s1 valign right-align">
+												<i class="material-icons small">person</i>
+											</div> -->
+											<div class="col s11 valign">
+												<h5>
+													{{this.name}}
+												</h5>
+											</div>
+											<div class="col s1 valign">
+												<i class="showEditCard material-icons small waves-effect waves-teal">edit</i>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col s12">
+												{{currency rate}} / hr.
+											</div>
+										</div>
+										<div class="row">
+											<div class="col s6">
+												{{emailFormat email}}
+											</div>
+											<div class="col s6">
+												{{phoneFormat phone}}
+											</div>
+										</div>
+									{{else}}
+										<form id="editEmployeeDetailsForm">
+											<div class="row valign-wrapper">
+												<div class="col s1 valign">
+													<i class="material-icons medium">person</i>
+												</div>
+												<div class="col s7 valign">
+													<div class="card-title">
+														<label for="_employeeName">Name</label>
+														<input value="{{this.name}}" id="_employeeName" type="text">
+													</div>
+												</div>
+												<div class="col s3 valign right-align">
+													<i class="saveChanges material-icons small waves-effect waves-teal">save</i>
+												</div>
+												<div class="col s1 valign">
+													<i class="clearChanges material-icons small waves-effect waves-teal">clear</i>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col s4">
+													<label for="_employeeRate">Hourly Rate ($/hr)</label>
+													<input id="_employeeRate" type="number" class="validate" value="{{rate}}">
+												</div>
+											</div>
+											<div class="row valign-wrapper">
+												<div class="col s6">
+													<label for="_employeeEmail">Email</label>
+													<input value="{{this.email}}" id="_employeeEmail" type="text">
+												</div>
+												<div class="col s3">
+													<label for="_employeePhone">Phone</label>
+													<input value="{{this.phone}}" id="_employeePhone" type="text">
+												</div>
+												<div class="col s3 valign">
+													<div class="switch">
+														<label>
+															Deactivate
+															<input id="_deactivate" class="switch" type="checkbox" checked>
+															<span class="lever"></span>
+															Active
+														</label>
+													</div>
+												</div>
+											</div>
+										</form>
+									{{/unless}}
+									<div class="divider"></div>
+									<div class="row">
+										<div class="col s12">
+											<div class="row">
+												<div class="col s12">
+													<h5 class="row">Time Sheet:</h5>
+													<div class="row">
+														<a class="periodDown waves-effect waves-dark"><i class="material-icons grey-text medium">keyboard_arrow_up</i></a> Pay Period Start Date: {{getThisPeriodStart}} {{#if businessSettingEmailOn}}{{#if isEmailAvailable email}}<span class="secondary-content">Send Reminder: <a class="emailReminder waves-effect waves-light btn-floating white btn-small"><i class="material-icons black-text left">email</i></a></span>{{/if}}{{/if}}
+														<ul class="collection card">
+															<li class="collection-item row">
+																<div class="col s6">&nbsp;</div>
+																<div class="col s2 center-align">In</div>
+																<div class="col s2 center-align">Out</div>
+																<div class="col s2 center-align">Hours</div>
+															</li>
+															{{#each getTimeSheetEntries _id}}
+																<li class="collection-item row">
+																	<div class="col s6">{{getFormattedDate date}}</div>
+																	<div class="col s2 center-align">{{getFormattedTime clockIn}}</div>
+																	<div class="col s2 center-align">{{getFormattedTime clockOut}}</div>
+																	<div class="col s2 center-align">{{hours}}</div>
+																</li>
+															{{/each}}
+														</ul>
+														<a class="periodUp waves-effect waves-dark"><i class="material-icons grey-text medium">keyboard_arrow_down</i></a> Pay Period End Date: {{getThisPeriodEnd}}
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								{{else}}
+									<div class="row valign-wrapper">
+										<div class="col s1 m1 valign">
+											<i class="material-icons medium">person</i>
+										</div>
+										<div class="col s10 m10 valign">
+											<div class="card-title grey-text">
+												{{this.name}}
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col s7 m7 offset-s1 offset-m1 grey-text">
+											{{emailFormat email}}
+										</div>
+										<div class="col s4 m4 grey-text">
+											{{phoneFormat phone}}
+										</div>
+									</div>
+									<div class="divider"></div>
+									<div class="row">
+										<div class="col s12 right-align">
+											<div class="switch">
+												<label>
+													Deactivate
+													<input id="_activate" class="activateEmployee" type="checkbox">
+													<span class="lever"></span>
+													Active
+												</label>
+											</div>
+										</div>
+									</div>
+								{{/if}}
+							{{/with}}
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+</template>
+
+<!-- 
+				{{#each listActiveEmployees}}
+					<li class="staticCard collection-item" id="{{this._id}}_staticCard">
+						<div class="row valign-wrapper">
+							<div class="col s1 m1 valign">
+								<i class="material-icons medium">person</i>
+							</div>
+							<div class="col s10 m10 valign">
+								<div class="card-title grey-text">
+									{{this.name}}
+								</div>
+							</div>
+							<div class="col s1 m1 valign">
+								<i id="{{this._id}}_showEditCard" class="showEditCard material-icons small waves-effect waves-teal">edit</i>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col s7 m7 offset-s1 offset-m1 grey-text">
+								{{emailFormat email}}
+							</div>
+							<div class="col s4 m4 grey-text">
+								{{phoneFormat phone}}
+							</div>
+						</div>
+					</li>
+					<li class="editCard collection-item" id="{{this._id}}_editCard" hidden>
+						<form id="{{this._id}}_form">
+							<div class="row valign-wrapper">
+								<div class="col s1 m1 valign">
+									<i class="material-icons medium">person</i>
+								</div>
+								<div class="col s7 m7 valign">
+									<div class="card-title grey-text">
+										<label for="{{this._id}}_employeeName">Name</label>
+										<input value="{{this.name}}" id="{{this._id}}_employeeName" type="text">
+									</div>
+								</div>
+								<div class="col s1 m1 offset-s2 offset-m2 valign">
+									<i id="{{this._id}}_showEditCard" class="clearChanges material-icons small waves-effect waves-teal">clear</i>
+								</div>
+								<div class="col s1 m1 valign">
+									<i id="{{this._id}}_showEditCard" class="saveChanges material-icons small waves-effect waves-teal">save</i>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col s7 m7 offset-s1 grey-text">
+									<label for="{{this._id}}_employeeEmail">Email</label>
+									<input value="{{this.email}}" id="{{this._id}}_employeeEmail" type="text">
+								</div>
+								<div class="col s4 m4 grey-text">
+									<label for="{{this._id}}_employeePhone">Phone</label>
+									<input value="{{this.phone}}" id="{{this._id}}_employeePhone" type="text">
+								</div>
+							</div>
+							<div class="divider"></div>
+							<div class="row">
+								<div class="col s12 right-align">
+									<div class="switch">
+										<label>
+											Deactivate
+											<input id="{{this._id}}_deactivate" class="switch deactivateEmployee" type="checkbox" checked>
+											<span class="lever"></span>
+											Active
+										</label>
+									</div>
+								</div>
+							</div>
+						</form>
+					</li>
+				{{/each}}
+				<li class="collection-item">
+					<div class="row">
+						<div class="col s12 right-align">
+							<a id="showDeactivated" class="waves-effect waves-light btn-flat grey-text"><i class="material-icons left">keyboard_arrow_down</i>Show Deactivated Employees</a>
+							<a id="hideDeactivated" class="waves-effect waves-light btn-flat grey-text"><i class="material-icons left">keyboard_arrow_up</i>Hide Deactivated Employees</a>
+						</div>	 
+					</div>
+				</li>
+				<div id="deactivatedEmployeesList" hidden>
+					{{#each listDeactivatedEmployees}}
+						<li class="deactivatedCard collection-item" id="{{this._id}}_deactivatedCard">
+							<div class="row valign-wrapper">
+								<div class="col s1 m1 valign">
+									<i class="material-icons medium">person</i>
+								</div>
+								<div class="col s10 m10 valign">
+									<div class="card-title grey-text">
+										{{this.name}}
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col s7 m7 offset-s1 offset-m1 grey-text">
+									{{emailFormat email}}
+								</div>
+								<div class="col s4 m4 grey-text">
+									{{phoneFormat phone}}
+								</div>
+							</div>
+							<div class="divider"></div>
+							<div class="row">
+								<div class="col s12 right-align">
+									<div class="switch">
+										<label>
+											Deactivate
+											<input id="{{this._id}}_activate" class="activateEmployee" type="checkbox">
+											<span class="lever"></span>
+											Active
+										</label>
+									</div>
+								</div>
+							</div>
+						</li>
+					{{/each}}
+				</div>
+			</ul>
+    	</div>
+  	</div>
+ -->
+
+
+
+
+<!-- 	<div class="row">
+		<div class="col s6 m6 offset-s3 offset-m3">
+			{{#each listActiveEmployees}}
+				<div class="card staticCard" id="{{this._id}}_staticCard">
+					<div class="row valign-wrapper">
+						<div class="col s1 m1 valign">
+							<i class="material-icons medium">person</i>
+						</div>
+						<div class="col s10 m10 valign">
+							<div class="card-title grey-text">
+								{{this.name}}
+							</div>
+						</div>
+						<div class="col s1 m1 valign">
+							<i id="{{this._id}}_showEditCard" class="showEditCard material-icons small waves-effect waves-teal">edit</i>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col s7 m7 offset-s1 offset-m1 grey-text">
+							{{emailFormat email}}
+						</div>
+						<div class="col s4 m4 grey-text">
+							{{phoneFormat phone}}
+						</div>
+					</div>
+				</div>
+				<div class="card editCard" id="{{this._id}}_editCard" hidden>
+					<form id="{{this._id}}_form">
+						<div class="row valign-wrapper">
+							<div class="col s1 m1 valign">
+								<i class="material-icons medium">person</i>
+							</div>
+							<div class="col s7 m7 valign">
+								<div class="card-title grey-text">
+									<label for="{{this._id}}_employeeName">Name</label>
+									<input value="{{this.name}}" id="{{this._id}}_employeeName" type="text">
+								</div>
+							</div>
+							<div class="col s1 m1 offset-s2 offset-m2 valign">
+								<i id="{{this._id}}_showEditCard" class="clearChanges material-icons small waves-effect waves-teal">clear</i>
+							</div>
+							<div class="col s1 m1 valign">
+								<i id="{{this._id}}_showEditCard" class="saveChanges material-icons small waves-effect waves-teal">save</i>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col s7 m7 offset-s1 grey-text">
+								<label for="{{this._id}}_employeeEmail">Email</label>
+								<input value="{{this.email}}" id="{{this._id}}_employeeEmail" type="text">
+							</div>
+							<div class="col s4 m4 grey-text">
+								<label for="{{this._id}}_employeePhone">Phone</label>
+								<input value="{{this.phone}}" id="{{this._id}}_employeePhone" type="text">
+							</div>
+						</div>
+						<div class="divider"></div>
+						<div class="row">
+							<div class="col s12 right-align">
+								<div class="switch">
+									<label>
+										Deactivate
+										<input id="{{this._id}}_deactivate" class="switch deactivateEmployee" type="checkbox" checked>
+										<span class="lever"></span>
+										Active
+									</label>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			{{/each}}
+
+			<div class="divider"></div>
+			<div class="row">
+				<div class="col s12 right-align">
+					<a id="showDeactivated" class="waves-effect waves-light btn-flat grey-text"><i class="material-icons left">keyboard_arrow_down</i>Show Deactivated Employees</a>
+					<a id="hideDeactivated" class="waves-effect waves-light btn-flat grey-text"><i class="material-icons left">keyboard_arrow_up</i>Hide Deactivated Employees</a>
+				</div>	 
+			</div>
+
+			<div id="deactivatedEmployeesList" hidden>
+				{{#each listDeactivatedEmployees}}
+					<div class="card deactivatedCard" id="{{this._id}}_deactivatedCard">
+						<div class="row valign-wrapper">
+							<div class="col s1 m1 valign">
+								<i class="material-icons medium">person</i>
+							</div>
+							<div class="col s10 m10 valign">
+								<div class="card-title grey-text">
+									{{this.name}}
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col s7 m7 offset-s1 offset-m1 grey-text">
+								{{emailFormat email}}
+							</div>
+							<div class="col s4 m4 grey-text">
+								{{phoneFormat phone}}
+							</div>
+						</div>
+						<div class="divider"></div>
+						<div class="row">
+							<div class="col s12 right-align">
+								<div class="switch">
+									<label>
+										Deactivate
+										<input id="{{this._id}}_activate" class="activateEmployee" type="checkbox">
+										<span class="lever"></span>
+										Active
+									</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				{{/each}}
+			</div>
+			<div class="divider"></div>
+		</div>
+		<div class="col s3 m3 center-align">
+			<div class="row">
+				<a id='addNewEmployee' class="waves-effect waves-light btn" href="/employees/create"><i class="material-icons left">add</i>New Employee</a>
+			</div>
+			<div class="row">
+				<a id='hoursCalendar' class="waves-effect waves-light btn" href="/employees/hoursCalendar"><i class="material-icons left">access_time</i>Hours Calendar</a>
+			</div>
+			<div class="row">
+				<a class="waves-effect waves-light btn" href="/employees/setupReminders"><i class="material-icons left">email</i>Setup Reminders</a>
+			</div>
+		</div>
+	</div> -->
+<!-- </template> -->

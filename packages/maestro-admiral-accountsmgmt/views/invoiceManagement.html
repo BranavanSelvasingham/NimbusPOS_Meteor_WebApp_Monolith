@@ -1,0 +1,147 @@
+<template name="InvoiceManagement">
+	<div class="row">
+		<ul class="collapsible col s8 offset-s2" data-collapsible="accordion">
+			<li>
+				<div class="collapsible-header">{{#if isBusinessSelected}}{{#with getSelectedBusinessInfo}}<a class="teal-text">{{name}}</a>{{/with}}{{else}}Select Business{{/if}}</div>
+				<div class="collapsible-body">
+					<ul class="collection">
+						{{#each getAllBusinesses}}
+							<li class="collection-item center-align selectBusiness">{{name}}</li>
+						{{/each}}
+					</ul>
+				</div>
+			</li>
+			<!-- <li>
+				<div class="collapsible-header">{{#if isLocationSelected}}{{#with getSelectedLocationInfo}}<a class="teal-text">{{name}}</a>{{/with}}{{else}}Select Location{{/if}}</div>
+				<div class="collapsible-body">
+					<ul class="collection">					
+						{{#each getAllLocations}}
+							<li class="collection-item center-align selectLocation">{{name}}</li>
+						{{/each}}
+					</ul>
+				</div>
+			</li> -->
+		</ul>
+	</div>
+
+	<h5 class="light-blue-text center-align forceRefresh">Generate Invoice</h5>
+
+	<div class="row valign-wrapper">
+		<div class="col s4 right-align valign">
+			<a id="previousPeriod" class="waves-effect waves-light"><i class="material-icons teal-text medium">keyboard_arrow_left</i></a>
+		</div>
+		<h5 class="col s4 center-align valign">
+	    	{{getSelectedMonthlyDate}}
+	    </h5>
+	    <div class="col s4 left-align valign">
+	    	<a id="nextPeriod" class="waves-effect waves-light"><i class="material-icons teal-text medium">keyboard_arrow_right</i></a>
+	    </div>
+	</div>
+
+	{{#with getDraftInvoice}}
+		<div class="row">
+			<div class="card col s8 offset-s2">
+				<p class="row">Pricing Plan: <a class="{{#if isPricingSalesBased}}pos-button-active{{else}}pos-button{{/if}} grey-text setPricingPlanToSalesBased">Sales Based</a>&nbsp;<a class="{{#if isPricingLocationBased}}pos-button-active{{else}}pos-button{{/if}} grey-text setPricingPlanToLocationBased ">Location Based</a></p>
+				{{#if isPricingLocationBased}}	
+					<p class="row">Location Names: 
+						{{#each getAllLocationNames}}
+							{{this.name}}&nbsp;||&nbsp;
+						{{/each}}
+					</p>
+				{{/if}}
+				<h5 class="center-align grey-text">Draft Invoice</h5>
+				<ul class="collection grey-text">
+					<li class="collection-item">
+						Business Name: <b>{{#with getSelectedBusinessInfo}}{{name}}{{/with}}</b>
+					</li>
+					<li class="collection-item">
+						Billing Year: <b>{{billingYear}}</b>
+					</li>
+					<li class="collection-item">
+						Billing Month: <b>{{getSelectedMonthlyDate}}</b>
+					</li>
+					<li class="collection-item">
+						Total Sales: <b>{{currency sales}}</b> (x{{orders}} orders)
+					</li>
+					<li class="collection-item">
+						<ul class="collection">
+							{{#each lineItems}}
+								<li class="collection-item">
+									{{description}} <b>{{currency amount}}</b>
+								</li>
+							{{/each}}
+						</ul>
+						Add Line Item: 
+						<li class="row">
+							<form id="manualAdjustment">
+								<div class="col s8">
+									<input id="adjustmentDescription" type="text" placeholder="Description">
+								</div>
+								<div class="col s4">
+									<input id="adjustmentAmount" type="number" placeholder="0.00">
+								</div>
+							</form>
+						</li>
+						<a class="waves-effect waves-light btn-flat addManualAdjustment">Add</a>
+					</li>
+					<li class="collection-item">
+						Payment Due: <b>{{currency paymentDue}}</b>
+					</li>
+					<li class="collection-item">
+						<input id="paymentDueDateInput" type="date" class="datepicker">
+						<button id="updateDueDate">Update</button>
+						Payment Due Date: <b>{{formatDate paymentDueDate}}</b>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="row center-align"><a class="waves-effect waves-light btn white createInvoice green-text">Create</a></div>
+	{{/with}}
+
+	<div class="divider"></div>
+	<h5 class="light-blue-text center-align">Manage Invoices</h5>
+
+	<ul class="collection">
+		{{#each getAllInvoices}}
+			<li class="collection-item">
+				<div class="row valign-wrapper">
+					<div class="card col s8">
+						<h5 class="center-align blue-text">Invoice: {{getMonthName billingMonth}}, {{billingYear}} <a class="secondary-content grey-text">{{status}}</a></h5>
+						<ul class="collection grey-text">
+							<li class="collection-item">
+								Business Name: <b>{{#with getBusinessInfo businessId}}{{name}}{{/with}}</b>
+							</li>
+							{{#unless thisInvoicePricingByLocation pricingPlanType}}
+								<li class="collection-item">
+									Total Sales: <b>{{currency sales}}</b> (x{{orders}} orders)
+								</li>
+							{{/unless}}
+							<li class="collection-item">
+								<ul class="collection">
+									{{#each lineItems}}
+										<li class="collection-item">
+											{{description}} <b>{{currency amount}}</b>
+										</li>
+									{{/each}}
+								</ul>
+							</li>
+							<li class="collection-item">
+								Payment Due: <b>{{currency paymentDue}}</b>
+							</li>
+							<li class="collection-item">
+								Payment Due Date: <b>{{formatDate paymentDueDate}}</b>
+							</li>
+						</ul>
+					</div>
+					<div class="col s4 valign center-align">
+						<div class="row center-align"><a class="waves-effect waves-light btn white thisInvoicePaid green-text">Paid</a></div>
+						<div class="row center-align"><a class="waves-effect waves-light btn white emailReminder green-text">Email</a></div>
+						<div class="row center-align"><a class="waves-effect waves-light btn red deleteThisInvoice white-text">Delete</a></div>
+						
+					</div>
+				</div>
+			</li>
+		{{/each}}
+	</ul>
+
+</template>

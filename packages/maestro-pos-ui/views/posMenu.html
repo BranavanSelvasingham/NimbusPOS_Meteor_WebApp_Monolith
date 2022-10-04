@@ -1,0 +1,86 @@
+<template name="POSMenu">
+	<div class="row center-align">
+		<!-- <div class="menuFlexContainer1"> -->
+			<!-- <div class="menuContainer left-align"> -->
+				{{#if showGeneralMenu}}
+				    {{#each generalAppMenu}}
+					    <a class="center-align card waves-effect waves-light white-text posMenuButton closeNav " href="{{pathFor routeName}}">
+					    	<div class="row valign-wrapper posMenuButtonContent">
+					    		<div class="col s12 valign">
+					    			{{label}}<br><i class="material-icons white-text medium">{{icon}}</i>
+					    		</div>
+					    	</div>
+					    </a>
+					    <!-- <a class="col s3 center-align" href="{{pathFor routeName}}">
+					    	<div class="card light-blue waves-effect waves-light">
+						    	<div class="row valign-wrapper" style="min-height:200px; min-width: 200px;">
+						    		<h4 class="col s12 white-text valign center-align">
+						    			{{label}}<br><i class="material-icons white-text medium">{{icon}}</i>
+						    		</h4>
+						    	</div>
+						    </div>
+					    </a> -->
+					{{/each}}
+				{{/if}}
+			<!-- </div> -->
+		<!-- </div> -->
+	</div>
+	<div class="row valign-wrapper"><div class="col s12 saveVerticalSpace valign"><a href="/appInfo" class="menu-btn-group white-text closeNav"><i class="material-icons left">info_outline</i>App Info</a></div></div>
+	<div class="divider"></div>
+	<h5 class="row valign-wrapper white-text">
+		<div class="col s5 valign">
+			Admin Menu:
+		</div>
+		{{#if showAdminMenu}}
+			<div class="col s5">&nbsp;</div>
+			<div class="col s2 valign right">
+				<a class="waves-effect waves-light white-text lockAdminMenu"><i class="material-icons right">lock_outline</i>Lock</a>
+			</div>
+		{{else}}
+			<div class="col s5 valign">
+				<input id="enteredAdminPassword" type="password" placeholder="Enter Admin Password" class="validate">
+			</div>
+			<div class="col s2 valign">
+				<a class="waves-effect waves-light white-text unlockAdminMenu"><i class="material-icons right">lock_open</i>Unlock</a>
+				<!-- <a class="btn-flat white-text">Unlock <i class="material-icons left unlockAdminMenu">lock_open</i></a> -->
+			</div>
+		{{/if}}
+	</h5>
+	<div class="divider"></div>
+		{{#if showAdminMenu}}
+			<div class="row center-align">
+				<!-- <div class="col s12"> -->
+					{{#each adminAppMenu}}
+						<a class="center-align card waves-effect waves-light white-text posMenuButtonAdmin closeNav" href="{{pathFor routeName}}">
+					    	<div class="row valign-wrapper posMenuButtonContent">
+					    		<div class="col s12 valign">
+					    			{{label}}<br><i class="material-icons white-text medium">{{icon}}</i>
+					    		</div>
+					    	</div>
+					    </a>
+						<!-- <a class="col s3 center-align" href="{{pathFor routeName}}">
+					    	<div class="card light-blue waves-effect waves-light">
+						    	<div class="row valign-wrapper" style="min-height:200px; min-width: 200px;">
+						    		<h4 class="col s12 white-text valign center-align">
+						    			{{label}}<br><i class="material-icons white-text medium">{{icon}}</i>
+						    		</h4>
+						    	</div>
+						    </div>
+					    </a> -->
+					{{/each}}
+				<!-- </div> -->
+			</div>
+		{{else}}
+<!-- 			<div class="row valign-wrapper">
+				<div class="col s8 offset-s2">
+					<input id="enteredAdminPassword" type="password" placeholder="Enter Admin Password">
+				</div>
+				<div class="col s2 valign">
+					<i class="material-icons left medium unlockAdminMenu">lock_open</i>
+				</div>
+			</div> -->
+			<div class="row keyboardSpaceFiller">
+				&nbsp;
+			</div>
+		{{/if}}
+</template>

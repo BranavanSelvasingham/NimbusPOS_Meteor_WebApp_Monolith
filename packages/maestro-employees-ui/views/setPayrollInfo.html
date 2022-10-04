@@ -1,0 +1,27 @@
+<template name="SetPayrollInfo">
+	<h5>Pay Period Settings:</h5>
+	<div class="row"></div>
+	<div class="row">
+		<div class="col s6">
+			<div class="row">This Pay Period Start Date: <a class="teal-text">{{getThisPeriodStart}}</a></div>
+			<div class="row"><input id="periodStartDate" type="date" class="datepicker"></div>
+		</div>
+		<div class="col s6">
+			<div class="row">Pay Period Type: <a class="teal-text">{{getFrequencyType}}</a></div>
+			<div class="row"> 
+				<div class="input-field" >
+			    	<select id="frequencyType">
+			      		<option value="" disabled selected>Weeklly/Bi-Weekly/etc.</option>
+			      		<option value="Weekly">Weekly</option>
+			      		<option value="Bi-Weekly">Bi-Weekly</option>
+			      		<option value="Monthly">Monthly</option>
+			    	</select>
+			  	</div>
+			</div>
+		</div>
+	</div>
+	<div class="row"><div class="col s12 right-align">
+		<!-- <a href="/business/employees" class="waves-effect waves-light btn-flat">Cancel</a> -->
+		<a id="updatePayrollSettings" class="waves-effect waves-light btn">Update Settings</a>
+	</div></div>
+</template>

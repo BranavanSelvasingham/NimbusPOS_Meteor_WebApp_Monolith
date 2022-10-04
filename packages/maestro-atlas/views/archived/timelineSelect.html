@@ -1,0 +1,30 @@
+<template name="TimelineSelect">
+	<!-- <h5 class="light-blue-text center-align">Dashboard: {{locationName}}</h5> -->
+	<div class="row hide-on-small-only">
+	    <div class="col s12">
+			<ul class="tabs">
+				<li class="tab col s3"><a href="#daily">Daily</a></li>
+				<li class="tab col s3"><a href="#weekly" class="active">Dashboard</a></li>
+				<li class="tab col s3 disabled"><a href="#biweekly">Bi-Weekly</a></li>
+				<li class="tab col s3 disabled"><a href="#monthly">Monthly</a></li>
+			</ul>
+	    </div>
+	    
+	    <div id="daily" class="col s12">
+	    	{{> DailyView}}
+	    </div>
+	    <div id="weekly" class="col s12">
+	    	{{> DashboardHome}}
+	    </div>
+<!-- 	    <div id="biweekly" class="col s12">
+	    	{{> BiweeklyView}}
+	    </div>
+	    <div id="monthly" class="col s12">
+	    	{{> MonthlyView}}
+	    </div> -->
+	</div>
+
+	<div class="row hide-on-med-and-up">
+		{{> DailyView}}
+	</div>
+</template>

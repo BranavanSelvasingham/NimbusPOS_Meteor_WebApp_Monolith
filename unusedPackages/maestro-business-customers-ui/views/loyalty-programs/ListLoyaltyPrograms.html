@@ -1,0 +1,184 @@
+<template name="ListLoyaltyPrograms">
+	<div  class="row">
+		<div class="col s12">
+	        <ul class="collection with-header">
+	            <li class="collection-header">
+	                <div class="row valign-wrapper">
+	                    <div class="col s8 left-align valign">
+	                        <h3>Loyalty Programs</h3>
+	                    </div>
+	                    <div class="col s4 right-align valign">
+						    <a class="waves-effect waves-light btn-floating btn-large" href="/business/loyaltyPrograms/create"><i class="material-icons left">add</i></a>
+	                    </div>
+	                </div>
+	            </li>
+	            <li class="collection-item listViewContainer">
+	            	 <div class="row listViewContainer">
+                        <div class="col s4 fixedHeightContainer listViewContainer itemsListStyle">
+                            <ul class="collection listViewContainer">
+                                {{#each listPrograms}}
+                                    <li class="collection-item avatar programSelected" style='{{isSelectedProgram _id}}'>
+                                        <div class="row">               
+                                            <i class="material-icons circle small left">card_giftcard</i>
+                                            <span class="title">{{this.name}}</span>
+                                            {{#with programType}}
+                                            	<p>{{this.type}}</p>
+                                            {{/with}}
+                                        </div>
+                                    </li>
+                                {{/each}}
+                            </ul>
+                        </div>
+                        <div class="col s8">
+                            {{#with getSelectedProgram}}
+                            	<!-- {{#if isStaticMode}} -->
+	                            	<div class="staticCard" style="{{isStaticMode}}">
+										<div class="row valign-wrapper">
+											<h5 class="col s8 valign teal-text">
+												{{this.name}}
+											</h5>
+											<div class="col s4">
+												<p class="teal-text">{{getPriceInfo price}}</p>
+											</div>
+										</div>
+										<div class="row valign-wrapper">
+											<div class="col s6">
+												<p class="teal-text">{{getExpiryDays expiryDays}}</p>
+											</div>
+											<div class="col s6">
+												<p class="teal-text">{{getExpiryDate expiryDate}}</p>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col s12">
+												<p class="teal-text">{{getProgramTypeInfo programType}}</p>
+											</div>
+										</div>
+										<div class="row teal-text">
+											<div class="col s6">
+						    					Tax on Program Price: {{getProgramTaxRule taxRule}}
+						    				</div>
+						    			</div>
+						    			<div class="row valign-wrapper">
+											<div class="col s12 valign right-align">
+												<a class="editThisCard btn-floating waves-effect waves-light btn-small teal">
+													<i class="valign material-icons">edit</i>
+												</a>
+											</div>
+										</div>
+										<div class="divider"></div>
+										<div class="row">
+											<ul class="col s10 push-s1 collection">
+												{{#each this.products}}
+													<li class="collection-item">
+														<p class="cyan-text">{{getProductName productId}}</p>
+														<p>{{getSizeLabels sizeCodes}}</p>
+													</li>
+												{{/each}}
+												{{#each this.categories}}
+													<li class="collection-item">
+														<p class="blue-text">{{this.name}}</p>
+													</li>
+												{{/each}}
+											</ul>
+										</div>
+										<div class="row">
+											<div class="col s12 right-align">
+											  <div class="switch">
+											    <label>
+											      Not available for sale
+											      <input type="checkbox" disabled {{isProgramActive status}}>
+											      <span class="lever"></span>
+											      Available for sale
+											    </label>
+											  </div>
+											</div>
+										</div>
+									</div>
+								<!-- {{/if}} -->
+
+								<!-- {{#if isEditMode}} -->
+									<div class="editCard" style="{{isEditMode}}">
+										<div class="row valign-wrapper">
+											<div class="col s8 valign teal-text">
+												<label for="editProgramNameField">Loyalty Program Name</label>
+												<input value="{{this.name}}" id="editProgramNameField" type="text">
+											</div>
+											<div class="col s4 valign">
+												<label for="editProgramPriceField">Price</label>
+						            			<input id="editProgramPriceField" class='pricingCells' type="number" min="0" step="1" value="{{editPrice price}}" placeholder="Free coupon/reward"/>
+											</div>
+										</div>
+										<div class="row valign-wrapper">
+											<div class="col s6 valign">
+												<label for="editProgramExpiryDays">Days to Expiry After Purchase</label>
+						            			<input id="editProgramExpiryDays" class='pricingCells' type="number" min="0" step="1" value="{{editExpiryDays expiryDays}}" placeholder="Does not expire"/>
+											</div>
+											<div class="col s6 valign">
+												<label for="editProgramExpiryDate">Expires on Date {{editExpiryDate expiryDate}}</label>
+						            			<input id="editProgramExpiryDate" class='datepicker' type="date" value="{{editExpiryDate expiryDate}}" placeholder="Does not expire"/>  
+											</div>
+										</div>
+										<div class="row valign-wrapper">
+											<div class="col s12">
+												<p class="teal-text">{{getProgramTypeInfo programType}}</p>
+											</div>
+										</div>
+										<div class="row valign-wrapper teal-text">
+											<div class="col s12 valign left-align">
+						    					Tax on Program Price:
+						    					<input name="applyTax" type="radio" id="yesTax" class="chooseProgramTax" />
+							      				<label for="yesTax">Yes</label>
+							      				&nbsp;&nbsp;&nbsp;&nbsp;
+							      				<input name="applyTax" type="radio" id="noTax" class="chooseProgramTax"/>
+							      				<label for="noTax">No</label>
+						    				</div>
+										</div>
+										<div class="row">
+											<div class="col s12 right-align">
+												<a class="saveThisCard btn-floating waves-effect waves-light btn-small teal" data-programid="{{this._id}}">
+													<i class="material-icons">save</i>
+												</a>
+												<a class="clearChangesOnCard btn-floating waves-effect waves-light btn-small teal" data-programid="{{this._id}}">
+													<i class="material-icons">clear</i>
+												</a>
+											</div>
+										</div>
+										<div class="divider"></div>
+										<div class="row">
+											<ul class="col s10 push-s1 collection">
+												{{#each this.products}}
+													<li class="collection-item">
+														<p class="cyan-text">{{getProductName productId}}</p>
+														<p>{{getSizeLabels sizeCodes}}</p>
+													</li>
+												{{/each}}
+												{{#each this.categories}}
+													<li class="collection-item">
+														<p class="blue-text">{{this.name}}</p>
+													</li>
+												{{/each}}
+											</ul>
+										</div>
+										<div class="row">
+											<div class="col s12 right-align">
+											  <div class="switch">
+											    <label>
+											      Not available for sale
+											      <input id="editProgramStatus" type="checkbox" {{isProgramActive status}}>
+											      <span class="lever"></span>
+											      Available for sale
+											    </label>
+											  </div>
+											</div>
+										</div>
+									</div>
+								<!-- {{/if}} -->
+                            {{/with}}
+                        </div>
+                    </div>
+                </li>
+	        </ul>
+	    </div>
+	</div>
+</template>

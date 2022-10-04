@@ -1,0 +1,46 @@
+<template name="CreateEmployee">
+	<div class="row">
+		<div class="card col s12">
+			<div class="col s2 m2 center-align">
+				<i class="material-icons medium">person_add</i>
+			</div>
+
+			<div class="col s10 m10">
+				<form id="enterEmployeeInfo">
+					<div class="row">
+						<div class="col s12 m12">
+							<label for="employeeName">Employee Name</label>
+							<input id="employeeName" type="text" class="validate">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col s12 m12">
+							<label for="employeeEmail">Employee Email</label>
+							<input id="employeeEmail" type="email" class="validate">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col s12 m12">
+							<label for="employeePhone">Phone Number</label>
+							<input id="employeePhone" type="tel" class="validate">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col s4 m4">
+							<label for="employeeRate">Hourly Rate ($/hr)</label>
+							<input id="employeeRate" type="number" class="validate">
+						</div>
+					</div>
+					<div class="row valign-wrapper">
+						<div class="col s6 m6 center-align red-text valign" id="errorMessages"></div>
+						<div class="col s6 m6 right-align">
+		                	<a id="cancelCreateEmployee" class="waves-effect waves-teal btn-flat" type="reset">Cancel</a>
+		                    <button id="createEmployee" class="waves-effect waves-light btn orange darken-1">Create</button>
+		                </div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+</template>

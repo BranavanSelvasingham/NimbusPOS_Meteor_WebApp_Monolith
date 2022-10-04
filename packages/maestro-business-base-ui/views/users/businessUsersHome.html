@@ -1,0 +1,120 @@
+<template name="BusinessUsersHome">
+    <div class="row">
+        <div class="col s12">
+            <ul class="collection with-header">
+                <li class="collection-header">
+                    <div class="row valign-wrapper">
+                        <div class="col s6 left-align valign">
+                            <h3>Users</h3>
+                        </div>
+                        <div class="col s6 right-align valign">
+                            <a href="{{pathFor 'AddUser'}}" class="waves-effect waves-light btn-floating btn-large"><i class="material-icons large">person_add</i></a>
+                        </div>
+                    </div>
+                </li>
+                <li class="collection-item listViewContainer">
+                    <div class="row listViewContainer">
+                        <div class="col s5 fixedHeightContainer listViewContainer itemsListStyle">
+                            <ul class="collection listViewContainer">
+                                {{#each businessUsers}}
+                                    <li class="collection-item row valign-wrapper business-user-select waves-effect waves-light {{isSelected}}" style="width:100%;">
+                                        {{#if isCurrentUser}}
+                                            <i class="material-icons tiny">filter_vintage</i>
+                                        {{/if}} 
+                                        {{profile.firstName}} {{profile.lastName}} ({{username}})
+                                    </li>
+                                {{/each}}
+                            </ul>
+                        </div>
+
+                        <div class="col s7 fixedHeightContainer">
+                            {{#with selectedUser}}
+                                <div class="row">
+                                    <span class="orange-text">{{profile.firstName}} {{profile.lastName}}</span>
+                                    <p>Username: {{username}}</p>
+                                    <p>Status: {{status}} </p>
+                                    <p>Roles: {{role}} </p>
+                                </div>
+                                <div class="">
+                                    <a id="change-user-password" class="waves-effect waves-light" href="#">Change User Password</a>
+                                </div>
+                            {{else}}
+                                <div class="">
+                                    <p>No user selected!</p>
+                                </div>
+                            {{/with}}
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+
+<!--     <div class="row">
+        <div class="col s4">
+            <div class="collection with-header">
+                <span class="collection-header title">Users</span>
+                {{#each businessUsers}}
+                    <a href="#" class="collection-item business-user waves-effect waves-light {{isSelected}}">{{#if isCurrentUser}}<i class="material-icons tiny">filter_vintage</i>{{/if}} {{profile.firstName}} {{profile.lastName}} ({{username}})</a>
+                {{else}}
+                    <a href="#" class="collection-item">No users available</a>
+                {{/each}}
+            </div>
+        </div>
+        <div class="col s8">
+            <div class="card">
+                {{#with selectedUser}}
+                    <div class="card-content">
+                        <span class="card-title orange-text">{{profile.firstName}} {{profile.lastName}}</span>
+
+                        <p>Username: {{username}}</p>
+
+                        <p>Status: {{status}} </p>
+
+                        <p>Roles: {{role}} </p>
+
+                    </div>
+                    <div class="card-action">
+                        <a id="change-user-password" class="waves-effect waves-light" href="#">Change User Password</a>
+                    </div>
+                {{else}}
+                    <div class="card-content">
+                        <p>No user selected!</p>
+                    </div>
+                {{/with}}
+            </div>
+        </div>
+    </div> -->
+
+<!--     <div id="add-business-user-button" class="fixed-action-btn">
+        <a id="add-business-user" href="{{pathFor 'AddUser'}}" class="btn-floating btn-large red waves-effect waves-light">
+            <i class="material-icons large">person_add</i>
+        </a>
+    </div> -->
+
+    {{!-- TODO user password change only allowed when email not set --}}
+    <div id="change-user-password-modal" class="modal modal-fixed-footer">
+        <div class="modal-content">
+            {{#with selectedUser}}
+                <h4 class="orange-text">Set password for {{profile.firstName}} {{profile.lastName}}</h4>
+                <div class="row">
+                    <div class="input-field col s6">
+                        <input id="new-password" type="password" class="validate">
+                        <label for="new-password">New Password</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input id="confirm-new-password" type="password" class="validate">
+                        <label for="confirm-new-password" data-error="Passwords do not match">Confirm New Password</label>
+                    </div>
+                </div>
+            {{else}}
+                <p>No user selected!</p>
+            {{/with}}
+        </div>
+        <div class="modal-footer">
+            <a href="#!" id="submit-change-user-password" class="modal-action modal-close waves-effect waves-light btn orange darken-1">Set Password</a>
+            <a href="#!" id="cancel-change-user-password" class="modal-action modal-close waves-effect waves-teal btn-flat">Cancel</a>
+        </div>
+    </div>
+</template>

@@ -1,0 +1,1109 @@
+<template name="CreateOrderSlides">
+    {{isLocationSelected}}
+
+    <ul id="order-checout-balance-tabs" class="tabs hide">
+        <li class="tab"><a class="active" href="#orderTab">1</a></li>
+        <li class="tab"><a href="#checkoutTab">2</a></li>
+        <li class="tab"><a href="#balanceTab">3</a></li>
+    </ul>
+
+    <div id="orderTab" class="row order-page-body">
+        <div class="col s8">
+            {{#if isDesktop}}
+                <div class="row">
+                    <div class="col s12">
+                        <ul id="product-customer-loyalty-tabs" class="tabs">
+                            <li class="tab col s4"><a class="active" href="#order-products"><i class="material-icons small center">view_module</i></a></li>
+                            <li class="tab col s4 selectCustomerSearchBox"><a href="#order-customers"><i class="material-icons small center">people</i></a></li>
+                            <li class="tab col s4"><a href="#order-loyalty"><i class="material-icons small center">card_giftcard</i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            {{/if}}
+            <ul class="collection listViewContainer">
+                <li class="collection-item listViewContainer">
+                    <div id="order-products">
+                        <!-- Category filters -->
+                        <div class="row">
+                            <div class="col s12">
+                                <div class="horizontalScrollDiv">
+                                    <div class="horizontalScrollContainer">
+                                        <div class="horizontalScrollContent">
+                                            <!-- <a class="enableProductSearch btn-floating btn-small waves-effect waves-light"><i class="material-icons">search</i></a>
+                                                {{#if productSearchEnabled}}
+                                                    <div class="col s4">
+                                                        <form name="product-list-search" style="background-color:#e0f7fa;">
+                                                            <input id="product-search" type="search">
+                                                        </form>
+                                                    </div>
+                                                {{/if}} -->
+                                            <div class="chip orderCategoryChip center-align selectCategory white-text" data-category="All" style="{{getCategoryColor 'All' ''}}">All</div>
+                                            {{#each primaryCategories}}
+                                                <div class="chip orderCategoryChip center-align {{#unless isCategorySelected name}}selectCategory{{/unless}} white-text" data-category="{{name}}" style="{{getCategoryColor name color}}">
+                                                    {{name}}
+                                                    <!-- {{#if isCategorySelected name}}
+                                                        {{#each secondaryCategories name}}
+                                                            <div class="chip orderCategoryChip center-align selectSecondaryCategory white-text" data-secondcategory="{{name}}" style="{{getCategoryColor name color}} border-style: solid; border-width:1px; border-color: white;">
+                                                                {{#if isSecondaryCategorySelected name}}<i class="material-icons left">keyboard_arrow_right</i>{{/if}}{{name}}
+                                                            </div>
+                                                        {{/each}}
+                                                    {{/if}} -->
+                                                </div>
+                                            {{/each}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="divider"></div>
+                        <!-- Products -->
+                        <div class="order-slide listViewContainer" style="{{#if isDesktop}}max-height: calc(100vh - 2em - 300px);{{/if}}">
+                            <div id="order-products-list" class="row">
+                                <div class="col s12">
+                                    <div class="grid-fluid">
+                                        <!-- {{#each products}} -->
+                                        {{#each getSortedFilteredProductsAndGroups}}
+                                            {{#if isThisAGroupItem thisIsGroup}}
+                                                {{#if isThisSelectedGroup name}}
+                                                    <div class="card-panel white-text grid-fluid-item-large" style="{{getTileBackgroundColor this}}" data-productid="{{_id}}">
+                                                        <div class="row">
+                                                            <!-- <h5>{{name}}<a class="secondary-content"><a class="btn-floating btn-flat waves-effect waves-light deselect-group-item"><i class="material-icons white-text small">remove_circle_outline</i></a></a></h5> -->
+                                                            <h5 class="deselect-group-item">{{name}}<a class="secondary-content"><i class="material-icons white-text small">remove_circle_outline</i></a></h5>
+                                                        </div>
+                                                        <div class="row" style="background-color: white;">
+                                                            <div class="grid-fluid">
+                                                                {{#each getProductsInGroup name}}
+                                                                    {{#if isThisProductExpanded this}}
+                                                                        <div class="card-panel white-text sub-grid-fluid-item-large" style="{{getTileBackgroundColor this}}" data-productid="{{_id}}">
+                                                                            <div class="row">
+                                                                                <!-- <h5>{{name}}<a class="secondary-content"><a class="btn-floating btn-flat waves-effect waves-light product-collapse"><i class="material-icons white-text small">remove_circle_outline</i></a></a></h5> -->
+                                                                                <h5 class="product-collapse">{{name}}<a class="secondary-content"><i class="material-icons white-text small">remove_circle_outline</i></a></h5>
+                                                                            </div>
+                                                                            <div class="row" style="background-color: white;">
+                                                                                <div class="grid-fluid">
+                                                                                    {{#each sizes}}
+                                                                                        <div class="product-size-select card-panel waves-effect waves-light white-text grid-fluid-item grid-fluid-item-small z-depth-0" style="{{getSizeTileBackgroundColor ../_id}}">
+                                                                                            <span>{{sizeName (code)}}<br>{{currency (price)}}</span>
+                                                                                        </div>
+                                                                                        <!-- <div class="card-panel white-text product-item-select grid-fluid-item" style="{{getTileBackgroundColor ../this}}" data-productid="{{_id}}">{{name}}</div> -->
+                                                                                    {{/each}}
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    {{else}}
+                                                                        <div class="card-panel waves-effect waves-light white-text product-item-select grid-fluid-item" style="{{getTileBackgroundColor this}}" data-productid="{{_id}}">{{name}}</div>
+                                                                    {{/if}}
+                                                                    <!-- <div class="card-panel white-text product-item-select grid-fluid-item" style="{{getTileBackgroundColor this}}" data-productid="{{_id}}">{{name}}</div> -->
+                                                                {{/each}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {{else}}
+                                                    <div class="card-panel waves-effect waves-light white-text group-item-select product-collapse grid-fluid-item" style="{{getTileBackgroundColor this}}" data-productid="{{_id}}">{{name}}<a class="secondary-content"><i class="material-icons white-text small">view_module</i></a></div>
+                                                {{/if}}
+                                            {{else}}
+                                                {{#if isThisProductExpanded this}}
+                                                    <div class="card-panel white-text grid-fluid-item-large" style="{{getTileBackgroundColor this}}" data-productid="{{_id}}">
+                                                        <div class="row">
+                                                            <!-- <h5>{{name}}<a class="secondary-content"><a class="btn-floating btn-flat waves-effect waves-light product-collapse"><i class="material-icons white-text small">remove_circle_outline</i></a></a></h5> -->
+                                                            <h5 class="product-collapse">{{name}}<a class="secondary-content"><i class="material-icons white-text small">remove_circle_outline</i></a></h5>
+                                                        </div>
+                                                        <div class="row" style="background-color: white;">
+                                                            <div class="grid-fluid">
+                                                                {{#each sizes}}
+                                                                    <div class="product-size-select card-panel waves-effect waves-light white-text grid-fluid-item grid-fluid-item-small z-depth-0" style="{{getSizeTileBackgroundColor ../_id}}">
+                                                                        <span>{{sizeName (code)}}<br>{{currency (price)}}</span>
+                                                                    </div>
+                                                                    <!-- <div class="card-panel white-text product-item-select grid-fluid-item" style="{{getTileBackgroundColor ../this}}" data-productid="{{_id}}">{{name}}</div> -->
+                                                                {{/each}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {{else}}
+                                                    <div class="card-panel waves-effect waves-light white-text product-item-select deselect-group-item grid-fluid-item" style="{{getTileBackgroundColor this}}" data-productid="{{_id}}">{{name}}</div>
+                                                {{/if}}
+                                            {{/if}}                                            
+                                        {{else}}
+                                            <p>No products available. Add using the products menu.</p>
+                                        {{/each}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Customers -->
+                    <div id="order-customers" class="">
+                        <div class="row">
+                            <div class="col s6 center-align">
+                                <a id="customerSearchButton" class="goToCustomerSearchTab waves-effect waves-light" style="border-bottom:{{#if isCustomerSearchTabMode}}solid{{else}}solid white{{/if}};"><i class="material-icons light-blue-text small">search</i></a>
+                            </div>
+                            <div class="col s6 center-align">
+                                <a id="createCustomerButton" class="goToCustomerCreateTab waves-effect waves-light" style="border-bottom:{{#if isCustomerCreateTabMode}}solid{{else}}solid white{{/if}};"><i class="material-icons light-blue-text small">person_add</i></a>
+                            </div>
+                        </div>
+                        <div class="row hide">
+                            <div class="col s12 center-align">
+                                <ul id="search-add-customers-tabs" class="tabs" style="overflow-x:hidden;">
+                                    <li class="tab col s4"><a class="active" href="#searchCustomer"><i class="material-icons">search</i></a></li>
+                                    <li class="tab col s4"><a href="#newCustomerAdd"><i class="material-icons">person_add</i></a></li>
+                                    <li class="tab col s4"><a href="#editCustomerDetails"><i class="material-icons"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div id="newCustomerAdd" class="row">
+                            <form id="create-customer" name="add-user">
+                                <div class="row valign-wrapper">
+                                    <div class="col s10">
+                                        <label id="customer-label" for="customer-name" data-error>Customer Name</label>
+                                        <input id="customer-name" type="text" class="validate text-capitalize">
+                                    <!-- </div> -->
+                                <!-- </div> -->
+                                <!-- <div class='row'><div id='error-message-name' class='col s12 red-text right-align'></div></div> -->
+                                
+                                <!-- <div class="row"> -->
+                                    <!-- <div class="col s12"> -->
+                                        <label id="email-label" for="email" data-error>Email</label>
+                                        <input id="email" type="email" class="validate">
+
+                                        <label for="customerPhone">Phone Number</label>
+                                        <input id="customerPhone" type="tel" class="validate">
+                                    </div>
+                                    <div class="col s2 valign right-align">
+                                        <button id="submit-create-customer" class="waves-effect waves-light btn teal" type="submit" form="create-customer">Add</button>
+                                    </div>
+                                </div>
+                                <!-- <div class='row'><div id='error-message-email' class='col s12 red-text right-align'></div></div> -->
+
+                                <!-- <div class="row"> -->
+                                    <!-- <div id='error-message-submit' class='red-text right-align'></div> -->
+                                <!-- </div> -->
+                                
+                            </form>
+                        </div>
+
+                        <div id="editCustomerDetails" class="row">
+                            {{#with orderCustomer}}    
+                                <form id="edit-customer-details">
+                                    <div class="row valign-wrapper">
+                                        <div class="col s10">
+                                            <label id="edit-customer-label" for="edit-customer-name" data-error>Customer Name</label>
+                                            <input id="edit-customer-name" type="text" class="validate text-capitalize" value="{{name}}">
+
+                                            <label id="edit-email-label" for="edit-email" data-error>Email</label>
+                                            <input id="edit-email" type="email" class="validate" value="{{email}}">
+
+                                            <label for="edit-customerPhone">Phone Number</label>
+                                            <input id="edit-customerPhone" type="tel" class="validate" value="{{phone}}">
+                                        </div>
+                                        <div class="col s2 valign right-align">
+                                            <a id="save-changes-customer" class="waves-effect waves-light btn-flat teal white-text">Save</a>
+                                        </div>
+                                    </div>
+                                    <!-- <div class='row'><div id='error-message-email' class='col s12 red-text right-align'></div></div> -->
+
+                                    <!-- <div class="row"> -->
+                                        <!-- <div id='error-message-submit' class='red-text right-align'></div> -->
+                                    <!-- </div> -->
+                                </form>
+                            {{/with}}
+                        </div>
+                        
+                        <div id="searchCustomer">
+                            <div class="row">
+                                <div class="col s12">
+                                    <div class="horizontalScrollDiv">
+                                        <div class="horizontalScrollContainer">
+                                            <div class="horizontalScrollContent">
+                                                <div class="col s6">
+                                                    <!-- <form name="customer-list"> -->
+                                                        <!-- <label for="customer-search"></label> -->
+                                                        <!-- <i id="clear-customer-search" class="material-icons right">close</i> -->
+                                                        <input id="customer-search" type="search" placeholder="Search Name" style="font-size: 1.4rem;"/>
+                                                    <!-- </form> -->
+                                                </div>
+                                                <!-- <div class="chip clear-customer-search selectAlphabet" data-alphabet="All" style="{{isAlphabetSelected 'All'}}">All</div> -->
+                                                <div class="chip clear-customer-search selectAlphabet white grey-text" data-alphabet="All" style="font-size:1.2rem;">Clear</div>
+                                                {{#each alphabet}}
+                                                    <div class="chip alphabetFilter selectAlphabet" data-alphabet="{{this.letter}}" style="{{isAlphabetSelected letter}}">
+                                                        {{this.letter}}
+                                                    </div>
+                                                {{/each}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="divider"></div>
+
+                            <div class="row customer-slide listViewContainer" style="{{#if isDesktop}}max-height: calc(100vh - 2em - 350px);{{/if}}">
+                                <div class="col s6 listViewContainer itemsListStyle orderItemsContainer">
+                                    <div class="section">
+                                        {{#with orderCustomer}}
+                                            <h5 class="center-align">{{name}} <i class="material-icons small grey-text goToCustomerEditTab">edit</i></h5>
+                                            {{#each getActivePrograms}}
+                                                <div class="card row valign-wrapper {{#if thisProgramIsApplied apply}}doNotApplyThisProgram{{else}}applyThisProgram{{/if}}">
+                                                    <div class="col s9 valign">
+                                                        <div class="card-content">
+                                                            <h6>{{getLoyaltyName this.programId}}</h6>
+                                                            <p>{{getLoyaltyBalance this.remainingQuantity this.remainingAmount}}</p>
+                                                            <p>{{getLoyaltyExpiration this.programId this.boughtOn}}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col s3 valign">
+                                                        {{#if thisProgramIsApplied apply}}
+                                                            <a class="btn-floating btn-small waves-effect waves-light green"><i class="material-icons">done</i></a>
+                                                        {{else}}
+                                                            <a class="btn-floating btn-small waves-effect waves-light white"></a>
+                                                        {{/if}}
+                                                    </div>
+                                                </div>
+                                            {{/each}}
+                                            <div class="row center-align">
+                                                <a class="btn waves-effect goToProgramsTab waves-light white grey-text">Add Program</a>
+                                            </div>
+                                        {{/with}}
+                                    </div>
+                                </div>
+                                <div class="col s6 listViewContainer orderItemsContainer">
+                                    <div class="listViewContainer">
+                                        <ul id="customers-list" class="collection listViewContainer">
+                                            {{#each getCustomers}}
+                                                <li class="collection-item select-customer" style='{{isSelectedCustomer _id}}'>
+                                                    <div class="waves-effect" style="font-size:1.2rem;">{{name}}</div>
+                                                </li>
+                                            {{else}}
+                                                <h6 class="row center-align grey-text">Search for Someone <br>(0 Matches So Far)</h6>
+                                            {{/each}}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Purchase Loyalty Programs -->
+                    <div id="order-loyalty" class="">
+                        {{#with orderCustomer}}
+                            <div class="row valign-wrapper">
+                                <div class="col s3 valign center-align">
+                                    <a class="selectLoyaltyType waves-effect waves-teal btn-flat teal lighten-2 white-text" data-programtype='All'>All</a>
+                                </div>
+                                <div class="col s3 valign center-align">
+                                    <a class="selectLoyaltyType waves-effect waves-teal btn-flat teal lighten-2 white-text" data-programtype='Quantity'>#</a>
+                                </div>
+                                <div class="col s3 valign center-align">
+                                    <a class="selectLoyaltyType waves-effect waves-teal btn-flat teal lighten-2 white-text" data-programtype='Percentage'>%</a>
+                                </div>
+                                <div class="col s3 valign center-align">
+                                    <a class="selectLoyaltyType waves-effect waves-teal btn-flat teal lighten-2 white-text" data-programtype='Amount'>$</a>
+                                </div>
+                            </div>
+
+                            <div class="divider"></div>
+
+                            <div class="row loyalty-slide" style="{{#if isDesktop}}max-height: calc(100vh - 2em - 300px);{{/if}}">
+                                <div class="col s12 listViewContainer orderItemsContainer" >
+                                    <div class="listViewContainer">
+                                        <ul id="purchase-loyalty-list" class="collection listViewContainer">
+                                            {{#each loyaltyProgram}}
+                                                {{#with purchaseLoyalty}}
+                                                    <li class="collection-item avatar selectLoyaltyProgram" data-programid="{{../_id}}">
+                                                        <i class="material-icons circle small left" data-programid="{{../_id}}">card_giftcard</i>
+                                                        <span class="title" data-programid="{{../_id}}">{{name}}</span>
+                                                        <p data-programid="{{../_id}}">{{getExpiryDays ../expiryDays}} {{getExpiryDate ../expiryDate}}</p>
+                                                        <a class="secondary-content" data-programid="{{../_id}}">{{#each sizes}}{{currency price}}{{/each}}</a>
+                                                    </li>
+                                                {{/with}}
+                                            {{/each}}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                        {{else}}
+                            <div class="row goToCustomersTab valign-wrapper">
+
+                                <div class="col s12 center-align valign">
+                                    <h5 class="teal-text">Choose or Create a Customer First</h5>
+                                    <i class="material-icons medium teal-text">people</i>
+                                </div>
+                            </div>
+                            <div class="divider"></div>
+                        {{/with}}
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Order summary -->
+        <div id="order-checkout" class="col s4 listViewContainer">
+            <h5 class="row">
+                {{#with orderCustomer}}
+                    <span class="teal-text">{{name}} <i class="material-icons small grey-text goToCustomerEditTab">edit</i></span>
+                {{else}}
+                    <span class="teal-text">Order Summary</span>
+                {{/with}}
+                <a class="secondary-content">
+                    {{#if noItems}}
+                        {{#with orderCustomer}}                           
+                            <a id='delete-order' class="waves-effect waves-light"><i class="material-icons small grey-text">refresh</i></a>
+                        {{/with}}
+                    {{else}}
+                        <i class="grey-text">{{getOrderNumber}}</i>&nbsp;&nbsp;<a id='delete-order' class="waves-effect waves-light"><i class="material-icons small grey-text">refresh</i></a>
+                    {{/if}}
+                </a>
+            </h5>
+<!--             {{#with orderCustomer}}
+                <h6 class="center-align"><i class="material-icons tiny left-align">person</i>{{name}}</h6>
+            {{/with}} -->
+            <div id="orderItemsList" class="orderSummaryContainer">
+            {{#if noItems}}
+                <p>Add an item</p>
+            {{else}}
+                {{#each itemsList}}
+                    {{#if itemNotLoyalty product._id}}
+                        {{#if itemNotLoyaltyRedeem product._id}}
+                            <div class="card row">
+                                <div class="row valign-wrapper">
+                                    <div class="col s2 valign center-align increase-item-quantity" data-productid="{{product._id}}" data-sizecode="{{size.code}}">
+                                        <h5 data-productid="{{product._id}}" data-sizecode="{{size.code}}">x{{quantity}}</h5>
+                                    </div>
+                                    <div class="col s10 valign">
+                                        <h5>{{product.name}}
+                                        <span class="secondary-content black-text">{{ currency (itemTotal) }}</span></h5>
+                                        {{#if displaySizeLine this}}
+                                            <div class="divider"></div>
+                                            <i class="teal-text small-text">{{sizeName size.code}}</i><i class="teal-text secondary-content">{{currency size.price}} ea.</i>
+                                        {{/if}}    
+                                        {{#each addOns}}
+                                            <div class="col s12">
+                                                <i class="teal-text small-text">+ {{name}}</i><i class="teal-text secondary-content">{{currency price}} ea.</i>
+                                            </div>
+                                        {{/each}}
+                                    </div>
+                                </div>
+                                <div class="divider"></div>
+                                <div class="order-item-options">
+                                    <div class="col s2 center-align">
+                                        <i class="decrease-item-quantity material-icons grey-text small center" data-productid="{{product._id}}" data-sizecode="{{size.code}}">keyboard_arrow_down</i>
+                                    </div>
+                                    {{#if anyAddOns product.addOns}}
+                                        <div class="col s8 center-align">
+                                            <a class="open-addon-select waves-effect waves-teal btn-flat">Add-Ons</a>
+                                        </div>
+                                    {{else}}
+                                        <div class="col s8">&nbsp;</div>
+                                    {{/if}}
+                                    <div class="col s2 valign">
+                                        <div class="left-align secondary-content"><i class="material-icons small circle grey-text delete-item left-align">clear</i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        {{else}}
+                            <div class="card row">
+                                <div class="row valign-wrapper">
+                                    <div class="col s2 valign center-align">
+                                        <h5>x{{quantity}}</h5>
+                                    </div>
+                                    <div class="col s10 valign">
+                                        <h5>{{product.name}}
+                                        <span class="secondary-content black-text">{{ currency (itemTotal) }}</span></h5>
+                                        <div class="divider"></div>
+                                        <i class="badge-m-outline">Redeemed</i>
+                                    </div>
+                                </div>
+                            </div>
+                        {{/if}}
+                    {{else}}
+                        <div class="card row">
+                            <div class="row valign-wrapper">
+                                <div class="col s2 valign center-align">
+                                    <h5>x{{quantity}}</h5>
+                                </div>
+                                <div class="col s10 valign">
+                                    <h5>{{product.name}}
+                                    <span class="secondary-content black-text">{{ currency (itemTotal) }}</span></h5>
+                                    <div class="divider"></div>
+                                    <i class="badge-m-outline">Loyalty Program</i>
+                                </div>
+                            </div>
+                            <div class="divider"></div>
+                            <div class="order-item-options">
+                                <div class="col s10 left-align">
+                                    {{#with getLoyaltyOrderItemProgram product._id}}
+                                        {{#if thisProgramIsApplied apply}}
+                                            <a class="btn-small btn-flat waves-effect waves-light green white-text doNotApplyThisProgramPrePurchase">Apply Now<i class="material-icons right white-text">check_box</i></a>
+                                        {{else}}
+                                            <a class="btn-small btn-flat waves-effect waves-light white applyThisProgramPrePurchase">Apply Now<i class="material-icons right grey-text">check_box_outline_blank</i></a>
+                                        {{/if}}
+                                    {{/with}}
+                                </div>
+                                <div class="col s2">
+                                    <div class="left-align secondary-content"><i class="material-icons small circle grey-text delete-item left-align">clear</i></div>
+                                </div>
+                            </div>
+                        </div>
+                    {{/if}}
+                {{/each}}
+            {{/if}}
+            </div>
+        </div>
+
+        <footer class="page-footer order-page-footer" style="z-index: 5;">
+            <div class="white-text footer-content">
+                <div class="col s4">
+                    <h5 class="white-text">Subtotal<span class="secondary-content white-text">{{currency orderSubtotal}}</span></h5>
+                    {{#if anyDiscounts}}
+                        <h5 class="white-text">Discounts<span class="secondary-content orange-text">- {{currency orderDiscount}}</span></h5>
+                    {{/if}}
+                </div>
+                <div class="col s4">
+                    <h5 class="white-text">Taxes (GST/HST)<span class="secondary-content white-text">{{currency orderTax}}</span></h5>
+                    <h5>Total <span class="secondary-content white-text">{{#if anyGiftCards}}{{currency orderPaymentDue}}{{else}}{{currency orderTotal}}{{/if}}</span></h5>
+                    <!--{{#if anyGiftCards}}
+                        <div>Total <span class="secondary-content white-text">{{currency orderTotal}}</span></div>
+                    {{/if}}-->
+                </div>
+                <div class="col s4" >
+                    {{#if anyGiftCards}}
+                        <h5 class="white-text">Gift Card Used<span class="secondary-content white-text">- {{currency giftCardUsed}}</span></h5>
+                    {{/if}}
+
+                    <!--<h5><span><button id="begin-checkout" data-target="checkout-order" class="btn modal-trigger {{#if noItems}}disabled{{/if}}">A Pay {{#if anyGiftCards}}{{currency orderPaymentDue}}{{else}}{{currency orderTotal}}{{/if}}</button></span></h5>-->
+                    <!-- <h5><span class="secondary-content"><button id="begin-checkout-bottom" data-target="checkout-order-bottom" class="btn modal-trigger secondary-content {{#if noItems}}disabled{{/if}}">Pay {{#if anyGiftCards}}{{currency orderPaymentDue}}{{else}}{{currency orderTotal}}{{/if}}</button></span></h5> -->
+                    <!-- <h5><span class="secondary-content"><button class="btn secondary-content {{#if noItems}}disabled{{else}}beginCheckout{{/if}}">Pay {{#if anyGiftCards}}{{currency orderPaymentDue}}{{else}}{{currency orderTotal}}{{/if}}</button></span></h5> -->
+                    <h4 class="white-text center-align {{#if noItems}}{{else}}beginCheckout{{/if}}" style="border-style: solid; border-color: white; border-width: 1px;">Pay {{#if anyGiftCards}}{{currency orderPaymentDue}}{{else}}{{currency orderTotal}}{{/if}}</h4>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <div id="checkoutTab" class="row order-page-body">
+        <div class="row valign-wrapper">
+            <div class="col s6 valign">
+                <h3 class="light-blue-text">Checkout</h3>
+            </div>
+            <div class="col s6 valign right-align">
+                {{getOrderNumber}}
+                {{#with orderCustomer}}
+                    {{#if emailReceiptSelected}}
+                        <a class="btn-medium btn-flat waves-effect waves-light white-text teal deselectEmailReceipt"><i class="material-icons left white-text">email</i>Email Receipt<i class="material-icons right white-text">check_box</i></a>
+                    {{else}}
+                        <a class="btn-medium btn-flat waves-effect waves-light white selectEmailReceipt"><i class="material-icons left grey-text">email</i>Email Receipt<i class="material-icons right grey-text">check_box_outline_blank</i></a>
+                    {{/if}}
+                {{/with}}                    
+                {{#if printReceiptSelected}}
+                    <a class="btn-medium btn-flat waves-effect waves-light deselectPrintReceipt white-text teal"><i class="material-icons left white-text">print</i>Print Receipt<i class="material-icons right white-text">check_box</i></a>
+                {{else}}
+                    <a class="btn-medium btn-flat waves-effect waves-light white selectPrintReceipt"><i class="material-icons left grey-text">print</i>Print Receipt<i class="material-icons right grey-text">check_box_outline_blank</i></a>
+                {{/if}}
+            </div>
+        </div>
+
+        <div class="row" style="border-top-style: solid;
+                                border-top-color: #e0e0e0;
+                                border-top-width: 1px;
+                                border-bottom-style: solid;
+                                border-bottom-color: #e0e0e0;
+                                border-bottom-width: 1px;">
+            <div class="col s10" style="border-right-style: solid;
+                                        border-right-color: #e0e0e0;
+                                        border-right-width: 1px;
+                                        height: calc(100vh - 2em - 360px);
+                                        overflow-y:auto;">&nbsp;
+                {{#if showCashPaymentInfo}}
+                    <div class="row">
+                        <div class="col s2 center-align">
+                            <div class="row">
+                                <a class="waves-effect waves-light btn addToCashAmountGiven btn-large blue-grey" style="width:125px;" data-cashamount="20">$20</a>
+                            </div>
+                            <div class="row">
+                                <a class="waves-effect waves-light btn addToCashAmountGiven btn-large blue-grey" style="width:125px;" data-cashamount="10">$10</a>
+                            </div>
+                            <div class="row">
+                                <a class="waves-effect waves-light btn addToCashAmountGiven btn-large blue-grey" style="width:125px;" data-cashamount="5">$5</a>
+                            </div>
+                        </div>
+                        <div class="col s4 center-align">
+                            <div class="row">
+                                <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="7">7</a>
+                                <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="8">8</a>
+                                <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="9">9</a>
+                            </div>
+                            <div class="row">
+                                <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="4">4</a>
+                                <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="5">5</a>
+                                <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="6">6</a>
+                            </div>
+                            <div class="row">
+                                <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="1">1</a>
+                                <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="2">2</a>
+                                <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="3">3</a>
+                            </div>
+                            <div class="row">
+                                <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="0">0</a>
+                            </div>
+                        </div>
+                        <div class="col s6">
+                            <div class="row">
+                                <div class="col s12">
+                                    {{#if anyGiftCards}}
+                                        <h4 class="light-blue-text">Pay: <span class="secondary-content light-blue-text">{{currency (orderCashPaymentDue)}}<i class="material-icons small">local_atm</i></span></h4>
+                                        <h5>Gift Card Used: <span class="secondary-content">- {{currency giftCardUsed}}<i class="material-icons small">card_giftcard</i></span></h5>
+                                        <h5>Order Total: <span class="secondary-content">{{currency orderTotal}}</span></h5>
+                                    {{else}}
+                                        <h4 class="light-blue-text">Pay: <span class="secondary-content">{{currency (orderCashTotal)}} <i class="material-icons small">local_atm</i></span></h4>
+                                    {{/if}}
+                                </div>
+                            </div>
+                            <div class="row valign-wrapper">
+                                <div class="col s12 valign">
+                                    <h5>Amount Given: <span class="secondary-content">{{currency (cashAmountGiven)}}<i class="clearCashAmountGiven material-icons grey-text small">refresh</i></span></h5>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col s12">
+                                    <h5>Change Due: <span class="secondary-content">{{currency (cashChangeDue)}}</span></h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {{/if}}
+
+                {{#if showCardPaymentInfo}}
+                    <div class="row">
+                        <div class="col s6">&nbsp;</div>
+                        <div class="col s6">
+                            {{#if anyGiftCards}}
+                                <h4 class="light-blue-text">Pay: <span class="secondary-content light-blue-text">{{currency (orderPaymentDue)}}<i class="material-icons small">local_atm</i></span></h4>
+                                <h5>Gift Card Used: <span class="secondary-content">- {{currency giftCardUsed}}<i class="material-icons small">card_giftcard</i></span></h5>
+                                <h5>Order Total: <span class="secondary-content">{{currency orderTotal}}</span></h5>
+                            {{else}}
+                                <h4 class="light-blue-text">Pay: <span class="secondary-content">{{currency orderTotal}} <i class="material-icons small">credit_card</i></span></h4>
+                            {{/if}}
+                        </div>
+                    </div>
+                {{/if}}
+
+                {{#if showLoyaltyInfo}}
+                    <div class="row">
+                        <div class="col s6">&nbsp;</div>
+                        {{#with orderCustomer}}
+                            <div class="col s6">
+                                <h5 class="light-blue-text">{{name}}</h5>
+                                <h6>List of Programs:</h6>
+                                {{#each getActivePrograms}}
+                                    <div class="card row valign-wrapper">
+                                        <div class="col s9 valign">
+                                            <div class="card-content">
+                                                <h6>{{getLoyaltyName this.programId}}</h6>
+                                                <p>{{getLoyaltyBalance this.remainingQuantity this.remainingAmount}}</p>
+                                                <p>{{getLoyaltyExpiration this.programId this.boughtOn}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col s3 valign">
+                                            {{#if thisProgramIsApplied apply}}
+                                                <a class="btn-floating btn-small waves-effect waves-light green doNotApplyThisProgram"><i class="material-icons">done</i></a>
+                                            {{else}}
+                                                <a class="btn-floating btn-small waves-effect waves-light white applyThisProgram"></a>
+                                            {{/if}}
+                                        </div>
+                                    </div>
+                                {{/each}}
+                            </div>
+                        {{else}}
+                            <div class="col s12 center-align">
+                                <h5>No customer selected</h5>
+                            </div>
+                        {{/with}}
+                    </div>
+                {{/if}}
+
+                {{#if showAdjustmentAmountInfo}}
+                    <div class="row">
+                        <div class="col s6">
+                            <div class="row">
+                                <div class="col s12"><h5>On The House:<span class="secondary-content green-text">- {{currency showAdjustmentAmount}}</span></h5></div>
+                            </div>
+                            <div class="row">
+                                <div class="col s4 left-align">
+                                    <a class="manualAdjustment btn-floating btn-large btn-flat waves-effect waves-light white-text {{#if isAdjustmentSelected 0}}blue lighten-1{{else}}grey{{/if}}" data-percent="0">0%</a>
+                                </div>
+                                <div class="col s4 center-align">
+                                    <a class="manualAdjustment btn-floating btn-large btn-flat waves-effect waves-light white-text {{#if isAdjustmentSelected 50}}blue lighten-1{{else}}grey{{/if}}" data-percent="50">50%</a>
+                                </div>
+                                <div class="col s4 right-align">
+                                    <a class="manualAdjustment btn-floating btn-large btn-flat waves-effect waves-light white-text {{#if isAdjustmentSelected 100}}blue lighten-1{{else}}grey{{/if}}" data-percent="100">100%</a>
+                                </div>
+                            </div>
+                            <div class="row valign-wrapper">
+                                <h3 class="col s12 center-align light-blue-text valign">
+                                    <a class="decreaseAdjustment"><i class="material-icons small grey-text">remove_circle</i></a>
+                                    &nbsp;&nbsp;{{getAdjustmentValue}}%&nbsp;&nbsp;
+                                    <a class="increaseAdjustment"><i class="material-icons small grey-text">add_circle</i></a>
+                                </h3>
+                            </div>
+<!--                             <div class="row">
+                                <div class="col s12">
+                                    <p class="range-field">
+                                        <input class="sliderManualAdjustment" type="range" id="setAdjustmentValue" min="0" max="100" value="{{getAdjustmentValue}}"/>
+                                    </p>
+                                </div>
+                            </div> -->
+                        </div>
+                        <div class="col s6">
+                            {{#if anyGiftCards}}
+                                <h4 class="light-blue-text">Pay: <span class="secondary-content light-blue-text">{{currency (orderPaymentDue)}}<i class="material-icons small">local_atm</i></span></h4>
+                                <h5>Gift Card Used: <span class="secondary-content">- {{currency giftCardUsed}}<i class="material-icons small">card_giftcard</i></span></h5>
+                                <h5>Order Total: <span class="secondary-content">{{currency orderTotal}}</span></h5>
+                            {{else}}
+                                <h4 class="light-blue-text">Pay: <span class="secondary-content">{{currency orderTotal}} <i class="material-icons small">{{getPaymentMethodIcon}}</i></span></h4>
+                            {{/if}}
+                        </div>
+                    </div>
+                {{/if}}
+            </div>
+
+<!--             <div class="col s3 center-align">
+                <div class="row valign-wrapper">
+                    <div class="col s6 valign center-align">
+                        <a class="showCashPaymentInfo select-payment-method btn btn-large waves-effect waves-light {{#if showCashPaymentInfo}}light-blue darken-1{{else}}teal{{/if}}" style="width: 100px; height: 100px;" data-paymentkey="cash"><i class="material-icons large" data-paymentkey="cash">local_atm</i></a>
+                    </div>
+                    <div class="col s6 valign center-align">
+                        <a class="showCardPaymentInfo select-payment-method btn btn-large waves-effect waves-light {{#if showCardPaymentInfo}}light-blue darken-1{{else}}teal{{/if}}" style="width: 100px; height: 100px;" data-paymentkey="card"><i class="material-icons large" data-paymentkey="card">credit_card</i></a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s6 valign center-align">
+                        <a class="showLoyaltyPaymentInfo btn btn-large waves-effect waves-light {{#if showLoyaltyInfo}}light-blue darken-1{{else}}teal{{/if}}" style="width: 100px; height: 100px;" data-paymentkey="loyalty"><i class="material-icons large">card_giftcard</i></a>
+                    </div>
+                    <div class="col s6 valign center-align">
+                        <a class="showAdjustmentInfo btn btn-large waves-effect waves-light {{#if showAdjustmentAmountInfo}}light-blue darken-1{{else}}teal{{/if}}" style="width: 100px; height: 100px;" data-paymentkey="adjustment"><i class="material-icons large">home</i></a>
+                    </div>
+                </div>
+            </div> -->
+<!--             <div class="col s3 center-align">
+                <div class="row valign-wrapper">
+                    <div class="col s6 valign center-align">
+                        <i class="material-icons medium showCashPaymentInfo select-payment-method {{#if showCashPaymentInfo}}light-blue-text{{else}}grey-text{{/if}}" style="width: 100px; height: 100px;" data-paymentkey="cash">local_atm</i>
+                    </div>
+                    <div class="col s6 valign center-align">
+                        <i class="material-icons medium showCardPaymentInfo select-payment-method {{#if showCardPaymentInfo}}light-blue-text{{else}}grey-text{{/if}}" style="width: 100px; height: 100px;" data-paymentkey="card">credit_card</i>
+                    </div>
+                </div>
+                <div class="row valign-wrapper">
+                    <div class="col s6 valign center-align">
+                        <i class="material-icons medium showLoyaltyPaymentInfo {{#if showLoyaltyInfo}}light-blue-text{{else}}grey-text{{/if}}" style="width: 100px; height: 100px;" data-paymentkey="loyalty">card_giftcard</i>
+                    </div>
+                    <div class="col s6 valign center-align">
+                        <i class="material-icons medium showAdjustmentInfo {{#if showAdjustmentAmountInfo}}light-blue-text{{else}}grey-text{{/if}}" style="width: 100px; height: 100px;" data-paymentkey="adjustment">home</i>
+                    </div>
+                </div>
+            </div> -->
+            <div class="col s2 center-align" style="height: calc(100vh - 2em - 360px);
+                                                    overflow-y:auto;">
+                <p><i class="material-icons medium showCashPaymentInfo select-payment-method {{#if showCashPaymentInfo}}light-blue-text{{else}}grey-text{{/if}}" data-paymentkey="cash">local_atm</i></p>
+                <p><i class="material-icons medium showCardPaymentInfo select-payment-method {{#if showCardPaymentInfo}}light-blue-text{{else}}grey-text{{/if}}" data-paymentkey="card">credit_card</i></p>
+                <!-- <p><i class="material-icons medium showLoyaltyPaymentInfo {{#if showLoyaltyInfo}}light-blue-text{{else}}grey-text{{/if}}" data-paymentkey="loyalty">card_giftcard</i></p> -->
+                <p><i class="material-icons medium showAdjustmentInfo {{#if showAdjustmentAmountInfo}}light-blue-text{{else}}grey-text{{/if}}" data-paymentkey="adjustment">home</i></p>
+            </div>
+        </div>
+
+<!--         <div class="row valign-wrapper">
+            <div class="col s6 left-align valign">
+                <a id="cancel-checkout" class="goToOrderTab waves-effect waves-green"><i class="material-icons medium grey-text">arrow_back</i></a>
+            </div>
+            <div class="col s6 right-align valign">
+                <h4 id="complete-checkout" class="waves-effect waves-green teal white-text" style="padding-color: teal; padding: 15px;" {{isPaymentDisabled}}>&nbsp;Payment Received&nbsp;</h4>
+            </div>
+        </div> -->
+
+        <footer class="page-footer order-page-footer teal" style="z-index: 5;">
+            <div class="footer-content row valign-wrapper">
+                <div class="col s4 valign">
+                    <a id="cancel-checkout" class="goToOrderTab waves-effect waves-green"><i class="material-icons large white-text">arrow_back</i></a>
+                </div>
+                <div class="col s2">
+                    <h5>&nbsp;</h5>
+                    <h5>&nbsp;</h5>
+                </div>
+                <div class="col s6 valign right-align">
+                    <h4 id="complete-checkout" class="waves-effect waves-green teal white-text" style="border-style: solid;
+                                                                                                        border-color: white;
+                                                                                                        border-width: 1px;
+                                                                                                        padding-color: teal; padding: 15px;">
+                                                                                                        &nbsp;Payment Received&nbsp;</h4>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <div id="balanceTab" class="row order-page-body">
+        {{#with processedOrderCustomer}}
+            <h5 class="center-align">{{name}}</h5>
+            <h6 class="center-align">Remaining Balance for Active Programs</h6>
+            {{#each getCustomerActivePrograms _id}}
+                <div class="row">
+                    <div class="col s6 offset-s3">
+                        <div class="card">
+                            <div class="card-content">
+                                <h6>{{getLoyaltyName this.programId}}</h6>
+                                <p>{{getLoyaltyBalance this.remainingQuantity this.remainingAmount}}</p>
+                                <p>{{getLoyaltyExpiration this.programId this.boughtOn}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {{else}}
+                <h6 class="row center-align grey-text">No Active Programs</h6>
+            {{/each}}
+<!--             <div class="row center-align">
+                <a class="goToOrderTab waves-effect waves-green"><i class="material-icons teal-text large">done</i></a>
+            </div> -->
+        {{/with}}
+        <footer class="page-footer order-page-footer teal" style="z-index: 5;">
+            <div class="footer-content row valign-wrapper">
+                <div class="col s4 valign">
+                    &nbsp;
+                </div>
+                <div class="col s2">
+                    <h5>&nbsp;</h5>
+                    <h5>&nbsp;</h5>
+                </div>
+                <div class="col s6 valign right-align">
+                    <a class="goToOrderTab waves-effect waves-green"><i class="material-icons white-text large">done</i>&nbsp;&nbsp;&nbsp;</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+
+
+    <!-- Select AddOn options -->
+    <div id="select-addon-options" class="modal modal-big modal-fixed-footer">
+        {{#with getThisOrderItem}}
+            <div class="modal-content">
+                <h3 class="light-blue-text">{{product.name}} Add-Ons</h3>
+                <div class="section">
+                    <div class="grid-fluid">
+                        {{#each product.addOns}}
+                            {{#with getAddOnInfo this}}
+                                <div class="product-add-on-select card-panel light-blue lighten-1 white-text grid-fluid-item grid-fluid-item-small">
+                                    <span>{{name}}<br>{{currency (price)}}</span>
+                                </div>
+                            {{/with}}
+                        {{/each}}
+                    </div>
+                </div>                    
+            </div>
+            <div class="modal-footer">
+                <!-- <button id="complete-addon-selection" class="modal-action modal-close waves-effect waves-green btn white-text">Add</button> -->
+                {{#each addOns}}
+                    <div class="chip">
+                        {{name}}
+                        <i data-addonid="{{_id}}" class="material-icons closeSelectedAddOnChip">close</i>
+                    </div>
+                {{/each}}
+            </div>
+        {{/with}}
+    </div>
+
+    <!-- Remaining loyalty program info of customer for processed order modal -->
+<!--     <div id="processed-order-customer-info" class="modal modal-big modal-fixed-footer">
+        <div class="modal-content">
+            {{#with processedOrderCustomer}}
+                <h5 class="center-align">{{name}}</h5>
+                <h6 class="center-align">Remaining Balance for Active Programs</h6>
+                {{#each getCustomerActivePrograms _id}}
+                    <div class="row">
+                        <div class="col s6 offset-s3">
+                            <div class="card">
+                                <div class="card-content">
+                                    <h6>{{getLoyaltyName this.programId}}</h6>
+                                    <p>{{getLoyaltyBalance this.remainingQuantity this.remainingAmount}}</p>
+                                    <p>{{getLoyaltyExpiration this.programId this.boughtOn}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {{/each}}
+            {{/with}}
+        </div>
+        <div class="modal-footer right-align">
+            <button id="cancel-checkout" class="modal-action modal-close waves-effect waves-green btn-floating btn-large"><i class="material-icons">done</i></button>
+        </div>
+    </div>
+ -->
+<!--     <div id="checkout-order-bottom" class="modal bottom-sheet modal-medium modal-fixed-footer">
+        <div class="modal-content">
+            <div class="row valign-wrapper">
+                <div class="col s6 valign">
+                    <h3 class="light-blue-text">Checkout</h3>
+                </div>
+                <div class="col s6 valign right-align">
+                    {{getOrderNumber}}
+                    {{#with orderCustomer}}
+                        {{#if emailReceiptSelected}}
+                            <a class="btn-medium btn-flat waves-effect waves-light white-text teal deselectEmailReceipt"><i class="material-icons left white-text">email</i>Email Receipt<i class="material-icons right white-text">check_box</i></a>
+                        {{else}}
+                            <a class="btn-medium btn-flat waves-effect waves-light white selectEmailReceipt"><i class="material-icons left grey-text">email</i>Email Receipt<i class="material-icons right grey-text">check_box_outline_blank</i></a>
+                        {{/if}}
+                    {{/with}}                    
+                    {{#if printReceiptSelected}}
+                        <a class="btn-medium btn-flat waves-effect waves-light deselectPrintReceipt white-text teal"><i class="material-icons left white-text">print</i>Print Receipt<i class="material-icons right white-text">check_box</i></a>
+                    {{else}}
+                        <a class="btn-medium btn-flat waves-effect waves-light white selectPrintReceipt"><i class="material-icons left grey-text">print</i>Print Receipt<i class="material-icons right grey-text">check_box_outline_blank</i></a>
+                    {{/if}}
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="row">
+                <div class="col s9">&nbsp;
+                    {{#if showCashPaymentInfo}}
+                        <div class="row">
+                            <div class="col s2 center-align">
+                                <div class="row">
+                                    <a class="waves-effect waves-light btn addToCashAmountGiven btn-large blue-grey" style="width:125px;" data-cashamount="20">$20</a>
+                                </div>
+                                <div class="row">
+                                    <a class="waves-effect waves-light btn addToCashAmountGiven btn-large blue-grey" style="width:125px;" data-cashamount="10">$10</a>
+                                </div>
+                                <div class="row">
+                                    <a class="waves-effect waves-light btn addToCashAmountGiven btn-large blue-grey" style="width:125px;" data-cashamount="5">$5</a>
+                                </div>
+                            </div>
+                            <div class="col s4 center-align">
+                                <div class="row">
+                                    <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="7">7</a>
+                                    <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="8">8</a>
+                                    <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="9">9</a>
+                                </div>
+                                <div class="row">
+                                    <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="4">4</a>
+                                    <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="5">5</a>
+                                    <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="6">6</a>
+                                </div>
+                                <div class="row">
+                                    <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="1">1</a>
+                                    <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="2">2</a>
+                                    <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="3">3</a>
+                                </div>
+                                <div class="row">
+                                    <a class="waves-effect waves-light btn-floating center-align addToCashDigitGiven btn-large blue-grey" data-cashdigit="0">0</a>
+                                </div>
+                            </div>
+                            <div class="col s6">
+                                <div class="row">
+                                    <div class="col s12">
+                                        {{#if anyGiftCards}}
+                                            <h4 class="light-blue-text">Pay: <span class="secondary-content light-blue-text">{{currency (orderCashPaymentDue)}}<i class="material-icons small">local_atm</i></span></h4>
+                                            <h5>Gift Card Used: <span class="secondary-content">- {{currency giftCardUsed}}<i class="material-icons small">card_giftcard</i></span></h5>
+                                            <h5>Order Total: <span class="secondary-content">{{currency orderTotal}}</span></h5>
+                                        {{else}}
+                                            <h4 class="light-blue-text">Pay: <span class="secondary-content">{{currency (orderCashTotal)}} <i class="material-icons small">local_atm</i></span></h4>
+                                        {{/if}}
+                                    </div>
+                                </div>
+                                <div class="row valign-wrapper">
+                                    <div class="col s12 valign">
+                                        <h5>Amount Given: <span class="secondary-content">{{currency (cashAmountGiven)}}<i class="clearCashAmountGiven material-icons grey-text small">refresh</i></span></h5>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col s12">
+                                        <h5>Change Due: <span class="secondary-content">{{currency (cashChangeDue)}}</span></h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {{/if}}
+
+                    {{#if showCardPaymentInfo}}
+                        <div class="row">
+                            <div class="col s6">&nbsp;</div>
+                            <div class="col s6">
+                                {{#if anyGiftCards}}
+                                    <h4 class="light-blue-text">Pay: <span class="secondary-content light-blue-text">{{currency (orderPaymentDue)}}<i class="material-icons small">local_atm</i></span></h4>
+                                    <h5>Gift Card Used: <span class="secondary-content">- {{currency giftCardUsed}}<i class="material-icons small">card_giftcard</i></span></h5>
+                                    <h5>Order Total: <span class="secondary-content">{{currency orderTotal}}</span></h5>
+                                {{else}}
+                                    <h4 class="light-blue-text">Pay: <span class="secondary-content">{{currency orderTotal}}</span></h4>
+                                {{/if}}
+                            </div>
+                        </div>
+                    {{/if}}
+
+                    {{#if showLoyaltyInfo}}
+                        <div class="row">
+                            <div class="col s6">&nbsp;</div>
+                            {{#with orderCustomer}}
+                                <div class="col s6">
+                                    <h5 class="light-blue-text">{{name}}</h5>
+                                    <h6>List of Programs:</h6>
+                                    {{#each getActivePrograms}}
+                                        <div class="card row valign-wrapper">
+                                            <div class="col s9 valign">
+                                                <div class="card-content">
+                                                    <h6>{{getLoyaltyName this.programId}}</h6>
+                                                    <p>{{getLoyaltyBalance this.remainingQuantity this.remainingAmount}}</p>
+                                                    <p>{{getLoyaltyExpiration this.programId this.boughtOn}}</p>
+                                                </div>
+                                            </div>
+                                            <div class="col s3 valign">
+                                                {{#if thisProgramIsApplied apply}}
+                                                    <a class="btn-floating btn-small waves-effect waves-light green doNotApplyThisProgram"><i class="material-icons">done</i></a>
+                                                {{else}}
+                                                    <a class="btn-floating btn-small waves-effect waves-light white applyThisProgram"></a>
+                                                {{/if}}
+                                            </div>
+                                        </div>
+                                    {{/each}}
+                                </div>
+                            {{else}}
+                                <div class="col s12 center-align">
+                                    <h5>No customer selected</h5>
+                                </div>
+                            {{/with}}
+                        </div>
+                    {{/if}}
+
+                    {{#if showAdjustmentAmountInfo}}
+                        <div class="row">
+                            <div class="col s6">
+                                <div class="row">
+                                    <div class="col s12"><h5>On The House:<span class="secondary-content">- {{currency showAdjustmentAmount}}</span></h5></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col s4 left-align">
+                                        <a class="manualAdjustment btn-floating btn-large btn-flat waves-effect waves-light {{#if isAdjustmentSelected 0}}blue lighten-4{{else}}white{{/if}}" data-percent="0">0%</a>
+                                    </div>
+                                    <div class="col s4 center-align">
+                                        <a class="manualAdjustment btn-floating btn-large btn-flat waves-effect waves-light {{#if isAdjustmentSelected 50}}blue lighten-4{{else}}white{{/if}}" data-percent="50">50%</a>
+                                    </div>
+                                    <div class="col s4 right-align">
+                                        <a class="manualAdjustment btn-floating btn-large btn-flat waves-effect waves-light {{#if isAdjustmentSelected 100}}blue lighten-4{{else}}white{{/if}}" data-percent="100">100%</a>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col s12">
+                                        <p class="range-field">
+                                            <input class="sliderManualAdjustment" type="range" id="setAdjustmentValue" min="0" max="100" value="{{getAdjustmentValue}}"/>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col s6">
+                                {{#if anyGiftCards}}
+                                    <h4 class="light-blue-text">Pay: <span class="secondary-content light-blue-text">{{currency (orderPaymentDue)}}<i class="material-icons small">local_atm</i></span></h4>
+                                    <h5>Gift Card Used: <span class="secondary-content">- {{currency giftCardUsed}}<i class="material-icons small">card_giftcard</i></span></h5>
+                                    <h5>Order Total: <span class="secondary-content">{{currency orderTotal}}</span></h5>
+                                {{else}}
+                                    <h4 class="light-blue-text">Pay: <span class="secondary-content">{{currency orderTotal}}</span></h4>
+                                {{/if}}
+                            </div>
+                        </div>
+                    {{/if}}
+                </div>
+
+                <div class="col s3 center-align">
+                    <div class="row valign-wrapper">
+                        <div class="col s6 valign center-align">
+                            <a class="showCashPaymentInfo select-payment-method btn btn-large waves-effect waves-light {{#if showCashPaymentInfo}}light-blue darken-1{{else}}teal{{/if}}" style="width: 100px; height: 100px;" data-paymentkey="cash"><h1 data-paymentkey="cash"><i class="material-icons large" data-paymentkey="cash">local_atm</i></h1></a>
+                        </div>
+                        <div class="col s6 valign center-align">
+                            <a class="showCardPaymentInfo select-payment-method btn btn-large waves-effect waves-light {{#if showCardPaymentInfo}}light-blue darken-1{{else}}teal{{/if}}" style="width: 100px; height: 100px;" data-paymentkey="card"><h1 data-paymentkey="card"><i class="material-icons large" data-paymentkey="card">credit_card</i></h1></a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s6 valign center-align">
+                            <a class="showLoyaltyPaymentInfo btn btn-large waves-effect waves-light {{#if showLoyaltyInfo}}light-blue darken-1{{else}}teal{{/if}}" style="width: 100px; height: 100px;" data-paymentkey="loyalty"><h1><i class="material-icons large">card_giftcard</i></h1></a>
+                        </div>
+                        <div class="col s6 valign center-align">
+                            <a class="showAdjustmentInfo btn btn-large waves-effect waves-light {{#if showAdjustmentAmountInfo}}light-blue darken-1{{else}}teal{{/if}}" style="width: 100px; height: 100px;" data-paymentkey="adjustment"><h1><i class="material-icons large">home</i></h1></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+                
+        <div class="modal-footer">
+            <button id="complete-checkout" class="modal-action modal-close waves-effect waves-green btn" {{isPaymentDisabled}}>Payment Received</button>
+            <button id="cancel-checkout" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</button>
+        </div>
+    </div> -->
+
+</template>
+
+    <!-- Product Selection Modal -->
+<!--     <div id="select-product-options" class="modal modal-big modal-fixed-footer">
+        {{#with candidateOrderItem }}
+            <div class="modal-content">
+                <h3 class="light-blue-text"><span class="badge-m-outline">{{quantity}} X</span>{{product.name}}
+                    <div class="valign-wrapper secondary-content">
+                        <i class="decrease-quantity material-icons red-text medium">remove_circle</i>
+                        <span class="valign">{{quantity}}</span>
+                        <i class="increase-quantity material-icons green-text medium">add_circle</i>
+                    </div>
+                </h3>
+
+                {{#if sizeNotSelected}}
+                    <div class="section">
+                        <h5 class="deep-orange-text accent-4">Select Size</h5>
+                        <div class="grid-fluid">
+                            {{#each product.sizes}}
+                                <div class="product-size-select card-panel light-blue lighten-1 white-text grid-fluid-item grid-fluid-item-small {{#if selectedCandidateSize}}grid-fluid-item-highlight z-depth-3{{else}}z-depth-0{{/if}}">
+                                    <span>{{sizeName (code)}}<br>{{currency (price)}}</span>
+                                </div>
+                            {{/each}}
+                        </div>
+                    </div>
+                {{/if}}
+
+                {{#if anyAddOns product.addOns}}
+                    <div class="section">
+                        <h5 class="deep-orange-text accent-4">Select Add-Ons (optional)</h5>
+                        <div class="grid-fluid">
+                            {{#each product.addOns}}
+                                {{#with getAddOnInfo this}}
+                                    <div class="product-add-on-select card-panel light-blue lighten-1 white-text grid-fluid-item grid-fluid-item-small">
+                                        <span>{{name}}<br>{{currency (price)}}</span>
+                                    </div>
+                                {{/with}}
+                            {{/each}}
+                        </div>
+                    </div>                    
+                {{/if}}
+            </div>
+
+            {{#if anyAddOns product.addOns}}    
+                <div class="modal-footer">
+                    <button id="complete-product-selection" class="modal-action modal-close waves-effect waves-green btn white-text">Add</button>
+                    {{#each getSelectedAddOns}}
+                        <div class="chip">
+                            {{name}}
+                            <i data-addonid="{{_id}}" class="material-icons closeSelectedAddOnChip">close</i>
+                        </div>
+                    {{/each}}
+                </div>
+            {{/if}}
+        {{/with}}
+    </div> -->
+
+    <!-- Addons modal -->
+<!--     <div id="addons-select" class="modal modal-big modal-fixed-footer"> 
+        <div class="section">
+            <h5 class="deep-orange-text accent-4">Select Add-ons (optional)</h5>
+            <div class="grid-fluid">
+                {{#each addons}}
+                    <div class="card-panel light-blue lighten-1 white-text grid-fluid-item">
+                        <span>{{name}}<br>{{currency (price)}}</span>
+                    </div>
+                {{/each}}
+            </div>
+        </div>
+    </div> -->

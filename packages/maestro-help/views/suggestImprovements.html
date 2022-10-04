@@ -1,0 +1,31 @@
+<template name="SuggestImprovements">
+	<div class="card col s12 m8 push-m2">
+		<h4 class="grey-text">Make it better!</h4>
+		<form id="sendFeedback">
+			<div class="row">
+				<div class="col s6">
+					<label for="user_Name">Name</label>
+					<input id="user_Name" type="text" class="validate">
+				</div>
+			</div>
+			<div class="row">
+				<div class="col s6">
+					<label for="contact_Info">Contact Info (Email or Phone)</label>
+					<input id="contact_Info" type="text" class="validate">
+				</div>
+			</div>
+			<div class="row">
+				<div class="col s12">
+					<label for="suggestion_Box">Make it better by:</label>
+					<textarea id="suggestion_Box" class="materialize-textarea"></textarea>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col s12 right-align">
+					<a id="cancelSuggestion" class="waves-effect waves-teal btn-flat">Cancel</a>
+		            <a id="sendSuggestion" class="waves-effect waves-light btn orange darken-1">Send</a>
+				</div>
+			</div>
+		</form>		
+	</div>
+</template>

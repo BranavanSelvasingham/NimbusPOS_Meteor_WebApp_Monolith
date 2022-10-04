@@ -1,0 +1,66 @@
+<template name="AllUsers">
+	<div class="row">
+		<div class="col s8 offset-s2">
+			<h5 class="grey-text center-align">All Business Users</h5>
+			<ul class="collection">
+				{{#each getAllBusinessUsers}}
+					<li class="collection-item row">
+						<div class="col s6">
+							{{username}} ({{getBusinessName profile.businessId}})
+						</div>
+						<div class="col s2 left-align">
+							<a class="btn-floating btn-small blue right-align userInfo"><i class="material-icons white-text">info</i></a>
+						</div>
+						<div class="col s2 center-align">
+							{{#if userIsDisabled loginDisabled}}
+								<a class="btn-flat green lighten-3 enableUserLogin white-text">Enable</a>
+							{{else}}
+								<a class="btn-flat red lighten-3 disableUserLogin white-text">Disable</a>
+							{{/if}}
+						</div>
+						<div class="col s2 right-align">
+							<a class="btn-floating btn-small red right-align deleteThisUser"><i class="material-icons white-text">delete</i></a>
+						</div>
+					</li>
+				{{/each}}
+			</ul>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col s8 offset-s2">
+			<h5 class="grey-text center-align">All End Customer Users</h5>
+			<ul class="collection">
+				{{#each getAllEndCustomerUsers}}
+					<li class="collection-item row">
+						<div class="col s6">
+							{{#each emails}}
+					            <div id="Emails_Tile" class="accountEmails">
+					                {{address}}
+					                {{#if verified}}
+					                    <i class="material-icons green-text">verified_user</i>
+					                {{else}}
+					                    (Unverified)
+					                {{/if}}
+					            </div>
+					        {{/each}}
+						</div>
+						<div class="col s2 left-align">
+							<a class="btn-floating btn-small blue right-align userInfo"><i class="material-icons white-text">info</i></a>
+						</div>
+						<div class="col s2 center-align">
+							{{#if userIsDisabled loginDisabled}}
+								<a class="btn-flat green lighten-3 enableUserLogin white-text">Enable</a>
+							{{else}}
+								<a class="btn-flat red lighten-3 disableUserLogin white-text">Disable</a>
+							{{/if}}
+						</div>
+						<div class="col s2 right-align">
+							<a class="btn-floating btn-small red right-align deleteThisUser"><i class="material-icons white-text">delete</i></a>
+						</div>
+					</li>
+				{{/each}}
+			</ul>
+		</div>
+	</div>
+</template>
